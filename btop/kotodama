@@ -1,0 +1,27 @@
+[meta]
+name = btop
+version = 1.4.7
+description = "Resource monitor with a fancy, responsive terminal UI"
+license = Apache-2.0
+size = 5
+
+[source]
+url = https://github.com/aristocratos/btop/archive/refs/tags/v1.4.7.tar.gz
+sha256 = 933de2e4d1b2211a638be463eb6e8616891bfba73aef5d38060bd8319baeefc6
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make OPTFLAGS="-O2 -pipe -march=x86-64-v2" PREFIX=/usr
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR=$DESTDIR install

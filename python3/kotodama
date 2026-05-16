@@ -1,0 +1,33 @@
+[meta]
+name = python3
+version = 3.14.5
+description = "High-level interpreted programming language"
+license = PSF-2.0
+size = 30
+
+[source]
+url = https://www.python.org/ftp/python/3.14.5/Python-3.14.5.tar.xz
+sha256 = 7e32597b99e5d9a39abed35de4693fa169df3e5850d4c334337ffd6a19a36db6
+
+[deps]
+build = gcc make zlib openssl libffi
+runtime = zlib openssl libffi
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+  --prefix=/usr \
+  --enable-shared \
+  --with-system-ffi \
+  --with-openssl=/usr \
+  --enable-optimizations
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

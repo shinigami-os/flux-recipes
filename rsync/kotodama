@@ -1,0 +1,28 @@
+[meta]
+name = rsync
+version = 3.4.2
+description = "Fast, versatile, remote (and local) file-copying tool"
+license = GPL-3.0
+size = 3
+
+[source]
+url = https://download.samba.org/pub/rsync/src/rsync-3.4.2.tar.gz
+sha256 = ff10aa2c151cd4b2dbbe6135126dbc854046113d2dfb49572a348233267eb315
+
+[deps]
+build = gcc make zlib openssl
+runtime = zlib openssl
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr --with-included-zlib=no
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

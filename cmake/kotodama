@@ -1,0 +1,28 @@
+[meta]
+name = cmake
+version = 4.3.2
+description = "Cross-platform build system generator"
+license = BSD-3-Clause
+size = 15
+
+[source]
+url = https://github.com/Kitware/CMake/archive/refs/tags/v4.3.2.tar.gz
+sha256 = 5e5ddea1fcdc28c4e447f767e3f6fa971a7f853ddd262b884871b889715bc96a
+
+[deps]
+build = gcc make openssl zlib
+runtime = openssl zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./bootstrap --prefix=/usr --parallel=$(nproc) -- -DCMAKE_USE_OPENSSL=ON
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

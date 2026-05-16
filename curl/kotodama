@@ -1,0 +1,28 @@
+[meta]
+name = curl
+version = 8.20.0
+description = "Command line tool and library for transferring data with URLs"
+license = curl
+size = 4
+
+[source]
+url = https://curl.se/download/curl-8.20.0.tar.gz
+sha256 = fc5819cad3f9f5482669adcdc49a782c15f36d2a0715b395b06d9173593d2dc0
+
+[deps]
+build = gcc make openssl zlib
+runtime = openssl zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr --with-openssl --with-zlib
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

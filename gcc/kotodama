@@ -1,0 +1,35 @@
+[meta]
+name = gcc
+version = 16.1.0
+description = "The GNU Compiler Collection"
+license = GPL-3.0
+size = 180
+
+[source]
+url = https://ftp.gnu.org/gnu/gcc/gcc-16.1.0/gcc-16.1.0.tar.gz
+sha256 = 48be131b8c719db967cf0265a0ccb0cab2a3b224d5bb42f84904f0c1744213e6
+
+[deps]
+build = gcc make gmp mpfr mpc zlib
+runtime = gmp mpfr mpc zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p ../gcc-build
+
+%build
+cd ../gcc-build
+../gcc-14.2.0/configure \
+  --prefix=/usr \
+  --enable-languages=c,c++ \
+  --disable-multilib \
+  --disable-bootstrap
+make
+
+%post-build
+
+%install
+cd ../gcc-build
+make DESTDIR=$DESTDIR install

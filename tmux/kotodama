@@ -1,0 +1,28 @@
+[meta]
+name = tmux
+version = 3.6a
+description = "Terminal multiplexer"
+license = ISC
+size = 2
+
+[source]
+url = https://github.com/tmux/tmux/releases/download/3.6a/tmux-3.6a.tar.gz
+sha256 = b6d8d9c76585db8ef5fa00d4931902fa4b8cbe8166f528f44fc403961a3f3759
+
+[deps]
+build = gcc make pkg-config
+runtime = libevent ncurses
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

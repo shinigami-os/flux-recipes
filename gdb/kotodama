@@ -1,0 +1,31 @@
+[meta]
+name = gdb
+version = 17.2
+description = "The GNU Project Debugger"
+license = GPL-3.0
+size = 40
+
+[source]
+url = https://ftp.gnu.org/gnu/gdb/gdb-17.2.tar.gz
+sha256 = cb891b9a9f554cac972eea5368176b240640ae90b681aae84bf873a9501f0063
+
+[deps]
+build = gcc make python3 zlib
+runtime = python3 zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+  --prefix=/usr \
+  --with-python=/usr/bin/python3 \
+  --disable-multilib
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

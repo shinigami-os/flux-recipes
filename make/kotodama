@@ -1,0 +1,28 @@
+[meta]
+name = make
+version = 4.4.1
+description = "GNU Make build automation tool"
+license = GPL-3.0
+size = 2
+
+[source]
+url = https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz
+sha256 = dd16fb1d67bfab79a72f5f8390735419b2d1401f30b02f303cb32e06922c4cbe
+
+[deps]
+build = gcc
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

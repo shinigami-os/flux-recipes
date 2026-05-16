@@ -1,0 +1,27 @@
+[meta]
+name = neovim
+version = 0.12.2
+description = "Vim-fork focused on extensibility and usability"
+license = Apache-2.0
+size = 14
+
+[source]
+url = https://github.com/neovim/neovim/archive/refs/tags/nightly.tar.gz
+sha256 = 42007de43c532c78db76a1e4b60b378104cbb007a1cb50d09945744e043ed549
+
+[deps]
+build = gcc clang cmake ninja make curl git
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR CMAKE_INSTALL_PREFIX=/usr install

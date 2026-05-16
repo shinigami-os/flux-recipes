@@ -1,0 +1,28 @@
+[meta]
+name = wget
+version = 1.25.0
+description = "Network utility to retrieve files from the web"
+license = GPL-3.0
+size = 3
+
+[source]
+url = https://ftp.gnu.org/gnu/wget/wget-1.25.0.tar.gz
+sha256 = 766e48423e79359ea31e41db9e5c289675947a7fcf2efdcedb726ac9d0da3784
+
+[deps]
+build = gcc make openssl zlib
+runtime = openssl zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr --with-ssl=openssl
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

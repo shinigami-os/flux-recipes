@@ -1,0 +1,27 @@
+[meta]
+name = git
+version = 2.54.0
+description = "Fast, scalable, distributed revision control system"
+license = GPL-2.0
+size = 32
+
+[source]
+url = https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.54.0.tar.gz
+sha256 = 45e8107643a44e3ce46f5665beb35af3932fb0d70017687905ab5d4e3aafa8eb
+
+[deps]
+build = gcc make curl zlib openssl
+runtime = curl zlib openssl
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make prefix=/usr all
+
+%post-build
+
+%install
+make prefix=/usr DESTDIR=$DESTDIR install

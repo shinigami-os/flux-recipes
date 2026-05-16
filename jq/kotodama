@@ -1,0 +1,28 @@
+[meta]
+name = jq
+version = 1.8.1
+description = "Lightweight and flexible command-line JSON processor"
+license = MIT
+size = 2
+
+[source]
+url = https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-1.8.1.tar.gz
+sha256 = 2be64e7129cecb11d5906290eba10af694fb9e3e7f9fc208a311dc33ca837eb0
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr --with-oniguruma=builtin --disable-docs
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

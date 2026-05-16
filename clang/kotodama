@@ -1,0 +1,35 @@
+[meta]
+name = clang
+version = 19.1.7
+description = "C, C++, and Objective-C compiler (LLVM based)"
+license = Apache-2.0
+size = 140
+
+[source]
+url = https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/llvm-project-19.1.7.src.tar.xz
+sha256 = 82401fea7b79d0078043f7598b835284d6650a75b93e64b6f761ea7b63097501
+
+[deps]
+build = gcc cmake ninja python3 zlib
+runtime = zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p ../clang-build
+
+%build
+cmake -S llvm -B ../clang-build -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DLLVM_ENABLE_PROJECTS="clang;lld" \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DLLVM_TARGETS_TO_BUILD=X86 \
+  -DLLVM_BUILD_LLVM_DYLIB=ON \
+  -DLLVM_LINK_LLVM_DYLIB=ON
+ninja -C ../clang-build
+
+%post-build
+
+%install
+DESTDIR=$DESTDIR ninja -C ../clang-build install

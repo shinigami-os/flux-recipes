@@ -1,0 +1,28 @@
+[meta]
+name = hello
+version = 2.12.1
+description = "The classic Hello World program"
+license = GPL-3.0
+size = 1
+
+[source]
+url = https://ftp.gnu.org/gnu/hello/hello-2.12.1.tar.gz
+sha256 = 8d99142afd92576f30b0cd7cb42a8dc6809998bc5d607d88761f512e26c7db20
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

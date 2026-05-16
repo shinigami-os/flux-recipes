@@ -1,0 +1,69 @@
+[meta]
+name = grub
+version = 2.12
+description = "GNU GRUB2 bootloader with BIOS (i386-pc) and UEFI (x86_64-efi) targets"
+license = GPL-3.0-or-later
+size = 90
+
+[source]
+url = https://ftp.gnu.org/gnu/grub/grub-2.12.tar.xz
+sha256 = f3c97391f7c4eaa677a78e090c7e97e6dc47b16f655f04683ebd37bef7fe0faa
+
+[deps]
+build = gcc make python3 flex bison texinfo gettext
+runtime = bash
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+# GRUB explicitly warns against custom CFLAGS for bootloader code.
+# Clear them so configure uses its own safe defaults per target.
+unset CFLAGS CXXFLAGS LDFLAGS
+
+%build
+# BIOS target (i386-pc)
+mkdir -p build-bios
+cd build-bios
+../configure \
+    --prefix=/usr \
+    --sbindir=/usr/bin \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --disable-werror \
+    --disable-grub-mkfont \
+    --disable-grub-themes \
+    --with-platform=pc \
+    --target=i386 \
+    --build=x86_64-linux-musl
+make
+cd ..
+
+# UEFI target (x86_64-efi)
+mkdir -p build-efi
+cd build-efi
+../configure \
+    --prefix=/usr \
+    --sbindir=/usr/bin \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --disable-werror \
+    --disable-grub-mkfont \
+    --disable-grub-themes \
+    --with-platform=efi \
+    --target=x86_64 \
+    --build=x86_64-linux-musl
+make
+cd ..
+
+%post-build
+
+%install
+cd build-bios
+make DESTDIR="$DESTDIR" install
+cd ../build-efi
+make DESTDIR="$DESTDIR" install
+cd ..
+
+# Install grub.cfg placeholder
+mkdir -p "$DESTDIR/boot/grub"

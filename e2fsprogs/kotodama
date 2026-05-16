@@ -1,0 +1,40 @@
+[meta]
+name = e2fsprogs
+version = 1.47.4
+description = "Ext2/3/4 filesystem utilities (mkfs.ext4, e2fsck, tune2fs, ...)"
+license = GPL-2.0-only AND LGPL-2.0-only AND MIT
+size = 6
+
+[source]
+url = https://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v1.47.4/e2fsprogs-1.47.4.tar.xz
+sha256 = fd5bf388cbdbe006a3d3b318d983b2948382440acc85a87f1e7d108653e8db0b
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --sbindir=/usr/bin \
+    --libdir=/usr/lib \
+    --with-root-prefix="" \
+    --enable-elf-shlibs \
+    --disable-fsck \
+    --disable-uuidd \
+    --disable-libuuid \
+    --disable-libblkid \
+    --disable-nls \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install
+make DESTDIR="$DESTDIR" install-libs

@@ -1,0 +1,34 @@
+[meta]
+name = bash
+version = 5.3
+description = "GNU Bourne-Again Shell"
+license = GPL-3.0-or-later
+size = 3
+
+[source]
+url = https://ftp.gnu.org/gnu/bash/bash-5.3.tar.gz
+sha256 = 0d5cd86965f869a26cf64f4b71be7b96f90a3ba8b3d74e27e8e9d9d5550f31ba
+
+[deps]
+build = gcc make
+runtime = ncurses
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --bindir=/usr/bin \
+    --without-bash-malloc \
+    --with-curses \
+    --disable-nls \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

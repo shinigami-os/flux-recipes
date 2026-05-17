@@ -1,0 +1,31 @@
+[meta]
+name = flex
+version = 2.6.4
+description = "Fast lexical analyser generator"
+license = BSD-2-Clause
+size = 1
+
+[source]
+url = https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
+sha256 = e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-nls \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

@@ -1,0 +1,31 @@
+[meta]
+name = texinfo
+version = 7.3
+description = "GNU documentation system: makeinfo, install-info, info reader"
+license = GPL-3.0-or-later
+size = 5
+
+[source]
+url = https://ftp.gnu.org/gnu/texinfo/texinfo-7.3.tar.xz
+sha256 = 51f74eb0f51cfa9873b85264dfdd5d46e8957ec95b88f0fb762f63d9e164c72e
+
+[deps]
+build = gcc make perl
+runtime = perl
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-nls \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

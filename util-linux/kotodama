@@ -1,0 +1,40 @@
+[meta]
+name = util-linux
+version = 2.42
+description = "Linux utility suite: fdisk, mount, lsblk, blkid, libuuid, libblkid, libmount"
+license = GPL-2.0-or-later AND LGPL-2.1-or-later
+size = 7
+
+[source]
+url = https://www.kernel.org/pub/linux/utils/util-linux/v2.42/util-linux-2.42.tar.xz
+sha256 = 3452b260bbaa775d6e749ac3bb22111785003fc1f444970025c8da26dfa758e9
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --libdir=/usr/lib \
+    --sbindir=/usr/bin \
+    --localstatedir=/var \
+    --without-systemd \
+    --without-udev \
+    --without-python \
+    --without-ncurses \
+    --disable-nls \
+    --disable-makeinstall-chown \
+    --disable-makeinstall-setuid \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

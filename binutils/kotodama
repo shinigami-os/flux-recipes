@@ -1,0 +1,39 @@
+[meta]
+name = binutils
+version = 2.46
+description = "GNU binary utilities: ld, as, objdump, nm, strip, and friends"
+license = GPL-3.0-or-later AND LGPL-2.1-or-later
+size = 35
+
+[source]
+url = https://ftp.gnu.org/gnu/binutils/binutils-2.46.tar.xz
+sha256 = 79b9752c84f4750868b1591565e914ecdea98521e96076929d94be0ac4e5f361
+
+[deps]
+build = gcc make flex bison zlib
+runtime = zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p ../binutils-build
+
+%build
+cd ../binutils-build
+../binutils-2.46/configure \
+    --prefix=/usr \
+    --enable-shared \
+    --enable-plugins \
+    --disable-werror \
+    --disable-nls \
+    --disable-gold \
+    --with-system-zlib \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+cd ../binutils-build
+make DESTDIR="$DESTDIR" install

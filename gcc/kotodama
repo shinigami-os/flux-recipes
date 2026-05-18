@@ -17,11 +17,11 @@ runtime = gmp mpfr mpc zlib
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-mkdir -p ../gcc-build
+mkdir -p build
 
 %build
-cd ../gcc-build
-../gcc-16.1.0/configure \
+cd build
+../configure \
   --prefix=/usr \
   --enable-languages=c,c++ \
   --disable-multilib \
@@ -31,5 +31,5 @@ make
 %post-build
 
 %install
-cd ../gcc-build
+cd build
 make DESTDIR=$DESTDIR install

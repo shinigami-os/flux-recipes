@@ -17,11 +17,11 @@ runtime = zlib
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-mkdir -p ../binutils-build
+mkdir -p build
 
 %build
-cd ../binutils-build
-../binutils-2.46/configure \
+cd build
+../configure \
     --prefix=/usr \
     --enable-shared \
     --enable-plugins \
@@ -35,5 +35,5 @@ make
 %post-build
 
 %install
-cd ../binutils-build
+cd build
 make DESTDIR="$DESTDIR" install

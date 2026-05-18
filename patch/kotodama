@@ -1,0 +1,31 @@
+[meta]
+name = patch
+version = 2.8
+description = "GNU patch: apply diff files to originals"
+license = GPL-3.0-or-later
+size = 1
+
+[source]
+url = https://ftp.gnu.org/gnu/patch/patch-2.8.tar.xz
+sha256 = f87cee69eec2b4fcbf60a396b030ad6aa3415f192aa5f7ee84cad5e11f7f5ae3
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-nls \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

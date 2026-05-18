@@ -1,0 +1,25 @@
+[meta]
+name = build-essential
+version = 1.0
+description = "Meta-package: essential tools for building software from source"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = gcc binutils make pkgconf flex bison patch
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

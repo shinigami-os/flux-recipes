@@ -1,0 +1,33 @@
+[meta]
+name = libevent
+version = 2.1.12-stable
+description = "Asynchronous event notification library"
+license = BSD-3-Clause
+size = 1
+
+[source]
+url = https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
+sha256 = 92e6de1be9ec176428fd2367677e61ceffc2ee1cb119035037a27d346b0403bb
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --disable-openssl \
+    --disable-samples \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

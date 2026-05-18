@@ -1,0 +1,31 @@
+[meta]
+name = mpc
+version = 1.4.0
+description = "GNU C library for complex number arithmetic with exact rounding"
+license = LGPL-3.0-or-later
+size = 1
+
+[source]
+url = https://ftp.gnu.org/gnu/mpc/mpc-1.4.0.tar.xz
+sha256 = 3210b3a546b1cb00c296ca360891d7740ee6ff06deb02a27a35b20cd3c0bb1a5
+
+[deps]
+build = gcc make gmp mpfr
+runtime = gmp mpfr
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

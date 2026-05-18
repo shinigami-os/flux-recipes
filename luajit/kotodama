@@ -1,0 +1,27 @@
+[meta]
+name = luajit
+version = 2.1-rolling-20260517
+description = "Just-in-time compiler and runtime for Lua 5.1"
+license = MIT
+size = 2
+
+[source]
+url = https://github.com/LuaJIT/LuaJIT/archive/18b087cd2cd4ddc4a79782bf155383a689d5093d.tar.gz
+sha256 = 88a592afa9907d6b0c6e1e7ac9b39982622e3ca086f0646d4ea89b0e4e81f093
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make PREFIX=/usr BUILDMODE=dynamic
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR="$DESTDIR" install

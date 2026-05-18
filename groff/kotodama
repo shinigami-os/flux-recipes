@@ -1,0 +1,32 @@
+[meta]
+name = groff
+version = 1.24.1
+description = "GNU troff document formatting system (man page renderer)"
+license = GPL-3.0-or-later
+size = 10
+
+[source]
+url = https://ftp.gnu.org/gnu/groff/groff-1.24.1.tar.gz
+sha256 = 74e2819795b6aff431aeac983d63a9c8968eeaba2a2eba7df8ba4c7b41e7cfd8
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --without-x \
+    --disable-nls \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

@@ -21,7 +21,7 @@ mkdir -p ../gcc-build
 
 %build
 cd ../gcc-build
-../gcc-14.2.0/configure \
+../gcc-16.1.0/configure \
   --prefix=/usr \
   --enable-languages=c,c++ \
   --disable-multilib \

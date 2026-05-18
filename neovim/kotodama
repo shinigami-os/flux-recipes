@@ -11,7 +11,7 @@ sha256 = 42007de43c532c78db76a1e4b60b378104cbb007a1cb50d09945744e043ed549
 
 [deps]
 build = gcc clang cmake ninja make curl git
-runtime =
+runtime = luajit
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

@@ -1,0 +1,39 @@
+[meta]
+name = perl
+version = 5.42.2
+description = "Practical Extraction and Report Language interpreter"
+license = GPL-1.0-or-later OR Artistic-1.0-Perl
+size = 20
+
+[source]
+url = https://www.cpan.org/src/5.0/perl-5.42.2.tar.gz
+sha256 = 9384e8deb75b7b1695e5637971b752281aaecd025a3d5d4734d33c1d0adfee47
+
+[deps]
+build = gcc make zlib
+runtime = zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+sh Configure \
+    -des \
+    -Dprefix=/usr \
+    -Dvendorprefix=/usr \
+    -Dman1dir=/usr/share/man/man1 \
+    -Dman3dir=/usr/share/man/man3 \
+    -Duseshrplib \
+    -Dusethreads \
+    -Doptimize="-O2 -pipe -march=x86-64-v2" \
+    -Dcccdlflags="-fPIC" \
+    -Dlddlflags="-shared" \
+    -Dldflags=""
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

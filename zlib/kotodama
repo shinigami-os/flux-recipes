@@ -1,0 +1,28 @@
+[meta]
+name = zlib
+version = 1.3.2
+description = "General-purpose lossless data-compression library"
+license = Zlib
+size = 1
+
+[source]
+url = https://github.com/madler/zlib/releases/download/v1.3.2/zlib-1.3.2.tar.gz
+sha256 = bb329a0a2cd0274d05519d61c667c062e06990d72e125ee2dfa8de64f0119d16
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

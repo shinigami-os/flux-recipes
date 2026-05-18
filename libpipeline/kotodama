@@ -1,0 +1,31 @@
+[meta]
+name = libpipeline
+version = 1.5.8
+description = "C library for pipeline manipulation between subprocesses"
+license = GPL-3.0-or-later
+size = 1
+
+[source]
+url = https://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.5.8.tar.gz
+sha256 = 1b1203ca152ccd63983c3f2112f7fe6fa5afd453218ede5153d1b31e11bb8405
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

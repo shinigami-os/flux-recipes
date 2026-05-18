@@ -1,0 +1,31 @@
+[meta]
+name = mpfr
+version = 4.2.2
+description = "GNU Multiple Precision Floating-Point Reliable Library"
+license = LGPL-3.0-or-later
+size = 2
+
+[source]
+url = https://ftp.gnu.org/gnu/mpfr/mpfr-4.2.2.tar.xz
+sha256 = b67ba0383ef7e8a8563734e2e889ef5ec3c3b898a01d00fa0a6869ad81c6ce01
+
+[deps]
+build = gcc make gmp
+runtime = gmp
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

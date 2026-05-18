@@ -1,0 +1,33 @@
+[meta]
+name = pkgconf
+version = 2.4.3
+description = "Package compiler and linker metadata toolkit (pkg-config replacement)"
+license = ISC
+size = 1
+
+[source]
+url = https://distfiles.ariadne.space/pkgconf/pkgconf-2.4.3.tar.xz
+sha256 = 51203d99ed573fa7344bf07ca626f10c7cc094e0846ac4aa0023bd0c83c25a41
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --with-pkg-config-dir=/usr/lib/pkgconfig:/usr/share/pkgconfig \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install
+ln -sf pkgconf "$DESTDIR/usr/bin/pkg-config"

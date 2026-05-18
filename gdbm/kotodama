@@ -1,0 +1,33 @@
+[meta]
+name = gdbm
+version = 1.26
+description = "GNU database manager library and utilities"
+license = GPL-3.0-or-later
+size = 1
+
+[source]
+url = https://ftp.gnu.org/gnu/gdbm/gdbm-1.26.tar.gz
+sha256 = 6a24504a14de4a744103dcb936be976df6fbe88ccff26065e54c1c47946f4a5e
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --enable-libgdbm-compat \
+    --disable-nls \
+    --disable-static \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

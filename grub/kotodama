@@ -17,15 +17,15 @@ runtime = bash
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# GRUB explicitly warns against custom CFLAGS for bootloader code.
-# Clear them so configure uses its own safe defaults per target.
-unset CFLAGS CXXFLAGS LDFLAGS
+rm -rf build-efi
 
 %build
-# BIOS target (i386-pc)
-mkdir -p build-bios
-cd build-bios
-../configure \
+unset CFLAGS CXXFLAGS LDFLAGS
+_srcdir="$(pwd -P)"
+
+# BIOS target built in-tree: this generates grub-core/extra_deps.lst in the
+# source tree as a natural side-effect, which the EFI out-of-tree build needs.
+./configure \
     --prefix=/usr \
     --sbindir=/usr/bin \
     --sysconfdir=/etc \
@@ -34,15 +34,14 @@ cd build-bios
     --disable-grub-mkfont \
     --disable-grub-themes \
     --with-platform=pc \
-    --target=i386 \
-    --build=x86_64-linux-musl
+    --target=i386
 make
-cd ..
 
-# UEFI target (x86_64-efi)
+# EFI target built out-of-tree: grub-core/extra_deps.lst now exists from the
+# BIOS build above, so the out-of-tree Makefile can find it.
 mkdir -p build-efi
 cd build-efi
-../configure \
+"$_srcdir/configure" \
     --prefix=/usr \
     --sbindir=/usr/bin \
     --sysconfdir=/etc \
@@ -51,17 +50,18 @@ cd build-efi
     --disable-grub-mkfont \
     --disable-grub-themes \
     --with-platform=efi \
-    --target=x86_64 \
-    --build=x86_64-linux-musl
+    --target=x86_64
 make
 cd ..
 
 %post-build
 
 %install
-cd build-bios
+# BIOS was built in-tree
 make DESTDIR="$DESTDIR" install
-cd ../build-efi
+
+# EFI was built out-of-tree
+cd build-efi
 make DESTDIR="$DESTDIR" install
 cd ..
 

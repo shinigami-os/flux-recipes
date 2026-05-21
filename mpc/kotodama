@@ -10,7 +10,7 @@ url = https://ftp.gnu.org/gnu/mpc/mpc-1.4.0.tar.xz
 sha256 = 3210b3a546b1cb00c296ca360891d7740ee6ff06deb02a27a35b20cd3c0bb1a5
 
 [deps]
-build = gcc make gmp mpfr
+build = gcc make gmp mpfr pkgconf
 runtime = gmp mpfr
 
 [build]
@@ -22,6 +22,8 @@ cflags = -O2 -pipe -march=x86-64-v2
 ./configure \
     --prefix=/usr \
     --disable-static \
+    --with-gmp=/usr \
+    --with-mpfr=/usr \
     --build=x86_64-linux-musl
 make
 

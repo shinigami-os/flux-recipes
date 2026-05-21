@@ -10,8 +10,8 @@ url = https://github.com/neovim/neovim/archive/refs/tags/nightly.tar.gz
 sha256 = 8345f11f75cbb6460f92e96ed0520fe824487b5a47128c70fcab70d33772b129
 
 [deps]
-build = gcc clang cmake ninja make curl git
-runtime = luajit
+build = gcc clang cmake ninja make curl git pkgconf libuv libvterm libtermkey libtree-sitter unibilium msgpack-c
+runtime = luajit libuv libvterm libtermkey libtree-sitter unibilium
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -19,9 +19,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr
+make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr \
+    USE_BUNDLED=OFF
 
 %post-build
 
 %install
-make DESTDIR=$DESTDIR CMAKE_INSTALL_PREFIX=/usr install
+make DESTDIR="$DESTDIR" CMAKE_INSTALL_PREFIX=/usr install

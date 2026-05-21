@@ -1,0 +1,27 @@
+[meta]
+name = unibilium
+version = 2.0.0
+description = "Terminfo parsing library"
+license = LGPL-3.0-or-later
+size = 1
+
+[source]
+url = https://github.com/mauke/unibilium/archive/refs/tags/v2.0.0.tar.gz
+sha256 = 78997d38d4c8177c60d3d0c1aa8c53fd0806eb21825b7b335b1768d7116bc1c1
+
+[deps]
+build = gcc make libtool
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make PREFIX=/usr
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR="$DESTDIR" install

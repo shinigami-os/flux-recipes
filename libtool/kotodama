@@ -1,0 +1,31 @@
+[meta]
+name = libtool
+version = 2.5.4
+description = "GNU generic library support script"
+license = GPL-2.0-or-later
+size = 2
+
+[source]
+url = https://ftp.gnu.org/gnu/libtool/libtool-2.5.4.tar.xz
+sha256 = f81f5860666b0bc7d84baddefa60d1cb9fa6fceb2398cc3baca6afaa60266675
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-nls \
+    --build=x86_64-linux-musl
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

@@ -1,0 +1,27 @@
+[meta]
+name = libvterm
+version = 0.3.3
+description = "Abstract VT220/Xterm/etc. terminal emulator library"
+license = MIT
+size = 1
+
+[source]
+url = https://www.leonerd.org.uk/code/libvterm/libvterm-0.3.3.tar.gz
+sha256 = 09156f43dd2128bd347cbeebe50d9a571d32c64e0cf18d211197946aff7226e0
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make PREFIX=/usr
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR="$DESTDIR" install

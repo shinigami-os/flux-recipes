@@ -1,0 +1,27 @@
+[meta]
+name = libtermkey
+version = 0.22
+description = "Easy processing of keyboard entry from terminal-based programs"
+license = MIT
+size = 1
+
+[source]
+url = https://www.leonerd.org.uk/code/libtermkey/libtermkey-0.22.tar.gz
+sha256 = 6945bd3c4aaa83da83d80a045c5563da4edd7d0374c62c0d35aec09eb3014600
+
+[deps]
+build = gcc make pkgconf
+runtime = unibilium
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make PREFIX=/usr
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR="$DESTDIR" install

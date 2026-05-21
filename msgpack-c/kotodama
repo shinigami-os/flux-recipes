@@ -1,0 +1,35 @@
+[meta]
+name = msgpack-c
+version = 7.0.0
+description = "MessagePack C/C++ implementation"
+license = BSL-1.0
+size = 1
+
+[source]
+url = https://github.com/msgpack/msgpack-c/releases/download/cpp-7.0.0/msgpack-cxx-7.0.0.tar.gz
+sha256 = 8e14780500933f43d86662fcaa1b0ce99ebe9c220f4680bc929dce09a0e0cfc6
+
+[deps]
+build = gcc make cmake
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p build
+
+%build
+cd build
+cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DMSGPACK_BUILD_TESTS=OFF \
+    -DMSGPACK_BUILD_EXAMPLES=OFF
+make
+
+%post-build
+
+%install
+cd build
+make DESTDIR="$DESTDIR" install

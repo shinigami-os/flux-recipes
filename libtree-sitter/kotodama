@@ -1,0 +1,27 @@
+[meta]
+name = libtree-sitter
+version = 0.26.9
+description = "Incremental parsing library for syntax highlighting and code analysis"
+license = MIT
+size = 2
+
+[source]
+url = https://github.com/tree-sitter/tree-sitter/archive/refs/tags/v0.26.9.tar.gz
+sha256 = 7504b7af7e7b9002ce529d4f941e1b7fb1fb435768780ce7da4abaac79bb156f
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make PREFIX=/usr
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR="$DESTDIR" install

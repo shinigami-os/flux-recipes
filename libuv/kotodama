@@ -1,0 +1,34 @@
+[meta]
+name = libuv
+version = 1.52.1
+description = "Cross-platform asynchronous I/O library"
+license = MIT
+size = 2
+
+[source]
+url = https://github.com/libuv/libuv/archive/refs/tags/v1.52.1.tar.gz
+sha256 = 478baf2599bfbc882c355288c9cb6f92e0e7dda435fa04031fa5b607cf3f414c
+
+[deps]
+build = gcc make cmake
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p build
+
+%build
+cd build
+cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_TESTING=OFF
+make
+
+%post-build
+
+%install
+cd build
+make DESTDIR="$DESTDIR" install

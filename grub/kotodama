@@ -35,6 +35,7 @@ _srcdir="$(pwd -P)"
     --disable-grub-themes \
     --with-platform=pc \
     --target=i386
+touch grub-core/extra_deps.lst
 make
 
 # EFI target built out-of-tree: grub-core/extra_deps.lst now exists from the

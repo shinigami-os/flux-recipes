@@ -39,8 +39,13 @@ _srcdir="$(pwd -P)"
 touch grub-core/extra_deps.lst
 make
 
-# EFI target built out-of-tree: grub-core/extra_deps.lst now exists from the
-# BIOS build above, so the out-of-tree Makefile can find it.
+# Preserve extra_deps.lst, then clean in-tree configure so EFI out-of-tree
+# configure can run against the same source tree
+cp grub-core/extra_deps.lst /tmp/grub-extra-deps.lst
+make distclean
+cp /tmp/grub-extra-deps.lst grub-core/extra_deps.lst
+
+# EFI target built out-of-tree
 mkdir -p build-efi
 cd build-efi
 "$_srcdir/configure" \

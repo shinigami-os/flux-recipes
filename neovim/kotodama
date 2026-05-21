@@ -21,7 +21,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %build
 make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr \
     USE_BUNDLED=OFF \
-    DEPS_CMAKE_FLAGS="-DLUAJIT_INCLUDE_DIR=/usr/include/luajit-2.1"
+    DEPS_CMAKE_FLAGS="-DUSE_BUNDLED_LUV=ON -DUSE_BUNDLED_LPEG=ON -DLUAJIT_INCLUDE_DIR=/usr/include/luajit-2.1"
 
 %post-build
 

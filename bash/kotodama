@@ -25,7 +25,8 @@ cflags = -O2 -pipe -march=x86-64-v2
     --without-bash-malloc \
     --with-curses \
     --disable-nls \
-    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${CC:+CC=$CC}
 make
 
 %post-build

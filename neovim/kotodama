@@ -7,7 +7,7 @@ size = 14
 
 [source]
 url = https://github.com/neovim/neovim/archive/refs/tags/nightly.tar.gz
-sha256 = 8345f11f75cbb6460f92e96ed0520fe824487b5a47128c70fcab70d33772b129
+sha256 = c72b4951ffcb9b4a9260beeb95f045fe186da9fdec6c7735bd17648bf73f6a4f
 
 [deps]
 build = gcc clang cmake ninja make curl git pkgconf luajit

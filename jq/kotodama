@@ -19,7 +19,8 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-./configure --prefix=/usr --with-oniguruma=builtin --disable-docs
+./configure --prefix=/usr --with-oniguruma=builtin --disable-docs \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
 make
 
 %post-build

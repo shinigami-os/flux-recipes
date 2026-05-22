@@ -19,7 +19,8 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-./configure --prefix=/usr --with-openssl --with-zlib
+./configure --prefix=/usr --with-openssl --with-zlib \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
 make
 
 %post-build

@@ -24,7 +24,7 @@ cflags = -O2 -pipe -march=x86-64-v2
     --enable-libgdbm-compat \
     --disable-nls \
     --disable-static \
-    --build=x86_64-linux-musl
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
 make
 
 %post-build

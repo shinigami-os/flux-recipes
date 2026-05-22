@@ -25,7 +25,8 @@ cd build
   --prefix=/usr \
   --enable-languages=c,c++ \
   --disable-multilib \
-  --disable-bootstrap
+  --disable-bootstrap \
+  ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
 make
 
 %post-build

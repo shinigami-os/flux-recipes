@@ -30,7 +30,7 @@ cflags = -O2 -pipe -march=x86-64-v2
     --disable-libuuid \
     --disable-libblkid \
     --disable-nls \
-    --build=x86_64-linux-musl
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
 make
 
 %post-build

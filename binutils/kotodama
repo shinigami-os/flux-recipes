@@ -29,7 +29,7 @@ cd build
     --disable-nls \
     --disable-gold \
     --with-system-zlib \
-    --build=x86_64-linux-musl
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
 make
 
 %post-build

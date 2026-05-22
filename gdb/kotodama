@@ -22,7 +22,8 @@ cflags = -O2 -pipe -march=x86-64-v2
 ./configure \
   --prefix=/usr \
   --with-python=/usr/bin/python3 \
-  --disable-multilib
+  --disable-multilib \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
 make
 
 %post-build

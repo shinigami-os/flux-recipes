@@ -24,7 +24,8 @@ cflags = -O2 -pipe -march=x86-64-v2
   --enable-shared \
   --with-system-ffi \
   --with-openssl=/usr \
-  --enable-optimizations
+  --enable-optimizations \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
 make
 
 %post-build

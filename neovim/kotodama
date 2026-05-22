@@ -19,6 +19,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
+unset DESTDIR
 make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr \
     DEPS_CMAKE_FLAGS="-DLUAJIT_INCLUDE_DIR=/usr/include/luajit-2.1 -DLUAJIT_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so"
 

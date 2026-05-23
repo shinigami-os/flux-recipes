@@ -26,6 +26,12 @@ cd build
   --enable-languages=c,c++ \
   --disable-multilib \
   --disable-bootstrap \
+  --with-gmp="${FLUX_CROSS_SYSROOT:-}/usr" \
+  --with-mpfr="${FLUX_CROSS_SYSROOT:-}/usr" \
+  --with-mpc="${FLUX_CROSS_SYSROOT:-}/usr" \
+  ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+  ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+  ${FLUX_CROSS_HOST:+CXX_FOR_BUILD=g++} \
   ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
   ${CC:+CC=$CC}
 make

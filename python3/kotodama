@@ -23,7 +23,7 @@ cflags = -O2 -pipe -march=x86-64-v2
   --prefix=/usr \
   --enable-shared \
   --with-system-ffi \
-  --with-openssl=/usr \
+  --with-openssl="${FLUX_CROSS_SYSROOT:-}/usr" \
   --enable-optimizations \
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${CC:+CC=$CC}

@@ -1,13 +1,13 @@
 [meta]
 name = gcc
-version = 16.1.0
+version = 14.2.0
 description = "The GNU Compiler Collection"
 license = GPL-3.0
-size = 180
+size = 100
 
 [source]
-url = https://ftp.gnu.org/gnu/gcc/gcc-16.1.0/gcc-16.1.0.tar.gz
-sha256 = 48be131b8c719db967cf0265a0ccb0cab2a3b224d5bb42f84904f0c1744213e6
+url = https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.xz
+sha256 = a7b39bc69cbf9e25826c5a60ab26477001f7c08d85cec04bc0e29cabed6f3cc9
 
 [deps]
 build = gcc make gmp mpfr mpc zlib
@@ -34,7 +34,7 @@ cd build
   ${FLUX_CROSS_HOST:+CXX_FOR_BUILD=g++} \
   ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
   ${CC:+CC=$CC}
-make CFLAGS_FOR_TARGET="-g -O2 -include stdbool.h"
+make
 
 %post-build
 

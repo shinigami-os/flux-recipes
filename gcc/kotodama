@@ -34,7 +34,7 @@ cd build
   ${FLUX_CROSS_HOST:+CXX_FOR_BUILD=g++} \
   ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
   ${CC:+CC=$CC}
-make
+make CFLAGS_FOR_TARGET="-g -O2 -include stdbool.h"
 
 %post-build
 

@@ -22,8 +22,8 @@ cflags = -O2 -pipe -march=x86-64-v2
 ./configure \
     --prefix=/usr \
     --disable-static \
-    --with-gmp=/usr \
-    --with-mpfr=/usr \
+    --with-gmp="${FLUX_CROSS_SYSROOT:-}/usr" \
+    --with-mpfr="${FLUX_CROSS_SYSROOT:-}/usr" \
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${CC:+CC=$CC}
 make

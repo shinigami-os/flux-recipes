@@ -1,13 +1,13 @@
 [meta]
 name = libnl
-version = 3.10.0
+version = 3.12.0
 description = "Netlink protocol library suite"
 license = LGPL-2.1-only
 size = 4
 
 [source]
-url = https://github.com/thom311/libnl/releases/download/libnl3_10_0/libnl-3.10.0.tar.gz
-sha256 = f4b08bd304f0b862f88e38f537bf04e8e4b79e5f430d139e7f1e7c773a9af8de
+url = https://github.com/thom311/libnl/archive/refs/tags/libnl3_12_0.tar.gz
+sha256 = a0dee52ff800a74cffbd02d64950ab7149a1df642dbdb4d601f66727b14ad021
 
 [deps]
 build = gcc make flex bison pkgconf

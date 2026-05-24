@@ -7,7 +7,7 @@ size = 35
 
 [source]
 url = https://ftp.gnu.org/gnu/binutils/binutils-2.46.0.tar.xz
-sha256 = 79b9752c84f4750868b1591565e914ecdea98521e96076929d94be0ac4e5f361
+sha256 = d75a94f4d73e7a4086f7513e67e439e8fcdcbb726ffe63f4661744e6256b2cf2
 
 [deps]
 build = gcc make flex bison zlib

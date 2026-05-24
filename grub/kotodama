@@ -39,7 +39,10 @@ cd build-bios
     --disable-grub-mkfont \
     --disable-grub-themes \
     --with-platform=pc \
-    --target=i386
+    --target=i386 \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+BUILD_CC=gcc}
 make
 cd ..
 
@@ -54,7 +57,10 @@ cd build-efi
     --disable-grub-mkfont \
     --disable-grub-themes \
     --with-platform=efi \
-    --target=x86_64
+    --target=x86_64 \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+BUILD_CC=gcc}
 make
 cd ..
 

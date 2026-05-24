@@ -6,7 +6,7 @@ license = GPL-3.0-or-later AND LGPL-2.1-or-later
 size = 35
 
 [source]
-url = https://ftp.gnu.org/gnu/binutils/binutils-2.46.tar.xz
+url = https://ftp.gnu.org/gnu/binutils/binutils-2.46.0.tar.xz
 sha256 = 79b9752c84f4750868b1591565e914ecdea98521e96076929d94be0ac4e5f361
 
 [deps]

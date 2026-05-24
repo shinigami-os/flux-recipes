@@ -10,13 +10,14 @@ url = https://github.com/thom311/libnl/archive/refs/tags/libnl3_12_0.tar.gz
 sha256 = a0dee52ff800a74cffbd02d64950ab7149a1df642dbdb4d601f66727b14ad021
 
 [deps]
-build = gcc make flex bison pkgconf
+build = gcc make flex bison pkgconf autoconf automake libtool
 runtime =
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+autoreconf -fi
 
 %build
 ./configure \

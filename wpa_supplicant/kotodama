@@ -37,10 +37,7 @@ CONFIG_CTRL_IFACE_UNIX=y
 CONFIG_DEBUG_FILE=y
 CONFIG_BACKEND=file
 EOF
-make \
-    PKG_CONFIG="${PKG_CONFIG:-pkg-config}" \
-    CFLAGS="-I${FLUX_CROSS_SYSROOT:-}/usr/include" \
-    LDFLAGS="-L${FLUX_CROSS_SYSROOT:-}/usr/lib"
+make
 
 %post-build
 

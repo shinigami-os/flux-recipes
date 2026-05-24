@@ -25,7 +25,6 @@ cflags = -O2 -pipe -march=x86-64-v2
     --libdir=lib \
     --release \
     no-tests \
-    ${FLUX_CROSS_HOST:+--cross-compile-prefix=$CROSS_COMPILE} \
     ${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}
 make
 

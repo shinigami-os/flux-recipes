@@ -19,7 +19,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-unset CROSS_COMPILE
+unset CC CXX CPP AR LD STRIP
 ./Configure linux-x86_64 \
     --prefix=/usr \
     --openssldir=/etc/ssl \

@@ -1,0 +1,50 @@
+[meta]
+name = wpa_supplicant
+version = 2.11
+description = "WPA/WPA2/WPA3 supplicant for Linux"
+license = BSD-3-Clause
+size = 2
+
+[source]
+url = https://w1.fi/releases/wpa_supplicant-2.11.tar.gz
+sha256 = 912ea06f74e30a8e36feef7fbfb694a45b57f0d70f45d87db67adf7b9eeec99e
+
+[deps]
+build = gcc make openssl libnl pkgconf
+runtime = openssl libnl
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cd wpa_supplicant
+cat > .config << 'EOF'
+CONFIG_DRIVER_NL80211=y
+CONFIG_DRIVER_WEXT=y
+CONFIG_TLS=openssl
+CONFIG_IEEE8021X_EAPOL=y
+CONFIG_EAP_TLS=y
+CONFIG_EAP_TTLS=y
+CONFIG_EAP_PEAP=y
+CONFIG_EAP_GTC=y
+CONFIG_EAP_MSCHAPV2=y
+CONFIG_SAE=y
+CONFIG_WPS=y
+CONFIG_CTRL_IFACE=y
+CONFIG_CTRL_IFACE_UNIX=y
+CONFIG_DEBUG_FILE=y
+CONFIG_BACKEND=file
+EOF
+make \
+    PKG_CONFIG="${PKG_CONFIG:-pkg-config}" \
+    CFLAGS="-I${FLUX_CROSS_SYSROOT:-}/usr/include" \
+    LDFLAGS="-L${FLUX_CROSS_SYSROOT:-}/usr/lib"
+
+%post-build
+
+%install
+cd wpa_supplicant
+make DESTDIR="$DESTDIR" install
+install -Dm644 wpa_supplicant.conf "$DESTDIR/etc/wpa_supplicant/wpa_supplicant.conf"

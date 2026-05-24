@@ -1,0 +1,35 @@
+[meta]
+name = openssl
+version = 3.3.2
+description = "TLS/SSL and crypto library"
+license = Apache-2.0
+size = 30
+
+[source]
+url = https://www.openssl.org/source/openssl-3.3.2.tar.gz
+sha256 = 2e8a40b01979afe8be0bbfb3de5dc1c6709fedb46d6c89c10da114ab5fc3d281
+
+[deps]
+build = gcc make perl
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./Configure linux-x86_64 \
+    --prefix=/usr \
+    --openssldir=/etc/ssl \
+    --libdir=lib \
+    --release \
+    no-tests \
+    ${FLUX_CROSS_HOST:+--cross-compile-prefix=$CROSS_COMPILE} \
+    ${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install_sw install_ssldirs

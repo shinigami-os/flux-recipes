@@ -1,0 +1,35 @@
+[meta]
+name = libnl
+version = 3.10.0
+description = "Netlink protocol library suite"
+license = LGPL-2.1-only
+size = 4
+
+[source]
+url = https://github.com/thom311/libnl/releases/download/libnl3_10_0/libnl-3.10.0.tar.gz
+sha256 = f4b08bd304f0b862f88e38f537bf04e8e4b79e5f430d139e7f1e7c773a9af8de
+
+[deps]
+build = gcc make flex bison pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --disable-static \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

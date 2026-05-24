@@ -7,7 +7,7 @@ size = 2
 
 [source]
 url = https://w1.fi/releases/wpa_supplicant-2.11.tar.gz
-sha256 = 912ea06f74e30a8e36feef7fbfb694a45b57f0d70f45d87db67adf7b9eeec99e
+sha256 = 912ea06f74e30a8e36fbb68064d6cdff218d8d591db0fc5d75dee6c81ac7fc0a
 
 [deps]
 build = gcc make openssl libnl pkgconf

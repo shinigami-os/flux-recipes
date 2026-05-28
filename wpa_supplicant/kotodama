@@ -10,8 +10,8 @@ url = https://w1.fi/releases/wpa_supplicant-2.11.tar.gz
 sha256 = 912ea06f74e30a8e36fbb68064d6cdff218d8d591db0fc5d75dee6c81ac7fc0a
 
 [deps]
-build = gcc make openssl libnl pkgconf
-runtime = openssl libnl
+build = gcc make libressl libnl pkgconf
+runtime = libressl libnl
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -37,11 +37,11 @@ CONFIG_CTRL_IFACE_UNIX=y
 CONFIG_DEBUG_FILE=y
 CONFIG_BACKEND=file
 EOF
-make BINDIR=/usr/bin SBINDIR=/usr/sbin
+make BINDIR=/usr/bin SBINDIR=/usr/sbin MANDIR=/usr/share/man LIBDIR=/usr/lib INCDIR=/usr/include DATADIR=/usr/share/wpa_supplicant ETCDIR=/etc/wpa_supplicant
 
 %post-build
 
 %install
 cd wpa_supplicant
-make BINDIR=/usr/bin SBINDIR=/usr/sbin DESTDIR="$DESTDIR" install
+make BINDIR=/usr/bin SBINDIR=/usr/sbin MANDIR=/usr/share/man LIBDIR=/usr/lib INCDIR=/usr/include DATADIR=/usr/share/wpa_supplicant ETCDIR=/etc/wpa_supplicant DESTDIR="$DESTDIR" install
 install -Dm644 wpa_supplicant.conf "$DESTDIR/etc/wpa_supplicant/wpa_supplicant.conf"

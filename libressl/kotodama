@@ -1,13 +1,13 @@
 [meta]
 name = libressl
-version = 3.9.2
+version = 4.3.1
 description = "LibreSSL TLS/crypto library (OpenSSL-compatible)"
 license = OpenSSL AND ISC AND BSD-3-Clause
 size = 8
 
 [source]
-url = https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-3.9.2.tar.gz
-sha256 = 7b031dac64a59eb6ee3304f7ffb75dad33ab8c9d279c847f92c89fb846068f97
+url = https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-4.3.1.tar.gz
+sha256 = c2db42ace14e7d5419826fab35a742ec6e4d12725a051a51d0cea3c10ba0fa50
 
 [deps]
 build = gcc make

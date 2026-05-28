@@ -17,34 +17,14 @@ runtime = bash
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-rm -rf build-bios build-efi
+rm -rf build-efi
 
 %build
 unset CFLAGS CXXFLAGS LDFLAGS
 export AWK=gawk
 _srcdir="$(pwd -P)"
 
-# Both targets built out-of-tree. extra_deps.lst must exist in the source tree
-# before make descends into grub-core (it references $(top_srcdir)/grub-core/extra_deps.lst).
 touch grub-core/extra_deps.lst
-
-mkdir -p build-bios
-cd build-bios
-"$_srcdir/configure" \
-    --prefix=/usr \
-    --sbindir=/usr/bin \
-    --sysconfdir=/etc \
-    --localstatedir=/var \
-    --disable-werror \
-    --disable-grub-mkfont \
-    --disable-grub-themes \
-    --with-platform=pc \
-    --target=i386 \
-    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
-    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
-    ${FLUX_CROSS_HOST:+BUILD_CC=gcc}
-make
-cd ..
 
 mkdir -p build-efi
 cd build-efi
@@ -59,21 +39,17 @@ cd build-efi
     --with-platform=efi \
     --target=x86_64 \
     ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
-    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
-    ${FLUX_CROSS_HOST:+BUILD_CC=gcc}
+    ${FLUX_CROSS_HOST:+BUILD_CC=gcc} \
+    ${CC:+CC=$CC}
 make
 cd ..
 
 %post-build
 
 %install
-cd build-bios
-make DESTDIR="$DESTDIR" install
-cd ..
-
 cd build-efi
 make DESTDIR="$DESTDIR" install
 cd ..
 
-# Install grub.cfg placeholder
 mkdir -p "$DESTDIR/boot/grub"
+mkdir -p "$DESTDIR/usr/lib/grub"

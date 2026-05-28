@@ -23,12 +23,11 @@ cflags = -O2 -pipe -march=x86-64-v2
     --prefix=/usr \
     --sysconfdir=/etc/ssl \
     --disable-static \
-    --disable-hardening \
     ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
-    ${FLUX_CROSS_HOST:+ac_cv_prog_cc_works=yes} \
-    ${FLUX_CROSS_HOST:+ac_cv_prog_cc_cross=yes} \
+    ${FLUX_CROSS_HOST:+CFLAGS="-I${FLUX_CROSS_SYSROOT}/include -I${FLUX_CROSS_SYSROOT}/usr/include"} \
+    ${FLUX_CROSS_HOST:+LDFLAGS="-L${FLUX_CROSS_SYSROOT}/lib -L${FLUX_CROSS_SYSROOT}/usr/lib"} \
     ${CC:+CC=$CC}
 make
 

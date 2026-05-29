@@ -1,0 +1,34 @@
+[meta]
+name = libmd
+version = 1.2.0
+description = "Message digest functions from BSD (MD5, SHA1, SHA256, etc.)"
+license = BSD-3-Clause AND BSD-2-Clause AND ISC
+size = 1
+
+[source]
+url = https://archive.hadrons.org/software/libmd/libmd-1.2.0.tar.xz
+sha256 = ac15ffb8430502fbaccdec66c5a82ee0eab0b0f36220df56710feadfeb13d0a0
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

@@ -1,0 +1,48 @@
+[meta]
+name = shadow
+version = 4.16.0
+description = "Login and password management utilities (useradd, passwd, groupadd...)"
+license = BSD-3-Clause AND GPL-2.0-only
+size = 4
+
+[source]
+url = https://github.com/shadow-maint/shadow/releases/download/4.16.0/shadow-4.16.0.tar.xz
+sha256 = 0b74f3f3af649f2d21f04f01a0dfd02706ef64f3c6ab16f8a8f540ac17e0cfba
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --disable-shared \
+    --without-libpam \
+    --without-selinux \
+    --without-audit \
+    --without-sssd \
+    --without-acl \
+    --without-attr \
+    --without-tcb \
+    --disable-nls \
+    --disable-man \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install
+
+# remove suid bits — let the system admin set them
+chmod 755 "$DESTDIR/usr/bin/passwd" 2>/dev/null || true

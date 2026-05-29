@@ -36,7 +36,8 @@ cflags = -O2 -pipe -march=x86-64-v2
     ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
-    ${CC:+CC=$CC}
+    ${CC:+CC=$CC} \
+    LIBS="-lbsd -lmd"
 make
 
 %post-build

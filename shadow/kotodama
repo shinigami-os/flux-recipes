@@ -37,7 +37,8 @@ cflags = -O2 -pipe -march=x86-64-v2
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
     ${CC:+CC=$CC} \
-    ac_cv_search_readpassphrase="-lbsd -lmd"
+    ac_cv_search_readpassphrase="-lbsd -lmd" \
+    CPPFLAGS="-I${FLUX_CROSS_SYSROOT:-}/usr/include/bsd"
 make
 
 %post-build

@@ -1,0 +1,26 @@
+[meta]
+name = os-prober
+version = 1.81
+description = "Detect other OSes for GRUB menu generation"
+license = GPL-2.0-only
+size = 1
+
+[source]
+url = http://ftp.debian.org/debian/pool/main/o/os-prober/os-prober_1.81.tar.xz
+sha256 = bb7c1b5c8b6ba83f845cfb7a31cc33b86a80a26e845e82e76dfcbb30b69b78cf
+
+[deps]
+build = make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+make install DESTDIR="$DESTDIR"

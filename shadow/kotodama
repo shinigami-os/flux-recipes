@@ -7,7 +7,7 @@ size = 4
 
 [source]
 url = https://github.com/shadow-maint/shadow/releases/download/4.16.0/shadow-4.16.0.tar.xz
-sha256 = 0b74f3f3af649f2d21f04f01a0dfd02706ef64f3c6ab16f8a8f540ac17e0cfba
+sha256 = b78e3921a95d53282a38e90628880624736bf6235e36eea50c50835f59a3530b
 
 [deps]
 build = gcc make

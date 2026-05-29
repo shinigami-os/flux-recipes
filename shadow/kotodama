@@ -37,7 +37,7 @@ cflags = -O2 -pipe -march=x86-64-v2
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
     ${CC:+CC=$CC} \
-    LIBS="-lbsd -lmd"
+    ac_cv_search_readpassphrase="-lbsd -lmd"
 make
 
 %post-build

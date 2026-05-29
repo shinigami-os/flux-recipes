@@ -19,8 +19,14 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
+make
 
 %post-build
 
 %install
-make install DESTDIR="$DESTDIR"
+install -Dm755 os-prober linux-boot-prober -t "$DESTDIR/usr/bin/"
+install -Dm755 newns "$DESTDIR/usr/lib/os-prober/newns"
+install -Dm644 common.sh "$DESTDIR/usr/share/os-prober/common.sh"
+cp -r os-probes "$DESTDIR/usr/lib/os-probes"
+cp -r linux-boot-probes "$DESTDIR/usr/lib/linux-boot-probes"
+chmod -R 755 "$DESTDIR/usr/lib/os-probes" "$DESTDIR/usr/lib/linux-boot-probes"

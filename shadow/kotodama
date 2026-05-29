@@ -17,9 +17,11 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+mkdir -p bsd-compat
+cp "${FLUX_CROSS_SYSROOT:-}/usr/include/bsd/readpassphrase.h" bsd-compat/
 
 %build
-export CPPFLAGS="-I${FLUX_CROSS_SYSROOT:-}/usr/include/bsd"
+export CPPFLAGS="-I$(pwd)/bsd-compat"
 export LDFLAGS="-L${FLUX_CROSS_SYSROOT:-}/usr/lib"
 ./configure \
     --prefix=/usr \
@@ -41,7 +43,7 @@ export LDFLAGS="-L${FLUX_CROSS_SYSROOT:-}/usr/lib"
     ${CC:+CC=$CC} \
     ac_cv_search_readpassphrase="-lbsd -lmd" \
     ac_cv_header_readpassphrase_h=yes
-make CPPFLAGS="-I${FLUX_CROSS_SYSROOT:-}/usr/include/bsd" LDFLAGS="-L${FLUX_CROSS_SYSROOT:-}/usr/lib"
+make
 
 %post-build
 

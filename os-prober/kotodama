@@ -7,7 +7,7 @@ size = 1
 
 [source]
 url = http://ftp.debian.org/debian/pool/main/o/os-prober/os-prober_1.81.tar.xz
-sha256 = bb7c1b5c8b6ba83f845cfb7a31cc33b86a80a26e845e82e76dfcbb30b69b78cf
+sha256 = 2fd928ec86538227711e2adf49cfd6a1ef74f6bb3555c5dad4e0425ccd978883
 
 [deps]
 build = make

@@ -40,6 +40,7 @@ cd build-efi
     --with-platform=efi \
     --target=x86_64 \
     ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${FLUX_CROSS_HOST:+BUILD_CC=gcc} \
     ${CC:+CC=$CC}
 make

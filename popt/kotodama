@@ -6,8 +6,8 @@ license = MIT
 size = 1
 
 [source]
-url = https://github.com/rpm-software-management/popt/releases/download/popt-1.19-release/popt-1.19.tar.gz
-sha256 = 0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5
+url = https://github.com/rpm-software-management/popt/archive/refs/tags/popt-1.19-release.tar.gz
+sha256 = 6eb40d650526cb9fe63eb4415bcecdf9cf306f7556e77eff689abc5a44670060
 
 [deps]
 build = gcc make

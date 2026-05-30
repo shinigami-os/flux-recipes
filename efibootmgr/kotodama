@@ -19,15 +19,17 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
+unset CROSS_COMPILE
 make \
+    CROSS_COMPILE="" \
+    PKG_CONFIG=pkg-config \
     ${CC:+CC=$CC} \
     ${AR:+AR=$AR} \
     ${LD:+LD=$LD} \
     ${STRIP:+STRIP=$STRIP} \
-    PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT:-}/usr/lib/pkgconfig" \
     EFIDIR=EFI \
-    LDFLAGS="-static -L${FLUX_CROSS_SYSROOT:-}/usr/lib" \
-    CFLAGS="${CFLAGS} -I${FLUX_CROSS_SYSROOT:-}/usr/include"
+    EXTRA_CFLAGS="-I${FLUX_CROSS_SYSROOT:-}/usr/include" \
+    LDFLAGS="-static -L${FLUX_CROSS_SYSROOT:-}/usr/lib"
 
 %post-build
 

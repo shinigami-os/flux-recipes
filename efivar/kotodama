@@ -36,6 +36,11 @@ cat > musl-compat/sys/cdefs.h << 'EOF'
 #ifndef __WORDSIZE
 #define __WORDSIZE 64
 #endif
+#include <sys/types.h>
+#ifndef __off64_t_defined
+typedef off_t off64_t;
+#define __off64_t_defined
+#endif
 EOF
 
 %build

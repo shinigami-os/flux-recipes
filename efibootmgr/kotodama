@@ -17,11 +17,9 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-mkdir -p build
 
 %build
-cd build
-cmake .. \
+cmake -S . -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     ${FLUX_CROSS_HOST:+-DCMAKE_SYSTEM_NAME=Linux} \
@@ -33,10 +31,9 @@ cmake .. \
     ${FLUX_CROSS_HOST:+-DPKG_CONFIG_EXECUTABLE=$(which pkg-config)} \
     ${FLUX_CROSS_HOST:+-DPKG_CONFIG_PATH=$FLUX_CROSS_SYSROOT/usr/lib/pkgconfig} \
     -DCMAKE_EXE_LINKER_FLAGS="-static"
-make
+cmake --build build
 
 %post-build
 
 %install
-cd build
-make DESTDIR="$DESTDIR" install
+DESTDIR="$DESTDIR" cmake --install build

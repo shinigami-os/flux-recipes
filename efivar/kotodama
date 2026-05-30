@@ -45,8 +45,10 @@ make \
     STATIC=1 \
     MARCH=x86-64-v2 \
     HOSTCC=gcc \
-    ${FLUX_CROSS_HOST:+CROSS_COMPILE=$CROSS_COMPILE} \
-    CC="${CC:-gcc} -I$(pwd)/musl-compat"
+    CC="${CC:-gcc} -I$(pwd)/musl-compat" \
+    ${AR:+AR=$AR} \
+    ${LD:+LD=$LD} \
+    ${STRIP:+STRIP=$STRIP}
 
 %post-build
 
@@ -55,4 +57,5 @@ make install DESTDIR="$DESTDIR" \
     ARCH=x86_64 \
     LIBDIR=/usr/lib \
     STATIC=1 \
-    ${FLUX_CROSS_HOST:+CROSS_COMPILE=$CROSS_COMPILE}
+    CC="${CC:-gcc} -I$(pwd)/musl-compat" \
+    ${AR:+AR=$AR}

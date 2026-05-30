@@ -39,7 +39,9 @@ cat > musl-compat/sys/cdefs.h << 'EOF'
 EOF
 
 %build
+unset CROSS_COMPILE
 make \
+    CROSS_COMPILE="" \
     ARCH=x86_64 \
     LIBDIR=/usr/lib \
     STATIC=1 \

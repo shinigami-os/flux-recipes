@@ -49,6 +49,9 @@ make
 
 %install
 make DESTDIR="$DESTDIR" install
-
-# remove suid bits — let the system admin set them
 chmod 755 "$DESTDIR/usr/bin/passwd" 2>/dev/null || true
+sed -i \
+    -e 's|^ENV_SUPATH.*|ENV_SUPATH\tPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin|' \
+    -e 's|^ENV_PATH.*|ENV_PATH\tPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin|' \
+    -e '/\/usr\/ucb/d' \
+    "$DESTDIR/etc/login.defs"

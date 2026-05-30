@@ -29,6 +29,7 @@ static inline int on_exit(void (*fn)(int, void*), void *arg) {
 #endif
 EOF
 sed -i '1s|^|#include "on_exit_compat.h"\n|' src/efisecdb.c
+sed -i '/^SUBDIRS/s/docs//' Makefile
 cat > musl-compat/sys/cdefs.h << 'EOF'
 #pragma once
 #define __BEGIN_DECLS

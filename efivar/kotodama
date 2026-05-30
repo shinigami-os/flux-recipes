@@ -70,7 +70,9 @@ make \
 %post-build
 
 %install
+unset CROSS_COMPILE
 make install DESTDIR="$DESTDIR" \
+    CROSS_COMPILE="" \
     ARCH=x86_64 \
     LIBDIR=/usr/lib \
     STATIC=1 \

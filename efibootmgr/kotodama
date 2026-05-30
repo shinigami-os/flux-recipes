@@ -11,7 +11,7 @@ sha256 = 2b195f912aa353f0d11f21f207684c91460fbc37f9a4f2673e63e5e32d108b10
 
 [deps]
 build = gcc make pkgconf efivar popt
-runtime =
+runtime = efivar
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -29,7 +29,7 @@ make \
     ${STRIP:+STRIP=$STRIP} \
     EFIDIR=EFI \
     EXTRA_CFLAGS="-I${FLUX_CROSS_SYSROOT:-}/usr/include" \
-    LDFLAGS="-static -L${FLUX_CROSS_SYSROOT:-}/usr/lib"
+    LDFLAGS="-L${FLUX_CROSS_SYSROOT:-}/usr/lib"
 
 %post-build
 

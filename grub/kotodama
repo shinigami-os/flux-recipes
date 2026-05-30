@@ -36,7 +36,6 @@ cd build-efi
     --disable-werror \
     --disable-grub-mkfont \
     --disable-grub-themes \
-    --with-grubdir=grub \
     --with-platform=efi \
     --target=x86_64 \
     ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
@@ -52,6 +51,9 @@ cd ..
 cd build-efi
 make DESTDIR="$DESTDIR" install
 cd ..
+
+sed -i 's|datarootdir="/usr/share"|datarootdir="/usr/share"\npkgdatadir="/usr/share/grub"|' \
+    "$DESTDIR/etc/grub.d/10_linux"
 
 mkdir -p "$DESTDIR/boot/grub"
 mkdir -p "$DESTDIR/usr/lib/grub"

@@ -19,12 +19,32 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+mkdir -p musl-compat/sys
+cat > musl-compat/sys/cdefs.h << 'EOF'
+#pragma once
+#define __BEGIN_DECLS
+#define __END_DECLS
+#define __THROW
+#define __NTH(fct) fct
+#define __nonnull(params)
+#define __wur
+#define __attribute_pure__
+#define __attribute_malloc__
+#define __attribute_alloc_size__(params)
+#define __attribute_warn_unused_result__
+#define __always_inline __inline __attribute__((__always_inline__))
+#ifndef __WORDSIZE
+#define __WORDSIZE 64
+#endif
+EOF
 
 %build
 make \
     ARCH=x86_64 \
     LIBDIR=/usr/lib \
     STATIC=1 \
+    CFLAGS="-I$(pwd)/musl-compat" \
+    MARCH=x86-64-v2 \
     ${FLUX_CROSS_HOST:+CROSS_COMPILE=$CROSS_COMPILE} \
     ${CC:+CC=$CC}
 
@@ -33,4 +53,6 @@ make \
 %install
 make install DESTDIR="$DESTDIR" \
     ARCH=x86_64 \
+    LIBDIR=/usr/lib \
+    STATIC=1 \
     ${FLUX_CROSS_HOST:+CROSS_COMPILE=$CROSS_COMPILE}

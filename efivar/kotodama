@@ -19,6 +19,8 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# on_exit() is glibc-only; musl lacks it. The call just frees memory before exit, safe to drop.
+sed -i 's/on_exit(free_actions, \&actions);//' src/efisecdb.c
 mkdir -p musl-compat/sys
 cat > musl-compat/sys/cdefs.h << 'EOF'
 #pragma once

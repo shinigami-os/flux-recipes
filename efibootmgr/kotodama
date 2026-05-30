@@ -7,7 +7,7 @@ size = 1
 
 [source]
 url = https://github.com/rhboot/efibootmgr/releases/download/18/efibootmgr-18.tar.bz2
-sha256 = 3dc5b4f8fd7e2c6db37a0e6d72c1a3d7a5cdf3a6cba394d1d7e4dd14b19c7f2a
+sha256 = 2b195f912aa353f0d11f21f207684c91460fbc37f9a4f2673e63e5e32d108b10
 
 [deps]
 build = gcc cmake pkgconf efivar popt

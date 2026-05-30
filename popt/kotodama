@@ -7,7 +7,7 @@ size = 1
 
 [source]
 url = https://github.com/rpm-software-management/popt/releases/download/popt-1.19-release/popt-1.19.tar.gz
-sha256 = c25a4838fc8e4c1c8aacb8bd620edb3084a3d63bf8987fdad3ca2758c63240f9
+sha256 = 0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5
 
 [deps]
 build = gcc make

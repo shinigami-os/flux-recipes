@@ -7,7 +7,7 @@ size = 2
 
 [source]
 url = https://github.com/rhboot/efivar/releases/download/39/efivar-39.tar.bz2
-sha256 = 1e240e3571f3a9c9f83c0f28e1b3fad2a31fcbd8e7d7d3b36e9cdf4f089e1b89
+sha256 = 0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5
 
 [deps]
 build = gcc make pkgconf

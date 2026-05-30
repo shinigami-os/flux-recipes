@@ -1,0 +1,42 @@
+[meta]
+name = efibootmgr
+version = 18
+description = "Tool for managing UEFI boot entries"
+license = GPL-2.0-or-later
+size = 1
+
+[source]
+url = https://github.com/rhboot/efibootmgr/releases/download/18/efibootmgr-18.tar.bz2
+sha256 = 3dc5b4f8fd7e2c6db37a0e6d72c1a3d7a5cdf3a6cba394d1d7e4dd14b19c7f2a
+
+[deps]
+build = gcc cmake pkgconf efivar popt
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p build
+
+%build
+cd build
+cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    ${FLUX_CROSS_HOST:+-DCMAKE_SYSTEM_NAME=Linux} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_C_COMPILER=$CC} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH=$FLUX_CROSS_SYSROOT} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY} \
+    ${FLUX_CROSS_HOST:+-DPKG_CONFIG_EXECUTABLE=$(which pkg-config)} \
+    ${FLUX_CROSS_HOST:+-DPKG_CONFIG_PATH=$FLUX_CROSS_SYSROOT/usr/lib/pkgconfig} \
+    -DCMAKE_EXE_LINKER_FLAGS="-static"
+make
+
+%post-build
+
+%install
+cd build
+make DESTDIR="$DESTDIR" install

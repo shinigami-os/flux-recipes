@@ -1,0 +1,36 @@
+[meta]
+name = popt
+version = 1.19
+description = "Command line option parsing library"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/rpm-software-management/popt/releases/download/popt-1.19-release/popt-1.19.tar.gz
+sha256 = c25a4838fc8e4c1c8aacb8bd620edb3084a3d63bf8987fdad3ca2758c63240f9
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --enable-static \
+    --disable-shared \
+    --disable-nls \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

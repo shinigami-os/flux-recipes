@@ -1,0 +1,36 @@
+[meta]
+name = efivar
+version = 39
+description = "Library and tool for manipulating EFI variables"
+license = LGPL-2.1-or-later
+size = 2
+
+[source]
+url = https://github.com/rhboot/efivar/releases/download/39/efivar-39.tar.bz2
+sha256 = 1e240e3571f3a9c9f83c0f28e1b3fad2a31fcbd8e7d7d3b36e9cdf4f089e1b89
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make \
+    ARCH=x86_64 \
+    LIBDIR=/usr/lib \
+    STATIC=1 \
+    ${FLUX_CROSS_HOST:+CROSS_COMPILE=$CROSS_COMPILE} \
+    ${CC:+CC=$CC}
+
+%post-build
+
+%install
+make install DESTDIR="$DESTDIR" \
+    ARCH=x86_64 \
+    ${FLUX_CROSS_HOST:+CROSS_COMPILE=$CROSS_COMPILE}

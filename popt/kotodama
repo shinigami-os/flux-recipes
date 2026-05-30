@@ -10,31 +10,28 @@ url = https://github.com/rpm-software-management/popt/archive/refs/tags/popt-1.1
 sha256 = 6eb40d650526cb9fe63eb4415bcecdf9cf306f7556e77eff689abc5a44670060
 
 [deps]
-build = gcc cmake make
+build = gcc make autoconf automake libtool pkgconf
 runtime =
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-mkdir -p build
+autoreconf -fi
 
 %build
-cd build
-cmake .. \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_SHARED_LIBS=OFF \
-    ${FLUX_CROSS_HOST:+-DCMAKE_SYSTEM_NAME=Linux} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_C_COMPILER=$CC} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH=$FLUX_CROSS_SYSROOT} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY}
+./configure \
+    --prefix=/usr \
+    --enable-static \
+    --disable-shared \
+    --disable-nls \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
 make
 
 %post-build
 
 %install
-cd build
 make DESTDIR="$DESTDIR" install

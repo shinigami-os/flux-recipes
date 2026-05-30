@@ -10,7 +10,7 @@ url = https://github.com/rhboot/efibootmgr/releases/download/18/efibootmgr-18.ta
 sha256 = 2b195f912aa353f0d11f21f207684c91460fbc37f9a4f2673e63e5e32d108b10
 
 [deps]
-build = gcc cmake pkgconf efivar popt
+build = gcc make pkgconf efivar popt
 runtime =
 
 [build]
@@ -19,21 +19,17 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-cmake -S . -B build \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    ${FLUX_CROSS_HOST:+-DCMAKE_SYSTEM_NAME=Linux} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_C_COMPILER=$CC} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH=$FLUX_CROSS_SYSROOT} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY} \
-    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY} \
-    ${FLUX_CROSS_HOST:+-DPKG_CONFIG_EXECUTABLE=$(which pkg-config)} \
-    ${FLUX_CROSS_HOST:+-DPKG_CONFIG_PATH=$FLUX_CROSS_SYSROOT/usr/lib/pkgconfig} \
-    -DCMAKE_EXE_LINKER_FLAGS="-static"
-cmake --build build
+make \
+    ${CC:+CC=$CC} \
+    ${AR:+AR=$AR} \
+    ${LD:+LD=$LD} \
+    ${STRIP:+STRIP=$STRIP} \
+    PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT:-}/usr/lib/pkgconfig" \
+    EFIDIR=EFI \
+    LDFLAGS="-static -L${FLUX_CROSS_SYSROOT:-}/usr/lib" \
+    CFLAGS="${CFLAGS} -I${FLUX_CROSS_SYSROOT:-}/usr/include"
 
 %post-build
 
 %install
-DESTDIR="$DESTDIR" cmake --install build
+make install DESTDIR="$DESTDIR" EFIDIR=EFI

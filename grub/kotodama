@@ -36,6 +36,7 @@ cd build-efi
     --disable-werror \
     --disable-grub-mkfont \
     --disable-grub-themes \
+    --with-grubdir=grub \
     --with-platform=efi \
     --target=x86_64 \
     ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \

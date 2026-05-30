@@ -45,6 +45,7 @@ make \
     STATIC=1 \
     CFLAGS="-I$(pwd)/musl-compat" \
     MARCH=x86-64-v2 \
+    HOSTCC=gcc \
     ${FLUX_CROSS_HOST:+CROSS_COMPILE=$CROSS_COMPILE} \
     ${CC:+CC=$CC}
 

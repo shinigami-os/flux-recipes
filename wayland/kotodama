@@ -23,10 +23,9 @@ unset PKG_CONFIG_LIBDIR
 unset PKG_CONFIG_PATH
 exec /usr/bin/pkg-config "$@"
 WRAPPER
-chmod +x native-pkgconfig.sh
 cat > native-file.ini << EOF
 [binaries]
-pkgconfig = '$(pwd)/native-pkgconfig.sh'
+pkgconfig = ['sh', '$(pwd)/native-pkgconfig.sh']
 EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF

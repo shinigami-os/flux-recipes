@@ -56,6 +56,7 @@ meson setup build \
     -Dsuspend_resume=consolekit \
     -Dlibaudit=no \
     -Dppp=false \
+    -Dlibpsl=false \
     -Dpolkit=false \
     -Ddhcpcd=no \
     -Ddhcpcanon=no \
@@ -66,7 +67,15 @@ meson setup build \
     -Dovs=false \
     -Dnmtui=false \
     -Dnm_cloud_setup=false \
-    -Dqt=false
+    -Dqt=false \
+    -Debpf=false \
+    -Dconcheck=false \
+    -Dofono=false \
+    -Dfirewalld_zone=false \
+    -Dmore_logging=false \
+    -Dld_gc=false \
+    -Dsession_tracking_consolekit=false \
+    -Dwext=false
 ninja -C build
 
 %post-build

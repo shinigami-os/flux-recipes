@@ -32,6 +32,7 @@ WRAPPER
 cat > native-file.ini << EOF
 [binaries]
 pkgconfig = ['sh', '$(pwd)/native-pkgconfig.sh']
+wayland-scanner = '/usr/bin/wayland-scanner'
 EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF

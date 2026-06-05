@@ -19,6 +19,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 sed -i "s/xsltproc = find_program('xsltproc')/xsltproc = find_program('xsltproc', required: false)/" meson.build
 sed -i "s/value: 'nss', description: 'Cryptography/value: 'null', description: 'Cryptography/" meson_options.txt
+sed -i '1s|^|#ifndef NETLINK_GET_STRICT_CHK\n#define NETLINK_GET_STRICT_CHK 12\n#endif\n|' src/libnm-platform/nm-netlink.c
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

@@ -24,4 +24,13 @@ cflags =
 
 %install
 install -Dm644 tllist.h "$DESTDIR/usr/include/tllist.h"
-install -Dm644 tllist.pc "$DESTDIR/usr/lib/pkgconfig/tllist.pc"
+mkdir -p "$DESTDIR/usr/lib/pkgconfig"
+cat > "$DESTDIR/usr/lib/pkgconfig/tllist.pc" << EOF
+prefix=/usr
+includedir=\${prefix}/include
+
+Name: tllist
+Description: Typed linked list C header
+Version: 1.1.0
+Cflags: -I\${includedir}
+EOF

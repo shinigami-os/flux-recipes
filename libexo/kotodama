@@ -10,42 +10,25 @@ url = https://archive.xfce.org/src/xfce/exo/4.21/exo-4.21.0.tar.bz2
 sha256 = 26f85ca2db3bcf99d8b8af28b0d565b0186ccc3d2ed4a5ba315f6a589b8bc2c9
 
 [deps]
-build = gcc meson ninja pkgconf gtk3 glib libxfce4util
+build = gcc make pkgconf gtk3 glib libxfce4util
 runtime = gtk3 glib libxfce4util
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-if [ -n "$FLUX_CROSS_HOST" ]; then
-cat > cross-file.ini << EOF
-[host_machine]
-system = 'linux'
-cpu_family = 'x86_64'
-cpu = 'x86_64'
-endian = 'little'
-[binaries]
-c = '${CC:-gcc}'
-ar = '${AR:-ar}'
-strip = '${STRIP:-strip}'
-pkg-config = 'pkg-config'
-[properties]
-sys_root = '${FLUX_CROSS_SYSROOT}'
-pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
-EOF
-fi
 
 %build
-meson setup build \
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
     --prefix=/usr \
-    --buildtype=release \
-    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dintrospection=false \
-    -Dvala=false \
-    -Ddocs=false
-ninja -C build
+    --disable-static \
+    --disable-introspection \
+    --disable-gtk-doc \
+    --disable-vala
+make
 
 %post-build
 
 %install
-DESTDIR="$DESTDIR" ninja -C build install
+make DESTDIR="$DESTDIR" install

@@ -17,6 +17,7 @@ runtime = glib dbus libnl
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i "s/xsltproc = find_program('xsltproc')/xsltproc = find_program('xsltproc', required: false)/" meson.build
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

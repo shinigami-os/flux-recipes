@@ -1,13 +1,13 @@
 [meta]
 name = libnma
-version = 1.10.10
+version = 1.10.6
 description = "NetworkManager applet library"
 license = LGPL-2.1-or-later
 size = 2
 
 [source]
-url = https://download.gnome.org/sources/libnma/1.10/libnma-1.10.10.tar.xz
-sha256 = 6e95d3011ecc51a72fec8b2a8e5b06b4e134c2b2cfe513bfce42d9029c6c8dd1
+url = https://download.gnome.org/sources/libnma/1.10/libnma-1.10.6.tar.xz
+sha256 = 53a6fb2b190ad37c5986caed3e98bede7c3c602399ee4f93c8fc054303d76dab
 
 [deps]
 build = gcc meson ninja pkgconf networkmanager gtk4 glib

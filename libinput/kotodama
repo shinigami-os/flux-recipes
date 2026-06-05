@@ -6,8 +6,8 @@ license = MIT
 size = 3
 
 [source]
-url = https://gitlab.freedesktop.org/libinput/libinput/-/releases/1.26.2/downloads/libinput-1.26.2.tar.xz
-sha256 = d0cfa1466c25d67bf30a29240391a2a901cf1278d600ea0ce1c0774646d3511f
+url = https://gitlab.freedesktop.org/libinput/libinput/-/archive/1.26.2/libinput-1.26.2.tar.xz
+sha256 = de2676137aebb2476c93f945be62d90f65e8695dbe627a835a32f93faa97c11a
 
 [deps]
 build = gcc meson ninja pkgconf libevdev mtdev libdrm udev

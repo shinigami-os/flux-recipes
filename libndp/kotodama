@@ -32,5 +32,5 @@ make -C libndp
 %post-build
 
 %install
-make -C libndp DESTDIR="$DESTDIR" install
-install -Dm644 libndp/ndp.h "$DESTDIR/usr/include/ndp.h"
+make DESTDIR="$DESTDIR" install-libLTLIBRARIES install-pkgconfigDATA
+find . -name "ndp.h" -exec install -Dm644 {} "$DESTDIR/usr/include/ndp.h" \;

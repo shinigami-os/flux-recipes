@@ -18,6 +18,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 sed -i "s/xsltproc = find_program('xsltproc')/xsltproc = find_program('xsltproc', required: false)/" meson.build
+sed -i "s/^option('crypto'.*/'crypto', type: 'combo', choices: ['nss', 'gnutls', 'null'], value: 'null'/" meson_options.txt
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]
@@ -54,7 +55,6 @@ meson setup build \
     -Dsession_tracking=no \
     -Dsuspend_resume=consolekit \
     -Dlibaudit=no \
-    -Dcrypto=null \
     -Dpolkit=false \
     -Ddhcpcd=no \
     -Ddhcpcanon=no \

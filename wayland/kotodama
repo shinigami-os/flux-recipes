@@ -23,6 +23,7 @@ sed -i \
 sed -i \
     "s|wayland_scanner_for_build = find_program(scanner_dep.get_variable(pkgconfig: 'wayland_scanner'))|wayland_scanner_for_build = find_program('wayland-scanner', native: true)|" \
     src/meson.build
+sed -i "/meson.override_find_program('wayland-scanner'/d" src/meson.build
 cat > native-pkgconfig.sh << 'WRAPPER'
 #!/bin/sh
 unset PKG_CONFIG_LIBDIR

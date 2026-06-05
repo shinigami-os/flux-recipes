@@ -33,6 +33,3 @@ make -C libndp
 
 %install
 make -C libndp DESTDIR="$DESTDIR" install
-mkdir -p "$DESTDIR/usr/include" "$DESTDIR/usr/lib/pkgconfig"
-cp libndp/ndp.h "$DESTDIR/usr/include/"
-sed "s|^prefix=.*|prefix=/usr|" libndp/libndp.pc > "$DESTDIR/usr/lib/pkgconfig/libndp.pc"

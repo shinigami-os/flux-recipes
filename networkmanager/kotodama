@@ -53,6 +53,7 @@ meson setup build \
     -Dsystemd_journal=false \
     -Dsession_tracking=no \
     -Dsuspend_resume=consolekit \
+    -Dlibaudit=no \
     -Dpolkit=false \
     -Ddhcpcd=no \
     -Ddhcpcanon=no \

@@ -57,7 +57,6 @@ meson setup build \
     -Dgallium-va=disabled \
     -Dgallium-vdpau=disabled \
     -Dgallium-xa=disabled \
-    -Dglslang=disabled \
     -Db_ndebug=true
 ninja -C build
 

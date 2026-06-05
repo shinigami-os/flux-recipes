@@ -46,7 +46,6 @@ meson setup build \
     -Dvapi=false \
     -Ddocs=false \
     -Dtests=no \
-    -Difnet=false \
     -Dnetconfig=no \
     -Dselinux=false \
     -Dsystemdsystemunitdir=no \
@@ -56,7 +55,7 @@ meson setup build \
     -Ddhcpcanon=no \
     -Dwifi=true \
     -Diwd=false \
-    -Dteamd=false \
+    -Dteamdctl=false \
     -Dmodem_manager=false \
     -Dovs=false \
     -Dnmtui=false \

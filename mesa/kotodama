@@ -17,6 +17,7 @@ runtime = libdrm libglvnd expat zlib
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+LLVM_CONFIG_BIN="$(find /usr/lib/llvm-*/bin/llvm-config /usr/bin/llvm-config-* 2>/dev/null | sort -V | tail -1)"
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]
@@ -30,6 +31,7 @@ cpp = '${CXX:-g++}'
 ar = '${AR:-ar}'
 strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
+llvm-config = '${LLVM_CONFIG_BIN}'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
 pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
@@ -38,6 +40,8 @@ fi
 
 %build
 rm -rf build
+LLVM_CONFIG_BIN="$(find /usr/lib/llvm-*/bin/llvm-config /usr/bin/llvm-config-* 2>/dev/null | sort -V | tail -1)"
+export LLVM_CONFIG="$LLVM_CONFIG_BIN"
 meson setup build \
     --prefix=/usr \
     --buildtype=release \

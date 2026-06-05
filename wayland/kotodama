@@ -17,6 +17,17 @@ runtime = expat libffi
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+cat > native-pkgconfig.sh << 'WRAPPER'
+#!/bin/sh
+unset PKG_CONFIG_LIBDIR
+unset PKG_CONFIG_PATH
+exec /usr/bin/pkg-config "$@"
+WRAPPER
+chmod +x native-pkgconfig.sh
+cat > native-file.ini << EOF
+[binaries]
+pkgconfig = '$(pwd)/native-pkgconfig.sh'
+EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]
@@ -39,6 +50,7 @@ fi
 meson setup build \
     --prefix=/usr \
     --buildtype=release \
+    --native-file=native-file.ini \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Ddocumentation=false \
     -Dtests=false \

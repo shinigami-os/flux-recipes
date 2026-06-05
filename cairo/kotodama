@@ -45,8 +45,6 @@ meson setup build \
     -Dfontconfig=enabled \
     -Dxlib=disabled \
     -Dxcb=disabled \
-    -Dopengl=disabled \
-    -Dglesv2=disabled \
     -Dpng=disabled \
     -Dspectre=disabled \
     -Dsymbol-lookup=disabled

@@ -41,8 +41,8 @@ meson setup build \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dintrospection=false \
-    -Dvala=false \
-    -Ddocs=false
+    -Dvala=disabled \
+    -Dgtk-doc=false
 ninja -C build
 
 %post-build

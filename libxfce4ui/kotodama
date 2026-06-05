@@ -41,11 +41,12 @@ meson setup build \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dintrospection=false \
-    -Dvala=false \
-    -Dgladeui=false \
-    -Dstartup-notification=false \
-    -Dlibsm=false \
-    -Ddocs=false
+    -Dvala=disabled \
+    -Dstartup-notification=disabled \
+    -Dsession-management=disabled \
+    -Dx11=disabled \
+    -Dwayland=disabled \
+    -Dgtk-doc=false
 ninja -C build
 
 %post-build

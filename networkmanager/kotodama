@@ -54,6 +54,7 @@ meson setup build \
     -Dsession_tracking=no \
     -Dsuspend_resume=consolekit \
     -Dlibaudit=no \
+    -Dcrypto=null \
     -Dpolkit=false \
     -Ddhcpcd=no \
     -Ddhcpcanon=no \

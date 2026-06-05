@@ -41,9 +41,10 @@ meson setup build \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dintrospection=disabled \
-    -Dx11=false \
+    -Dx11=disabled \
     -Ddocs=false \
-    -Dtests=false
+    -Duse_systemd=false \
+    -Dgtk2_atk_adaptor=false
 ninja -C build
 
 %post-build

@@ -1,0 +1,61 @@
+[meta]
+name = gtk4
+version = 4.16.12
+description = "GTK 4 widget toolkit"
+license = LGPL-2.1-or-later
+size = 60
+
+[source]
+url = https://download.gnome.org/sources/gtk/4.16/gtk-4.16.12.tar.xz
+sha256 = ef31bdbd6f082c4401634a20c850b0050c9bf252ef1e079764ee95a2a0c4c95a
+
+[deps]
+build = gcc meson ninja pkgconf glib pango cairo gdk-pixbuf graphene libxkbcommon wayland wayland-protocols libepoxy
+runtime = glib pango cairo gdk-pixbuf graphene libxkbcommon wayland libepoxy
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dx11-backend=false \
+    -Dwayland-backend=true \
+    -Dbroadway-backend=false \
+    -Dvulkan=disabled \
+    -Dintrospection=disabled \
+    -Ddemos=false \
+    -Dbuild-examples=false \
+    -Dbuild-tests=false \
+    -Dbuild-testsuite=false \
+    -Dmedia-gstreamer=disabled \
+    -Dmedia-ffmpeg=disabled \
+    -Dman-pages=false \
+    -Dgtk_doc=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -1,0 +1,35 @@
+[meta]
+name = lua54
+version = 5.4.7
+description = "Lua 5.4 scripting language"
+license = MIT
+size = 1
+
+[source]
+url = https://www.lua.org/ftp/lua-5.4.7.tar.gz
+sha256 = 9fbf5e28ef86c69858f6d3d34eccc32e911c1a28b4120ff3e84aaa70cfbf1e30
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make \
+    MYCFLAGS="${CFLAGS} -fPIC" \
+    CC="${CC:-gcc}" \
+    AR="${AR:-ar} rcu" \
+    RANLIB="${RANLIB:-ranlib}" \
+    linux
+
+%post-build
+
+%install
+make \
+    INSTALL_TOP="$DESTDIR/usr" \
+    TO_LIB="liblua.a liblua.so liblua.so.5 liblua.so.5.4 liblua.so.5.4.7" \
+    install

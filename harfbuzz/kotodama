@@ -1,0 +1,55 @@
+[meta]
+name = harfbuzz
+version = 10.2.0
+description = "OpenType text shaping engine"
+license = MIT
+size = 5
+
+[source]
+url = https://github.com/harfbuzz/harfbuzz/releases/download/10.2.0/harfbuzz-10.2.0.tar.xz
+sha256 = 620e3468faec2ea8685d32c46a58469b850ef63040b3565cde05959825b48227
+
+[deps]
+build = gcc meson ninja pkgconf freetype glib
+runtime = freetype glib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+cpp = '${CXX:-g++}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dintrospection=disabled \
+    -Ddocs=disabled \
+    -Dtests=disabled \
+    -Dbenchmark=disabled \
+    -Dcairo=disabled \
+    -Dchafa=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

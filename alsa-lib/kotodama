@@ -1,0 +1,36 @@
+[meta]
+name = alsa-lib
+version = 1.2.13
+description = "Advanced Linux Sound Architecture library"
+license = LGPL-2.1-or-later
+size = 5
+
+[source]
+url = https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.13.tar.bz2
+sha256 = 8c4ff37553cbe89618e187e4c779f71a9bb2a8b27b91f87ed40987cc9233d8f6
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --disable-python \
+    --without-debug \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

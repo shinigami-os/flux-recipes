@@ -1,0 +1,53 @@
+[meta]
+name = wlroots
+version = 0.18.2
+description = "Modular Wayland compositor library"
+license = MIT
+size = 5
+
+[source]
+url = https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.18.2/downloads/wlroots-0.18.2.tar.gz
+sha256 = cf776c169169f279808d9eabc6583f484338dcd454c966a285ff178c88c105d4
+
+[deps]
+build = gcc meson ninja pkgconf wayland wayland-protocols libxkbcommon libdrm libinput seatd mesa libglvnd pixman
+runtime = wayland libxkbcommon libdrm libinput seatd mesa pixman
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dxwayland=disabled \
+    -Dexamples=false \
+    -Drenderers=gles2 \
+    -Dallocators=gbm \
+    -Dbackends=drm,libinput
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -1,0 +1,55 @@
+[meta]
+name = libdrm
+version = 2.4.123
+description = "Direct Rendering Manager library"
+license = MIT
+size = 2
+
+[source]
+url = https://dri.freedesktop.org/libdrm/libdrm-2.4.123.tar.xz
+sha256 = a2b98567a149a74b0f50e91e825f9c0315d86e7be9b74394dae8b298caadb79e
+
+[deps]
+build = gcc meson ninja pkgconf libpciaccess
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dtests=false \
+    -Dman-pages=disabled \
+    -Damdgpu=enabled \
+    -Dradeon=enabled \
+    -Dintel=enabled \
+    -Dvmwgfx=enabled \
+    -Dnouveau=enabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

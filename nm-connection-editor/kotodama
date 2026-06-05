@@ -1,0 +1,36 @@
+[meta]
+name = nm-connection-editor
+version = 1.36.0
+description = "NetworkManager GUI connection editor"
+license = GPL-2.0-or-later
+size = 3
+
+[source]
+url = https://download.gnome.org/sources/network-manager-applet/1.36/network-manager-applet-1.36.0.tar.xz
+sha256 = a84704487ea3afe1485c47fb2ab598b8f779f540ae0dcbf0a1c5f85e64a7e253
+
+[deps]
+build = gcc meson ninja pkgconf networkmanager gtk4 glib libnma
+runtime = networkmanager gtk4 glib libnma
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    -Dappindicator=no \
+    -Dselinux=false \
+    -Dwwan=false \
+    -Dteam=false \
+    -Dintrospection=false \
+    -Dlibnma-gtk4=true
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

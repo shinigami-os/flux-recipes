@@ -1,0 +1,51 @@
+[meta]
+name = pango
+version = 1.54.0
+description = "Text layout and rendering library"
+license = LGPL-2.1-or-later
+size = 2
+
+[source]
+url = https://download.gnome.org/sources/pango/1.54/pango-1.54.0.tar.xz
+sha256 = 8a9eed75021ee734d7fc0fdf3a65c3bba51dfefe4ae51a9b414a60c70b2d1ed8
+
+[deps]
+build = gcc meson ninja pkgconf glib cairo harfbuzz fontconfig fribidi
+runtime = glib cairo harfbuzz fontconfig fribidi
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dintrospection=disabled \
+    -Ddocumentation=false \
+    -Dbuild-testsuite=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

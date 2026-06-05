@@ -1,0 +1,35 @@
+[meta]
+name = expat
+version = 2.6.4
+description = "XML parsing library"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/libexpat/libexpat/releases/download/R_2_6_4/expat-2.6.4.tar.xz
+sha256 = a695629dae047055b37d50a0ff4776d1d45d0a4c842cf4ccee158441f55ff7ee
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --without-docbook \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

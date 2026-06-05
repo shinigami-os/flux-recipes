@@ -1,0 +1,56 @@
+[meta]
+name = glib
+version = 2.82.4
+description = "GLib core library: GObject, GIO, GModule"
+license = LGPL-2.1-or-later
+size = 15
+
+[source]
+url = https://download.gnome.org/sources/glib/2.82/glib-2.82.4.tar.xz
+sha256 = 37dd0877fe964cd15e9a2710b044a1830fb1bd93652a6d0cb6b8b2dff187c709
+
+[deps]
+build = gcc meson ninja pkgconf libffi pcre2 zlib
+runtime = libffi pcre2 zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dtests=false \
+    -Dintrospection=disabled \
+    -Ddocumentation=false \
+    -Dman-pages=disabled \
+    -Dinstalled_tests=false \
+    -Dglib_debug=disabled \
+    -Dselinux=disabled \
+    -Dsysprof=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

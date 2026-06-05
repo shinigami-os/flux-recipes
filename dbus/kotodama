@@ -1,0 +1,43 @@
+[meta]
+name = dbus
+version = 1.16.0
+description = "D-Bus message bus system"
+license = GPL-2.0-or-later AND AFL-2.1
+size = 3
+
+[source]
+url = https://dbus.freedesktop.org/releases/dbus/dbus-1.16.0.tar.xz
+sha256 = 9f8ca5eb51cbe09951aec8624b86c292990ae2428b41b856e2bed17ec65c8849
+
+[deps]
+build = gcc cmake ninja pkgconf expat
+runtime = expat
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DDBUS_SESSION_SOCKET_DIR=/run/user \
+    -DDBUS_SYSTEM_SOCKET=/run/dbus/system_bus_socket \
+    -DDBUS_SYSTEM_PID_FILE=/run/dbus/pid \
+    -DDBUS_ENABLE_XML_DOCS=OFF \
+    -DDBUS_ENABLE_DOXYGEN_DOCS=OFF \
+    -DDBUS_BUILD_TESTS=OFF \
+    -DDBUS_WITH_GLIB=OFF \
+    ${FLUX_CROSS_HOST:+-DCMAKE_SYSTEM_NAME=Linux} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_C_COMPILER=$CC} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH=$FLUX_CROSS_SYSROOT} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY}
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

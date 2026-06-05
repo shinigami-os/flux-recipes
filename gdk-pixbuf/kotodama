@@ -1,0 +1,56 @@
+[meta]
+name = gdk-pixbuf
+version = 2.42.12
+description = "Image loading library for GTK"
+license = LGPL-2.1-or-later
+size = 3
+
+[source]
+url = https://download.gnome.org/sources/gdk-pixbuf/2.42/gdk-pixbuf-2.42.12.tar.xz
+sha256 = b9505b3445b9a7e48ced34760c3bcb73e966df3ac94c95a148cb669ab748e3c7
+
+[deps]
+build = gcc meson ninja pkgconf glib libpng libjpeg
+runtime = glib libpng libjpeg
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dintrospection=disabled \
+    -Dman=false \
+    -Dgtk_doc=false \
+    -Dtests=false \
+    -Dinstalled_tests=false \
+    -Dpng=enabled \
+    -Djpeg=enabled \
+    -Dtiff=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

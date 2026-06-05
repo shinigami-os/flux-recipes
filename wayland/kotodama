@@ -1,0 +1,51 @@
+[meta]
+name = wayland
+version = 1.23.1
+description = "Wayland display server protocol and libraries"
+license = MIT
+size = 1
+
+[source]
+url = https://gitlab.freedesktop.org/wayland/wayland/-/releases/1.23.1/downloads/wayland-1.23.1.tar.xz
+sha256 = 864fb2a8399e2d0ec39d56e9d9b753c093775beadc6022ce81f441929a81e5ed
+
+[deps]
+build = gcc meson ninja pkgconf expat libffi
+runtime = expat libffi
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Ddocumentation=false \
+    -Dtests=false \
+    -Ddtd_validation=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

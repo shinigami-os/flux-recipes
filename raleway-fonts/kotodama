@@ -1,0 +1,26 @@
+[meta]
+name = raleway-fonts
+version = 4.020
+description = "Raleway - elegant sans-serif typeface"
+license = OFL-1.1
+size = 5
+
+[source]
+url = https://www.1001fonts.com/download/raleway.zip
+sha256 = 82a48346d59f395ac365b4aca6d3bc782d9286767ab0963e6182962d765b9034
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+find . -name "*.ttf" -exec install -Dm644 {} "$DESTDIR/usr/share/fonts/raleway/{}" \;

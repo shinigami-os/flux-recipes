@@ -1,0 +1,52 @@
+[meta]
+name = xfconf
+version = 4.21.0
+description = "Xfce configuration system"
+license = LGPL-2.1-or-later
+size = 1
+
+[source]
+url = https://archive.xfce.org/src/xfce/xfconf/4.21/xfconf-4.21.0.tar.xz
+sha256 = 0c2d749cc9109e5c5f2b92687faa20b7136c38ff5873e3b5d3ee53fe4e7cf1d4
+
+[deps]
+build = gcc meson ninja pkgconf glib dbus
+runtime = glib dbus
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dintrospection=false \
+    -Dvala=false \
+    -Dbash-completion=false \
+    -Ddocs=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

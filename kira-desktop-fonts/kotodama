@@ -1,0 +1,23 @@
+[meta]
+name = kira-desktop-fonts
+version = 1.0
+description = "Font meta-package: Raleway + JetBrains Mono Nerd Font"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = raleway-fonts jetbrains-mono-nerd-font
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

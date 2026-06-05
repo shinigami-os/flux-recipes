@@ -1,0 +1,52 @@
+[meta]
+name = fcft
+version = 3.1.9
+description = "Simple library for font loading and glyph rasterization"
+license = MIT
+size = 1
+
+[source]
+url = https://codeberg.org/dnkl/fcft/archive/3.1.9.tar.gz
+sha256 = 4b7e3b2ab7e14f532d8a9cb0f2d3b0cdf9d2919b95e6ab8030f7ac87d059c2b6
+
+[deps]
+build = gcc meson ninja pkgconf freetype fontconfig harfbuzz pixman tllist
+runtime = freetype fontconfig harfbuzz pixman
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dpgo=disabled \
+    -Dsvg-backend=none \
+    -Ddocs=disabled \
+    -Dtests=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

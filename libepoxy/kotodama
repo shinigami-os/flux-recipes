@@ -1,0 +1,53 @@
+[meta]
+name = libepoxy
+version = 1.5.10
+description = "OpenGL function pointer management library"
+license = MIT
+size = 1
+
+[source]
+url = https://download.gnome.org/sources/libepoxy/1.5/libepoxy-1.5.10.tar.xz
+sha256 = 072cda4b59dd098bba8c2363a6247299db1fa89411dc221c8b81b8ee8192e623
+
+[deps]
+build = gcc meson ninja pkgconf mesa
+runtime = mesa
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dx11=false \
+    -Degl=yes \
+    -Dglx=no \
+    -Dtests=false \
+    -Ddocs=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

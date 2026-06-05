@@ -1,0 +1,48 @@
+[meta]
+name = libpciaccess
+version = 0.18.1
+description = "Generic PCI access library"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.18.1.tar.xz
+sha256 = 4af43444b38adb5545d0ed1c2ce46d9608cc47b31c2387fc5181656765a6fa76
+
+[deps]
+build = gcc meson ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini}
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

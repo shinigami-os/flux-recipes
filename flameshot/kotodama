@@ -1,0 +1,39 @@
+[meta]
+name = flameshot
+version = 13.3.0
+description = "Powerful screenshot tool with annotation support"
+license = GPL-3.0-or-later
+size = 5
+
+[source]
+url = https://github.com/flameshot-org/flameshot/archive/refs/tags/v13.3.0.tar.gz
+sha256 = bd1666313c875400e9588b47eb3fd2f4d0828460b3705a215b97746ea654c1b4
+
+[deps]
+build = gcc cmake ninja pkgconf qt6-base qt6-svg
+runtime = qt6-base qt6-svg
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DUSE_WAYLAND_CLIPBOARD=true \
+    -DUSE_WAYLAND_GRIM=true \
+    ${FLUX_CROSS_HOST:+-DCMAKE_SYSTEM_NAME=Linux} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_C_COMPILER=$CC} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_CXX_COMPILER=$CXX} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH=$FLUX_CROSS_SYSROOT} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY}
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

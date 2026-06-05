@@ -1,0 +1,23 @@
+[meta]
+name = kira-desktop-audio
+version = 1.0
+description = "Audio stack meta-package: PipeWire + WirePlumber + pavucontrol"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = pipewire wireplumber pavucontrol
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

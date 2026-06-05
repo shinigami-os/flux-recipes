@@ -1,0 +1,38 @@
+[meta]
+name = pcre2
+version = 10.44
+description = "Perl-compatible regular expression library (v2)"
+license = BSD-3-Clause
+size = 2
+
+[source]
+url = https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.44/pcre2-10.44.tar.bz2
+sha256 = d34f02e113cf7193a1ebf2770d3ac527088d485d4e047ed10e5d217c6ef5de96
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --enable-pcre2-16 \
+    --enable-pcre2-32 \
+    --enable-jit \
+    --enable-unicode \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

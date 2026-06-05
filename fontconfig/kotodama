@@ -1,0 +1,51 @@
+[meta]
+name = fontconfig
+version = 2.15.0
+description = "Font configuration and customization library"
+license = MIT
+size = 2
+
+[source]
+url = https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.15.0.tar.xz
+sha256 = 63a0658d0e06e0fa886106452b58ef04f21f58202ea02a94c39de0d3335d7c0e
+
+[deps]
+build = gcc meson ninja pkgconf expat freetype glib
+runtime = expat freetype
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Ddoc=disabled \
+    -Dtests=disabled \
+    -Dtools=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

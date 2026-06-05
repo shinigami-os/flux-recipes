@@ -1,0 +1,37 @@
+[meta]
+name = wireplumber
+version = 0.5.14
+description = "PipeWire session and policy manager"
+license = MIT
+size = 5
+
+[source]
+url = https://gitlab.freedesktop.org/pipewire/wireplumber/-/archive/0.5.14/wireplumber-0.5.14.tar.gz
+sha256 = e91f04cd8cec75d72b8a2aaa7e90b1ba0a5e2094b7a882fc3a29a484a48a87e9
+
+[deps]
+build = gcc meson ninja pkgconf pipewire glib lua54
+runtime = pipewire glib lua54
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    -Ddoc=disabled \
+    -Dtests=disabled \
+    -Dintrospection=disabled \
+    -Dsystemd=disabled \
+    -Dsystemd-system-service=false \
+    -Dsystemd-user-service=false \
+    -Delogind=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

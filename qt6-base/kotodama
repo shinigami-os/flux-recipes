@@ -1,0 +1,42 @@
+[meta]
+name = qt6-base
+version = 6.8.3
+description = "Qt6 base framework"
+license = GPL-3.0-only OR LGPL-3.0-only
+size = 120
+
+[source]
+url = https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtbase-everywhere-src-6.8.3.tar.xz
+sha256 = 56001b905601bb9023d399f3ba780d7fa940f3e4861e496a7c490331f49e0b80
+
+[deps]
+build = gcc cmake ninja pkgconf glib dbus libglvnd mesa libdrm openssl libxkbcommon wayland wayland-protocols zlib
+runtime = glib dbus libglvnd libdrm openssl libxkbcommon wayland zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build \
+    -GNinja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DQT_BUILD_TESTS=OFF \
+    -DQT_BUILD_EXAMPLES=OFF \
+    -DFEATURE_xcb=OFF \
+    -DFEATURE_dbus=ON \
+    -DFEATURE_wayland=ON \
+    -DFEATURE_openssl=ON \
+    -DFEATURE_system_zlib=ON \
+    -DFEATURE_system_pcre2=ON \
+    -DFEATURE_system_harfbuzz=ON \
+    -DFEATURE_system_freetype=ON \
+    -DFEATURE_reduce_relocations=OFF
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

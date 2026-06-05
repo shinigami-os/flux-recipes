@@ -1,0 +1,4 @@
+name = swayFX
+package = kira-desktop-swayFX
+launch = /usr/bin/kira-start-swayFX
+description = SwayFX compositor with eww bar, fuzzel launcher and Mako notifications

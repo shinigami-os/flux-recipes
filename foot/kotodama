@@ -1,0 +1,32 @@
+[meta]
+name = foot
+version = 1.27.0
+description = "Fast, lightweight Wayland terminal emulator"
+license = MIT
+size = 2
+
+[source]
+url = https://codeberg.org/dnkl/foot/archive/1.27.0.tar.gz
+sha256 = 4e6131cc859ec6a36569f1978cf3617cc3836a681d13d228ded1b4885dab7770
+
+[deps]
+build = gcc meson ninja pkgconf wayland wayland-protocols libxkbcommon freetype fontconfig harfbuzz pixman fcft tllist scdoc
+runtime = wayland libxkbcommon freetype fontconfig harfbuzz pixman
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    -Ddocs=disabled \
+    -Dthemes=true
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

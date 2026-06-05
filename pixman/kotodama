@@ -1,0 +1,50 @@
+[meta]
+name = pixman
+version = 0.44.2
+description = "Low-level pixel manipulation library"
+license = MIT
+size = 1
+
+[source]
+url = https://cairographics.org/releases/pixman-0.44.2.tar.gz
+sha256 = 6349061ce1a338ab6952b92194d1b0377472244208d47ff25bef86fc71973466
+
+[deps]
+build = gcc meson ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dtests=disabled \
+    -Ddemos=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

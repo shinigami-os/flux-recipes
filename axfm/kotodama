@@ -1,0 +1,25 @@
+[meta]
+name = axfm
+version = TODO
+description = "GUI file manager"
+license = TODO
+size = 5
+
+[source]
+url = TODO
+sha256 = TODO
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

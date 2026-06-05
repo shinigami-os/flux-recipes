@@ -1,0 +1,25 @@
+[meta]
+name = kira-desktop-swayFX
+version = 1.0
+description = "SwayFX desktop environment meta-package"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = swayfx eww fuzzel mako swaylock-effects swaybg flameshot foot yazi thunar xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw nm-connection-editor kira-desktop-audio kira-desktop-fonts kira-desktop-portal
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -Dm644 "$FLUX_RECIPE_DIR/files/swayFX.desktop-env" "$DESTDIR/usr/share/kira-desktop/swayFX.desktop-env"
+install -Dm755 "$FLUX_RECIPE_DIR/files/kira-start-swayFX" "$DESTDIR/usr/bin/kira-start-swayFX"

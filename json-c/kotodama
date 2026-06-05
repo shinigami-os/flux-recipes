@@ -1,0 +1,38 @@
+[meta]
+name = json-c
+version = 0.17
+description = "JSON implementation in C"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/json-c/json-c/archive/refs/tags/json-c-0.17-20230812.tar.gz
+sha256 = 024d302a3aadcbf9f78735320a6d5aedf8b77876c8ac8bbb95081ca55054c7eb
+
+[deps]
+build = gcc cmake ninja
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_STATIC_LIBS=OFF \
+    ${FLUX_CROSS_HOST:+-DCMAKE_SYSTEM_NAME=Linux} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_C_COMPILER=$CC} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH=$FLUX_CROSS_SYSROOT} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY}
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

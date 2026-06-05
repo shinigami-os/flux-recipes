@@ -1,0 +1,27 @@
+[meta]
+name = jetbrains-mono-nerd-font
+version = 3.4.0
+description = "JetBrains Mono patched with Nerd Fonts icons"
+license = OFL-1.1
+size = 50
+
+[source]
+url = https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.tar.xz
+sha256 = ef552a3e638f25125c6ad4c51176a6adcdce295ab1d2ffacf0db060caf8c1582
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+mkdir -p "$DESTDIR/usr/share/fonts/jetbrains-mono-nerd"
+find . -name "*.ttf" -exec install -Dm644 {} "$DESTDIR/usr/share/fonts/jetbrains-mono-nerd/" \;

@@ -1,0 +1,45 @@
+[meta]
+name = pipewire
+version = 1.2.7
+description = "Low-latency audio/video router and processor"
+license = MIT
+size = 15
+
+[source]
+url = https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/1.2.7/pipewire-1.2.7.tar.gz
+sha256 = e93a7836c7307dcbc989e95fc7ec0878322514c475fabd90e89ed52fd4f15d32
+
+[deps]
+build = gcc meson ninja pkgconf glib alsa-lib dbus
+runtime = glib alsa-lib dbus
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    -Ddocs=disabled \
+    -Dtests=disabled \
+    -Dexamples=disabled \
+    -Dsession-managers=[] \
+    -Dgstreamer=disabled \
+    -Dffmpeg=disabled \
+    -Dbluez5=disabled \
+    -Djack=disabled \
+    -Dpw-cat=disabled \
+    -Davahi=disabled \
+    -Dsystemd=disabled \
+    -Dsdl2=disabled \
+    -Dlibusb=disabled \
+    -Dudev=enabled \
+    -Dalsa=enabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

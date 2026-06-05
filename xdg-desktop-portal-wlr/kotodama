@@ -1,0 +1,31 @@
+[meta]
+name = xdg-desktop-portal-wlr
+version = 0.8.2
+description = "XDG desktop portal backend for wlroots-based compositors"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/emersion/xdg-desktop-portal-wlr/releases/download/v0.8.2/xdg-desktop-portal-wlr-0.8.2.tar.gz
+sha256 = 5e6840d3326a4afb440c353ee19cf68d4e4fba40a5648224904b3a06612aae87
+
+[deps]
+build = gcc meson ninja pkgconf wayland wayland-protocols pipewire libdrm
+runtime = wayland pipewire
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    -Dsd-bus-provider=none
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

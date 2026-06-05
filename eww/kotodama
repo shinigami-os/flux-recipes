@@ -1,0 +1,27 @@
+[meta]
+name = eww
+version = 0.6.0
+description = "ElKowars wacky widgets - status bar and widgets in Scheme"
+license = MIT
+size = 20
+
+[source]
+url = https://github.com/elkowar/eww/archive/refs/tags/v0.6.0.tar.gz
+sha256 = cef361946946c566b79f8ddc6208d1a3f16b4ff9961439a3f86935e1cfa174a1
+
+[deps]
+build = rust cargo pkgconf gtk3 gdk-pixbuf pango
+runtime = gtk3 gdk-pixbuf pango
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cargo build --release --locked --no-default-features --features=wayland
+
+%post-build
+
+%install
+install -Dm755 target/release/eww "$DESTDIR/usr/bin/eww"

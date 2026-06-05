@@ -1,0 +1,62 @@
+[meta]
+name = mesa
+version = 24.3.4
+description = "Open-source OpenGL/Vulkan implementation"
+license = MIT
+size = 150
+
+[source]
+url = https://archive.mesa3d.org/mesa-24.3.4.tar.xz
+sha256 = e641ae27191d387599219694560d221b7feaa91c900bcec46bf444218ed66025
+
+[deps]
+build = gcc meson ninja pkgconf python3 libdrm libglvnd libpciaccess expat zlib llvm
+runtime = libdrm libglvnd expat zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+cpp = '${CXX:-g++}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dplatforms=wayland \
+    -Dgallium-drivers=softpipe,virgl,nouveau,radeonsi,r600,svga,iris,crocus \
+    -Dvulkan-drivers='' \
+    -Dglx=disabled \
+    -Degl=enabled \
+    -Dgbm=enabled \
+    -Dgles1=disabled \
+    -Dgles2=enabled \
+    -Dllvm=enabled \
+    -Dshared-llvm=enabled \
+    -Dopengl=true \
+    -Dglvnd=enabled \
+    -Db_ndebug=true
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

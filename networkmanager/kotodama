@@ -1,0 +1,70 @@
+[meta]
+name = networkmanager
+version = 1.50.0
+description = "Network connection manager"
+license = GPL-2.0-or-later AND LGPL-2.1-or-later
+size = 20
+
+[source]
+url = https://download.gnome.org/sources/NetworkManager/1.50/NetworkManager-1.50.0.tar.xz
+sha256 = fc03e7388a656cebc454c5d89481626122b1975d7c26babc64dc7e488faa66e3
+
+[deps]
+build = gcc meson ninja pkgconf glib dbus libnl libndp
+runtime = glib dbus libnl
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dintrospection=false \
+    -Dvapi=false \
+    -Ddocs=false \
+    -Dtests=no \
+    -Difnet=false \
+    -Dnetconfig=no \
+    -Dselinux=false \
+    -Dsystemdsystemunitdir=no \
+    -Dsystemd_journal=false \
+    -Dpolkit=false \
+    -Ddhcpcd=no \
+    -Ddhcpcanon=no \
+    -Dwifi=true \
+    -Diwd=false \
+    -Dteamd=false \
+    -Dmodem_manager=false \
+    -Dovs=false \
+    -Dnmtui=false \
+    -Dnm_cloud_setup=false \
+    -Dqt=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

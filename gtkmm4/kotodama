@@ -1,0 +1,53 @@
+[meta]
+name = gtkmm4
+version = 4.14.0
+description = "C++ bindings for GTK 4"
+license = LGPL-2.1-or-later
+size = 10
+
+[source]
+url = https://download.gnome.org/sources/gtkmm/4.14/gtkmm-4.14.0.tar.xz
+sha256 = 9350a0444b744ca3dc69586ebd1b6707520922b6d9f4f232103ce603a271ecda
+
+[deps]
+build = gcc meson ninja pkgconf gtk4 glib
+runtime = gtk4 glib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+cpp = '${CXX:-g++}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dbuild-documentation=false \
+    -Dbuild-demos=false \
+    -Dbuild-tests=false \
+    -Dbuild-examples=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -1,0 +1,52 @@
+[meta]
+name = graphene
+version = 1.10.8
+description = "Thin layer of graphic data types for 3D libraries"
+license = MIT
+size = 1
+
+[source]
+url = https://download.gnome.org/sources/graphene/1.10/graphene-1.10.8.tar.xz
+sha256 = a37bb0e78a419dcbeaa9c7027bcff52f5ec2367c25ec859da31dfde2928f279a
+
+[deps]
+build = gcc meson ninja pkgconf glib
+runtime = glib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dintrospection=disabled \
+    -Dtests=false \
+    -Dinstalled_tests=false \
+    -Dgtk_doc=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

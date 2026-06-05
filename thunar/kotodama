@@ -1,0 +1,39 @@
+[meta]
+name = thunar
+version = 4.21.5
+description = "Xfce file manager"
+license = GPL-2.0-or-later
+size = 8
+
+[source]
+url = https://github.com/xfce-mirror/thunar/archive/refs/tags/thunar-4.21.5.tar.gz
+sha256 = a48a0bee39c5656159ede03a51d04f93e3c798adac6f2738cb92b7a08aed66c1
+
+[deps]
+build = gcc make pkgconf glib gtk3 libexo libxfce4util libxfce4ui xfconf
+runtime = glib gtk3 libexo libxfce4util libxfce4ui xfconf
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --disable-static \
+    --enable-shared \
+    --disable-debug \
+    --disable-nls \
+    --without-x \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

@@ -1,0 +1,54 @@
+[meta]
+name = libinput
+version = 1.26.2
+description = "Library for handling input devices in Wayland"
+license = MIT
+size = 3
+
+[source]
+url = https://gitlab.freedesktop.org/libinput/libinput/-/releases/1.26.2/downloads/libinput-1.26.2.tar.xz
+sha256 = d0cfa1466c25d67bf30a29240391a2a901cf1278d600ea0ce1c0774646d3511f
+
+[deps]
+build = gcc meson ninja pkgconf libevdev mtdev libdrm udev
+runtime = libevdev mtdev udev
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dtests=false \
+    -Ddocumentation=false \
+    -Ddebug-gui=false \
+    -Dlibwacom=false \
+    -Dzshcompletiondir=no \
+    -Dbashcompletiondir=no
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -1,0 +1,28 @@
+[meta]
+name = yazi
+version = v26.5.6
+description = "Blazing fast terminal file manager written in Rust"
+license = MIT
+size = 5
+
+[source]
+url = https://github.com/sxyazi/yazi/archive/refs/tags/v26.5.6.tar.gz
+sha256 = a18445df86a20068f7b17609d12d6f635de488958579ae7a2b143a244ba7e63f
+
+[deps]
+build = rust cargo pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cargo build --release --locked
+
+%post-build
+
+%install
+install -Dm755 target/release/yazi "$DESTDIR/usr/bin/yazi"
+install -Dm755 target/release/ya "$DESTDIR/usr/bin/ya"

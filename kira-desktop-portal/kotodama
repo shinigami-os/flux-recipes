@@ -1,0 +1,23 @@
+[meta]
+name = kira-desktop-portal
+version = 1.0
+description = "XDG desktop portal meta-package: wlr + gtk backends"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = xdg-desktop-portal-wlr xdg-desktop-portal-gtk
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

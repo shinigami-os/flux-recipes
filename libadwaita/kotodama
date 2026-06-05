@@ -1,0 +1,53 @@
+[meta]
+name = libadwaita
+version = 1.6.3
+description = "Building blocks for modern GNOME applications"
+license = LGPL-2.1-or-later
+size = 5
+
+[source]
+url = https://download.gnome.org/sources/libadwaita/1.6/libadwaita-1.6.3.tar.xz
+sha256 = c88d4516edd1e0fc61be925f414efc340e149171756064473a082b6ae9a5dc00
+
+[deps]
+build = gcc meson ninja pkgconf gtk4 glib
+runtime = gtk4 glib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dintrospection=disabled \
+    -Dvapi=false \
+    -Dgtk_doc=false \
+    -Dtests=false \
+    -Dexamples=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

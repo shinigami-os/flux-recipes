@@ -1,0 +1,52 @@
+[meta]
+name = gobject-introspection
+version = 1.82.0
+description = "GObject introspection for language bindings"
+license = LGPL-2.0-or-later AND GPL-2.0-or-later
+size = 5
+
+[source]
+url = https://download.gnome.org/sources/gobject-introspection/1.82/gobject-introspection-1.82.0.tar.xz
+sha256 = 0f5a4c1908424bf26bc41e9361168c363685080fbdb87a196c891c8401ca2f09
+
+[deps]
+build = gcc meson ninja pkgconf glib python3
+runtime = glib python3
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+python = 'python3'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Ddoctool=disabled \
+    -Dtests=false \
+    -Dcairo=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -1,0 +1,32 @@
+[meta]
+name = xdg-desktop-portal-gtk
+version = 1.15.3
+description = "GTK backend for xdg-desktop-portal (file picker)"
+license = LGPL-2.1-or-later
+size = 2
+
+[source]
+url = https://github.com/flatpak/xdg-desktop-portal-gtk/releases/download/1.15.3/xdg-desktop-portal-gtk-1.15.3.tar.xz
+sha256 = 47a3743d2419a8601e691db37e85bb5fac5ae4b26842177065cd5f22ada23b37
+
+[deps]
+build = gcc meson ninja pkgconf gtk3 glib
+runtime = gtk3 glib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    -Dbackend-gnome-keyring=disabled \
+    -Dbackend-secret-service=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

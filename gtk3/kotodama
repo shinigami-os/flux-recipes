@@ -1,0 +1,59 @@
+[meta]
+name = gtk3
+version = 3.24.43
+description = "GTK 3 widget toolkit"
+license = LGPL-2.1-or-later
+size = 40
+
+[source]
+url = https://download.gnome.org/sources/gtk+/3.24/gtk+-3.24.43.tar.xz
+sha256 = 7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7
+
+[deps]
+build = gcc meson ninja pkgconf glib pango cairo gdk-pixbuf atk at-spi2-core libxkbcommon wayland wayland-protocols libepoxy
+runtime = glib pango cairo gdk-pixbuf atk at-spi2-core libxkbcommon wayland libepoxy
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkgconfig = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dx11_backend=false \
+    -Dwayland_backend=true \
+    -Dbroadway_backend=false \
+    -Dintrospection=false \
+    -Ddemos=false \
+    -Dexamples=false \
+    -Dtests=false \
+    -Dinstalled_tests=false \
+    -Dman=false \
+    -Dgtk_doc=false \
+    -Dprint_backends=file
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

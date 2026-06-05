@@ -1,0 +1,32 @@
+[meta]
+name = mako
+version = 1.11.0
+description = "Lightweight Wayland notification daemon"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/emersion/mako/releases/download/v1.11.0/mako-1.11.0.tar.gz
+sha256 = e97eb5bd0dc6a9159019949f48b3db4e8781b56bd6377bd65827e1cb440a7def
+
+[deps]
+build = gcc meson ninja pkgconf wayland wayland-protocols libxkbcommon cairo pango gdk-pixbuf
+runtime = wayland libxkbcommon cairo pango gdk-pixbuf
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    -Dicons=disabled \
+    -Dsd-bus-provider=none
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

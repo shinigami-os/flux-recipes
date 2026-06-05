@@ -43,9 +43,7 @@ meson setup build \
     -Dtests=false \
     -Ddocumentation=false \
     -Ddebug-gui=false \
-    -Dlibwacom=false \
-    -Dzshcompletiondir=no \
-    -Dbashcompletiondir=no
+    -Dlibwacom=false
 ninja -C build
 
 %post-build

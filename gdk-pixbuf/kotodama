@@ -47,7 +47,8 @@ meson setup build \
     -Dinstalled_tests=false \
     -Dpng=enabled \
     -Djpeg=enabled \
-    -Dtiff=disabled
+    -Dtiff=disabled \
+    -Dgio_sniffing=false
 ninja -C build
 
 %post-build

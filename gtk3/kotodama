@@ -17,6 +17,17 @@ runtime = glib pango cairo gdk-pixbuf atk at-spi2-core libxkbcommon wayland libe
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+cat > native-pkgconfig.sh << 'WRAPPER'
+#!/bin/sh
+unset PKG_CONFIG_LIBDIR
+unset PKG_CONFIG_PATH
+exec /usr/bin/pkg-config "$@"
+WRAPPER
+cat > native-file.ini << EOF
+[binaries]
+pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
+wayland-scanner = '/usr/bin/wayland-scanner'
+EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]
@@ -37,6 +48,7 @@ fi
 
 %build
 meson setup build \
+    --native-file=native-file.ini \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \

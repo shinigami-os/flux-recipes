@@ -17,9 +17,21 @@ runtime = wayland libxkbcommon cairo pango json-c libinput
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+cat > native-pkgconfig.sh << 'WRAPPER'
+#!/bin/sh
+unset PKG_CONFIG_LIBDIR
+unset PKG_CONFIG_PATH
+exec /usr/bin/pkg-config "$@"
+WRAPPER
+cat > native-file.ini << EOF
+[binaries]
+pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
+wayland-scanner = '/usr/bin/wayland-scanner'
+EOF
 
 %build
 meson setup build \
+    --native-file=native-file.ini \
     --prefix=/usr \
     --buildtype=release \
     -Dwerror=false \

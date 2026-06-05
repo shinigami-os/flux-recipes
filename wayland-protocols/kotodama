@@ -28,6 +28,7 @@ cat > native-file.ini << EOF
 pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
 wayland-scanner = '/usr/bin/wayland-scanner'
 EOF
+sed -i "s|prog_scanner = find_program(dep_scanner.get_variable(pkgconfig: 'wayland_scanner', internal: 'wayland_scanner'))|prog_scanner = find_program('wayland-scanner', native: true)|" meson.build
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

@@ -51,6 +51,8 @@ meson setup build \
     -Dselinux=false \
     -Dsystemdsystemunitdir=no \
     -Dsystemd_journal=false \
+    -Dsession_tracking=no \
+    -Dsuspend_resume=consolekit \
     -Dpolkit=false \
     -Ddhcpcd=no \
     -Ddhcpcanon=no \

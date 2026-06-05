@@ -31,7 +31,7 @@ strip = '${STRIP:-strip}'
 pkgconfig = 'pkg-config'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
-pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkg-config']
 EOF
 fi
 
@@ -41,10 +41,13 @@ meson setup build \
     --sysconfdir=/etc \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Ddocs=false \
+    -Ddocs=disabled \
     -Dexamples=false \
-    -Ddb=disabled \
-    -Dnis=false \
+    -Dpam_userdb=disabled \
+    -Dnis=disabled \
+    -Di18n=disabled \
+    -Deconf=disabled \
+    -Dlogind=disabled \
     -Daudit=disabled \
     -Dselinux=disabled
 ninja -C build

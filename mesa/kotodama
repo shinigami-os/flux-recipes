@@ -53,6 +53,11 @@ meson setup build \
     -Dshared-llvm=enabled \
     -Dopengl=true \
     -Dglvnd=enabled \
+    -Dgallium-opencl=disabled \
+    -Dgallium-va=disabled \
+    -Dgallium-vdpau=disabled \
+    -Dgallium-xa=disabled \
+    -Dglslang=disabled \
     -Db_ndebug=true
 ninja -C build
 

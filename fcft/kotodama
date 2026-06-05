@@ -52,10 +52,10 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dpgo=disabled \
     -Dsvg-backend=none \
     -Ddocs=disabled \
-    -Dtests=disabled
+    -Dtest-text-shaping=false \
+    -Dexamples=false
 ninja -C build
 
 %post-build

@@ -17,12 +17,19 @@ runtime = libdrm libglvnd expat zlib
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-find . -name "meson.build" | xargs grep -l "wayland-scanner" | xargs sed -i "s|find_program('wayland-scanner'|find_program('/usr/bin/wayland-scanner'|g"
 LLVM_CONFIG_BIN="$(find /usr/lib/llvm-*/bin/llvm-config /usr/bin/llvm-config-* 2>/dev/null | sort -V | tail -1)"
+cat > native-pkgconfig.sh << 'WRAPPER'
+#!/bin/sh
+unset PKG_CONFIG_LIBDIR
+unset PKG_CONFIG_PATH
+exec /usr/bin/pkg-config "$@"
+WRAPPER
+chmod +x native-pkgconfig.sh
 cat > native-file.ini << EOF
 [binaries]
 wayland-scanner = '/usr/bin/wayland-scanner'
 llvm-config = '${LLVM_CONFIG_BIN}'
+pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
 EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF

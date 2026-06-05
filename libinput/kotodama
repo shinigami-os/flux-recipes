@@ -1,13 +1,13 @@
 [meta]
 name = libinput
-version = 1.26.2
+version = 1.30.4
 description = "Library for handling input devices in Wayland"
 license = MIT
 size = 3
 
 [source]
-url = https://gitlab.freedesktop.org/libinput/libinput/-/archive/1.26.2/libinput-1.26.2.tar.xz
-sha256 = de2676137aebb2476c93f945be62d90f65e8695dbe627a835a32f93faa97c11a
+url = https://gitlab.freedesktop.org/libinput/libinput/-/archive/1.30.4/libinput-1.30.4.tar.gz
+sha256 = c97ec2500d4a94ab4d4c9896039d731ea2eb55f6c69f46b12a036fdb5d3adcb2
 
 [deps]
 build = gcc meson ninja pkgconf libevdev mtdev libdrm udev

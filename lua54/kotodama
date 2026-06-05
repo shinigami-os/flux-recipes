@@ -25,11 +25,22 @@ make \
     AR="${AR:-ar} rcu" \
     RANLIB="${RANLIB:-ranlib}" \
     linux
+cd src
+${CC:-gcc} -shared -fPIC -Wl,-soname,liblua.so.5 \
+    -o liblua.so.5.4.7 \
+    $(ls *.o | grep -v '^lua\.o$' | grep -v '^luac\.o$') \
+    -lm
+ln -sf liblua.so.5.4.7 liblua.so.5.4
+ln -sf liblua.so.5.4.7 liblua.so.5
+ln -sf liblua.so.5.4.7 liblua.so
 
 %post-build
 
 %install
 make \
     INSTALL_TOP="$DESTDIR/usr" \
-    TO_LIB="liblua.a liblua.so liblua.so.5 liblua.so.5.4 liblua.so.5.4.7" \
+    TO_LIB="liblua.a liblua.so.5.4.7" \
     install
+ln -sf liblua.so.5.4.7 "$DESTDIR/usr/lib/liblua.so.5.4"
+ln -sf liblua.so.5.4.7 "$DESTDIR/usr/lib/liblua.so.5"
+ln -sf liblua.so.5.4.7 "$DESTDIR/usr/lib/liblua.so"

@@ -1,0 +1,33 @@
+[meta]
+name = libndp
+version = 1.9
+description = "Library for IPv6 Neighbor Discovery Protocol"
+license = LGPL-2.1-or-later
+size = 1
+
+[source]
+url = https://github.com/jpirko/libndp/archive/refs/tags/v1.9.tar.gz
+sha256 = e564f5914a6b1b799c3afa64c258824a801c1b79a29e2fe6525b682249c65261
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+autoreconf -fiv
+
+%build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --disable-static \
+    --disable-man-pages
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

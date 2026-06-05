@@ -37,6 +37,7 @@ EOF
 fi
 
 %build
+rm -rf build
 meson setup build \
     --prefix=/usr \
     --buildtype=release \

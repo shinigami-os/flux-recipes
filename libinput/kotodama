@@ -10,8 +10,8 @@ url = https://gitlab.freedesktop.org/libinput/libinput/-/archive/1.30.4/libinput
 sha256 = c97ec2500d4a94ab4d4c9896039d731ea2eb55f6c69f46b12a036fdb5d3adcb2
 
 [deps]
-build = gcc meson ninja pkgconf libevdev mtdev libdrm udev
-runtime = libevdev mtdev udev
+build = gcc meson ninja pkgconf libevdev mtdev libdrm eudev
+runtime = libevdev mtdev eudev
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -31,7 +31,7 @@ strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
-pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkg-config']
 EOF
 fi
 

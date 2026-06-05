@@ -1,0 +1,48 @@
+[meta]
+name = eudev
+version = 3.2.14
+description = "Standalone dynamic device management daemon (udev fork)"
+license = GPL-2.0-or-later AND LGPL-2.1-or-later
+size = 2
+
+[source]
+url = https://github.com/eudev-project/eudev/releases/download/v3.2.14/eudev-3.2.14.tar.gz
+sha256 = 8da4319102f24abbf7fff5ce9c416af848df163b29590e666d334cc1927f006f
+
+[deps]
+build = gcc make pkgconf gperf util-linux
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+export ac_cv_func_setpgrp_void=yes
+export ac_cv_func_malloc_0_nonnull=yes
+export ac_cv_func_realloc_0_nonnull=yes
+fi
+
+%build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --with-rootprefix=/usr \
+    --with-rootlibdir=/usr/lib \
+    --sbindir=/usr/bin \
+    --libexecdir=/usr/lib \
+    --disable-static \
+    --disable-introspection \
+    --disable-gudev \
+    --disable-blkid \
+    --disable-mtd_probe \
+    --enable-rule-generator \
+    --disable-manpages \
+    --disable-selinux
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

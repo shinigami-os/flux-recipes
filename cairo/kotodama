@@ -17,7 +17,7 @@ runtime = pixman freetype fontconfig glib zlib
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-sed -i '/#include <freetype\/freetype.h>/a #include <freetype\/ftcolor.h>' src/cairo-ft-private.h
+sed -i '/^#include FT_FREETYPE_H/a #include FT_COLOR_H' src/cairo-ft.h
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

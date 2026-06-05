@@ -10,8 +10,8 @@ url = https://download.gnome.org/sources/at-spi2-core/2.54/at-spi2-core-2.54.1.t
 sha256 = f0729e5c8765feb1969bb6c1fba18afa2582126b0359aa75a173fda1acf93c4c
 
 [deps]
-build = gcc meson ninja pkgconf glib dbus
-runtime = glib dbus
+build = gcc meson ninja pkgconf glib dbus libxml2
+runtime = glib dbus libxml2
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

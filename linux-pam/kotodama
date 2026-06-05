@@ -17,6 +17,7 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i 's/libpam_internal_dep, libaudit, libeconf, libdl, libintl/libpam_internal_dep, libaudit, libeconf, libdl/' libpam/meson.build
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

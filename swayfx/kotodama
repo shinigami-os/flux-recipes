@@ -33,7 +33,7 @@ cpu = 'x86_64'
 endian = 'little'
 [binaries]
 c = '${CC:-gcc}'
-pkgconfig = 'pkg-config'
+pkg-config = 'pkg-config'
 EOF
 ninja -C build
 

@@ -28,7 +28,7 @@ endian = 'little'
 c = '${CC:-gcc}'
 ar = '${AR:-ar}'
 strip = '${STRIP:-strip}'
-pkgconfig = 'pkg-config'
+pkg-config = 'pkg-config'
 python = 'python3'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'

@@ -28,7 +28,7 @@ endian = 'little'
 c = '${CC:-gcc}'
 ar = '${AR:-ar}'
 strip = '${STRIP:-strip}'
-pkgconfig = 'pkg-config'
+pkg-config = 'pkg-config'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
 pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
@@ -40,11 +40,13 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dx11=false \
+    -Dx11=disabled \
+    -Dglx=disabled \
+    -Dasm=disabled \
+    -Dentrypoint-patching=disabled \
     -Dgles1=false \
     -Dgles2=true \
-    -Degl=true \
-    -Dglx=false
+    -Degl=true
 ninja -C build
 
 %post-build

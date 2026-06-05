@@ -41,10 +41,10 @@ meson setup build \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Denable-docs=false \
-    -Denable-wayland=enabled \
-    -Denable-x11=disabled \
-    -Denable-xkbregistry=disabled \
-    -Denable-tools=disabled
+    -Denable-wayland=true \
+    -Denable-x11=false \
+    -Denable-xkbregistry=false \
+    -Denable-tools=false
 ninja -C build
 
 %post-build

@@ -40,7 +40,7 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dlogind=disabled \
+    -Dlibseat-logind=disabled \
     -Dlibseat-builtin=enabled \
     -Dman-pages=disabled
 ninja -C build

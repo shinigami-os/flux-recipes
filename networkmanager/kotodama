@@ -75,7 +75,9 @@ meson setup build \
     -Dmore_logging=false \
     -Dld_gc=false \
     -Dsession_tracking_consolekit=false \
-    -Dwext=false
+    -Dwext=false \
+    -Dnmcli=false \
+    -Dreadline=none
 ninja -C build
 
 %post-build

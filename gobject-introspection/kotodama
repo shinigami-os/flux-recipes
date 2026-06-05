@@ -18,6 +18,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 if [ -n "$FLUX_CROSS_HOST" ]; then
+sed -i "s/cc.check_header('Python.h', dependencies: \[python.dependency()\], required: true)/if not meson.is_cross_build()\n  cc.check_header('Python.h', dependencies: [python.dependency()], required: true)\nendif/" meson.build
+sed -i "s/^subdir('giscanner')$/if not meson.is_cross_build()\n  subdir('giscanner')\nendif/" meson.build
+fi
+if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]
 system = 'linux'

@@ -17,7 +17,6 @@ runtime = glib python3
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-sed -i "s/python = pymod.find_installation(get_option('python'))/python = pymod.find_installation(get_option('python'), native: true)/" meson.build
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

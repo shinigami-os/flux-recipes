@@ -33,7 +33,7 @@ strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
-pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkg-config']
 EOF
 fi
 
@@ -55,6 +55,7 @@ meson setup build \
     -Dsession_tracking=no \
     -Dsuspend_resume=consolekit \
     -Dlibaudit=no \
+    -Dppp=false \
     -Dpolkit=false \
     -Ddhcpcd=no \
     -Ddhcpcanon=no \

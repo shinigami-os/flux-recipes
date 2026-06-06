@@ -1,13 +1,13 @@
 [meta]
 name = iso-codes
-version = 4.18.0
+version = 4.20.1
 description = "ISO language, territory, currency, script codes and their translations"
 license = LGPL-2.1-or-later
 size = 40
 
 [source]
-url = https://salsa.debian.org/iso-codes-team/iso-codes/-/archive/v4.18.0/iso-codes-v4.18.0.tar.gz
-sha256 = 596d247445c7804caf0ed8c3838f07f561525a0d23aeb2673dcc1825c672c576
+url = https://salsa.debian.org/iso-codes-team/iso-codes/-/archive/v4.20.1/iso-codes-v4.20.1.tar.gz?ref_type=tags
+sha256 = 2d7d9f6084ab9ce6c534ce71a3dd5144b6e474f3c97616459a88f73f44a64bff
 
 [deps]
 build = make

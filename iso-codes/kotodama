@@ -6,8 +6,8 @@ license = LGPL-2.1-or-later
 size = 40
 
 [source]
-url = https://salsa.debian.org/iso-codes-team/iso-codes/-/archive/v4.20.1/iso-codes-v4.20.1.tar.gz?ref_type=tags
-sha256 = 2d7d9f6084ab9ce6c534ce71a3dd5144b6e474f3c97616459a88f73f44a64bff
+url = https://salsa.debian.org/iso-codes-team/iso-codes/-/archive/v4.20.1/iso-codes-v4.20.1.tar.gz
+sha256 = fb2edf81131cf937ce970f2bcb59a151dd30bd1ee99f5382f736f37fe71b9610
 
 [deps]
 build = make

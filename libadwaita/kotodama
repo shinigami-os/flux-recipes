@@ -30,6 +30,8 @@ pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
 glib-compile-schemas = '/usr/bin/glib-compile-schemas'
 glib-compile-resources = '/usr/bin/glib-compile-resources'
 gdbus-codegen = '/usr/bin/gdbus-codegen'
+[properties]
+pkg_config_libdir = ['/usr/lib/x86_64-linux-gnu/pkgconfig', '/usr/lib/pkgconfig', '/usr/share/pkgconfig']
 EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF

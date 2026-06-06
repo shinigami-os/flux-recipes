@@ -64,9 +64,7 @@ meson setup build \
     -Dqt=false \
     -Dmaintainer=false \
     -Dsystemd=false \
-    -Dbash-completion=false \
-    -Dapt-support=false \
-    -Dman=false
+    -Dapt-support=false
 ninja -C build
 
 %post-build

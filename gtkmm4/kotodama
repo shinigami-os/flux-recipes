@@ -48,6 +48,7 @@ meson setup build \
 find subprojects -name "meson.build" -exec sed -i "s/fontconfig_req = '>= 2\.[0-9]*\.[0-9]*'/fontconfig_req = '>= 2.16.0'/" {} \; 2>/dev/null || true
 find subprojects -name "meson.build" -exec sed -i "s/glib_req = '>= 2\.[0-9]*\.[0-9]*'/glib_req = '>= 2.82.0'/" {} \; 2>/dev/null || true
 find subprojects -name "meson.build" -exec sed -i "s|gmmproc_dir = glibmm_dep.get_variable('gmmprocdir')|gmmproc_dir = '/usr/lib/x86_64-linux-gnu/glibmm-2.68/proc'|g" {} \; 2>/dev/null || true
+find subprojects -path "*/cairomm/meson.build" -exec sed -i "s/build_tests_opt = get_option('build-tests')/build_tests_opt = 'false'/" {} \; 2>/dev/null || true
 rm -rf build
 meson setup build \
     --prefix=/usr \

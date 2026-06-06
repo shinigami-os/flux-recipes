@@ -17,7 +17,6 @@ runtime = gtk4 glib
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-find subprojects -name "meson.build" -exec sed -i "s/fontconfig_req = '>= 2\.17\.0'/fontconfig_req = '>= 2.15.0'/" {} \; 2>/dev/null || true
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]
@@ -38,6 +37,15 @@ EOF
 fi
 
 %build
+rm -rf build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dbuild-documentation=false \
+    -Dbuild-demos=false \
+    -Dbuild-tests=false || true
+find build -path "*/subprojects/pango/meson.build" -exec sed -i "s/fontconfig_req = '>= 2\.17\.0'/fontconfig_req = '>= 2.16.0'/" {} \; 2>/dev/null || true
 rm -rf build
 meson setup build \
     --prefix=/usr \

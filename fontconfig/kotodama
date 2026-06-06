@@ -1,13 +1,13 @@
 [meta]
 name = fontconfig
-version = 2.15.0
+version = 2.18.1
 description = "Font configuration and customization library"
 license = MIT
 size = 2
 
 [source]
-url = https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.15.0.tar.xz
-sha256 = 63a0658d0e06e0fa886106452b58ef04f21f58202ea02a94c39de0d3335d7c0e
+url = https://github.com/fontconfig/fontconfig/archive/refs/tags/2.18.1.tar.gz
+sha256 = e9309564717b6301230112b173f36c288489479d381d2f0add1210ca5b16ba7e
 
 [deps]
 build = gcc meson ninja pkgconf expat freetype glib

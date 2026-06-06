@@ -29,6 +29,9 @@ c = '${CC:-gcc}'
 ar = '${AR:-ar}'
 strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
+glib-mkenums = '/usr/bin/glib-mkenums'
+glib-compile-resources = '/usr/bin/glib-compile-resources'
+gdbus-codegen = '/usr/bin/gdbus-codegen'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
 pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
@@ -41,7 +44,8 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dintrospection=false
+    -Dintrospection=false \
+    -Dgtk-doc=false
 ninja -C build
 
 %post-build

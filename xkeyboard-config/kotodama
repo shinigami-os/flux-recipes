@@ -1,13 +1,13 @@
 [meta]
 name = xkeyboard-config
-version = 2.42
+version = 2.45
 description = "X Keyboard Configuration Database"
 license = MIT
 size = 5
 
 [source]
-url = https://www.x.org/archive/individual/data/xkeyboard-config-2.42.tar.xz
-sha256 = 9a7f93a1bbb88ed939cbdc23cfd3483560c856b27f87f736130af18b0e3676f7
+url = https://github.com/cantoraz/xkeyboard-config/archive/refs/tags/xkeyboard-config+codeman-2.45.tar.gz
+sha256 = 837c9e23260187798f77cbb6022eca23ac4a70cbda49f0f08dcf48a6fce6f143
 
 [deps]
 build = gcc meson ninja pkgconf

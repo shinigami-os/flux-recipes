@@ -20,6 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 sed -i "/'- Wincompatible-pointer-types-discards-qualifiers'/d" subprojects/libxmlb/meson.build 2>/dev/null || true
 sed -i '/Wincompatible-pointer-types-discards-qualifiers/d' subprojects/libxmlb/meson.build 2>/dev/null || true
 sed -i "s/ascli_exe = find_program('appstreamcli')/ascli_exe = find_program('appstreamcli', native: true)/" data/meson.build
+sed -i "s|command : \[ascli_exe, 'news-to-metainfo', '--limit=6', '@INPUT0@', '@INPUT1@', '@OUTPUT@'\]|command : ['cp', '@INPUT1@', '@OUTPUT@']|" data/meson.build
 cat > native-pkgconfig.sh << 'WRAPPER'
 #!/bin/sh
 unset PKG_CONFIG_LIBDIR

@@ -58,12 +58,15 @@ meson setup build \
     -Dapidocs=false \
     -Ddocs=false \
     -Dinstall-docs=false \
-    -Dintrospection=false \
+    -Dgir=false \
     -Dvapi=false \
     -Dcompose=false \
     -Dqt=false \
-    -Dtests=false \
-    -Dmaintainer=false
+    -Dmaintainer=false \
+    -Dsystemd=false \
+    -Dbash-completion=false \
+    -Dapt-support=false \
+    -Dman=false
 ninja -C build
 
 %post-build

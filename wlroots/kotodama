@@ -47,6 +47,7 @@ EOF
 fi
 
 %build
+rm -rf build
 meson setup build \
     --native-file=native-file.ini \
     --prefix=/usr \

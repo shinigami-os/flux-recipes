@@ -26,6 +26,7 @@ cpu = 'x86_64'
 endian = 'little'
 [binaries]
 c = '${CC:-gcc}'
+cpp = '${CXX:-g++}'
 ar = '${AR:-ar}'
 strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'

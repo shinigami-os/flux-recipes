@@ -45,7 +45,8 @@ meson setup build \
     -Dbuild-documentation=false \
     -Dbuild-demos=false \
     -Dbuild-tests=false || true
-find build -path "*/subprojects/pango/meson.build" -exec sed -i "s/fontconfig_req = '>= 2\.17\.0'/fontconfig_req = '>= 2.16.0'/" {} \; 2>/dev/null || true
+find subprojects -name "meson.build" -exec sed -i "s/fontconfig_req = '>= 2\.[0-9]*\.[0-9]*'/fontconfig_req = '>= 2.16.0'/" {} \; 2>/dev/null || true
+find subprojects -name "meson.build" -exec sed -i "s/glib_req = '>= 2\.[0-9]*\.[0-9]*'/glib_req = '>= 2.82.0'/" {} \; 2>/dev/null || true
 rm -rf build
 meson setup build \
     --prefix=/usr \

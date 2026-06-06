@@ -1,0 +1,50 @@
+[meta]
+name = xkeyboard-config
+version = 2.42
+description = "X Keyboard Configuration Database"
+license = MIT
+size = 5
+
+[source]
+url = https://www.x.org/archive/individual/data/xkeyboard-config-2.42.tar.xz
+sha256 = 9a7f93a1bbb88ed939cbdc23cfd3483560c856b27f87f736130af18b0e3676f7
+
+[deps]
+build = gcc meson ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+rm -rf build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dxorg-rules-symlinks=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

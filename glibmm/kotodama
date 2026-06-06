@@ -57,7 +57,6 @@ meson setup build \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dbuild-documentation=false \
     -Dbuild-examples=false \
-    -Dbuild-tests=false \
     -Dmaintainer-mode=false
 ninja -C build
 

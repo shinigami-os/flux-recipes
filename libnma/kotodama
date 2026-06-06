@@ -31,20 +31,23 @@ strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
-pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
 EOF
 fi
 
 %build
+rm -rf build
 meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    "-Dc_args=-Dg_variant_builder_init_static=g_variant_builder_init" \
     -Dintrospection=false \
     -Dvapi=false \
     -Dgtk_doc=false \
     -Dlibnma_gtk4=true \
-    -Dmobile_broadband_provider_info=false
+    -Dmobile_broadband_provider_info=false \
+    -Dgcr=false
 ninja -C build
 
 %post-build

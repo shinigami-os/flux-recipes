@@ -10,8 +10,8 @@ url = https://github.com/emersion/xdg-desktop-portal-wlr/releases/download/v0.8.
 sha256 = 5e6840d3326a4afb440c353ee19cf68d4e4fba40a5648224904b3a06612aae87
 
 [deps]
-build = gcc meson ninja pkgconf wayland wayland-protocols pipewire libdrm
-runtime = wayland pipewire
+build = gcc meson ninja pkgconf wayland wayland-protocols pipewire libdrm basu
+runtime = wayland pipewire basu
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -28,13 +28,32 @@ cat > native-file.ini << EOF
 pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
 wayland-scanner = '/usr/bin/wayland-scanner'
 EOF
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
 
 %build
+rm -rf build
 meson setup build \
     --native-file=native-file.ini \
     --prefix=/usr \
     --buildtype=release \
-    -Dsd-bus-provider=none
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dsd-bus-provider=basu
 ninja -C build
 
 %post-build

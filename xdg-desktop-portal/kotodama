@@ -1,0 +1,74 @@
+[meta]
+name = xdg-desktop-portal
+version = 1.20.4
+description = "Desktop integration portal"
+license = LGPL-2.1-or-later
+size = 2
+
+[source]
+url = https://github.com/flatpak/xdg-desktop-portal/releases/download/1.20.4/xdg-desktop-portal-1.20.4.tar.xz
+sha256 = 9528eb3b060b88ac82f294fbdc6af5f4d3adfa42575f2cd816cab3d3e0a7a68c
+
+[deps]
+build = gcc meson ninja pkgconf glib
+runtime = glib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+cat > native-pkgconfig.sh << 'WRAPPER'
+#!/bin/sh
+unset PKG_CONFIG_LIBDIR
+unset PKG_CONFIG_PATH
+exec /usr/bin/pkg-config "$@"
+WRAPPER
+cat > native-file.ini << EOF
+[binaries]
+pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
+gdbus-codegen = '/usr/bin/gdbus-codegen'
+glib-compile-resources = '/usr/bin/glib-compile-resources'
+glib-compile-schemas = '/usr/bin/glib-compile-schemas'
+[properties]
+pkg_config_libdir = ['/usr/lib/x86_64-linux-gnu/pkgconfig', '/usr/lib/pkgconfig', '/usr/share/pkgconfig']
+EOF
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+gdbus-codegen = '/usr/bin/gdbus-codegen'
+glib-compile-resources = '/usr/bin/glib-compile-resources'
+glib-compile-schemas = '/usr/bin/glib-compile-schemas'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+rm -rf build
+meson setup build \
+    --native-file=native-file.ini \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    "-Dc_args=-Dg_variant_builder_init_static=g_variant_builder_init" \
+    -Ddocumentation=disabled \
+    -Dman-pages=disabled \
+    -Dsystemd=disabled \
+    -Dflatpak-interfaces=disabled \
+    -Dpipewiresupport=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -1,0 +1,68 @@
+[meta]
+name = gst-plugins-base
+version = 1.26.2
+description = "GStreamer base plugins"
+license = LGPL-2.1-or-later
+size = 10
+
+[source]
+url = https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.26.2.tar.xz
+sha256 = f4b9fc0be852fe5f65401d18ae6218e4aea3ff7a3c9f8d265939b9c4704915f7
+
+[deps]
+build = gcc meson ninja pkgconf glib gstreamer
+runtime = glib gstreamer
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+glib-compile-resources = '/usr/bin/glib-compile-resources'
+glib-compile-schemas = '/usr/bin/glib-compile-schemas'
+gdbus-codegen = '/usr/bin/gdbus-codegen'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+rm -rf build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    "-Dc_args=-Dg_variant_builder_init_static=g_variant_builder_init" \
+    -Dintrospection=disabled \
+    -Dexamples=disabled \
+    -Dtests=disabled \
+    -Ddoc=disabled \
+    -Dnls=disabled \
+    -Dx11=disabled \
+    -Dgl=disabled \
+    -Dgl-graphene=disabled \
+    -Dorc=disabled \
+    -Dalsa=disabled \
+    -Dlibvisual=disabled \
+    -Dopus=disabled \
+    -Dpango=disabled \
+    -Dvorbis=disabled \
+    -Dtheora=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

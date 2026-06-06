@@ -1,0 +1,61 @@
+[meta]
+name = gstreamer
+version = 1.26.2
+description = "GStreamer multimedia framework"
+license = LGPL-2.1-or-later
+size = 10
+
+[source]
+url = https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.26.2.tar.xz
+sha256 = f75334a3dff497c240844304a60015145792ecc3b6b213ac19841ccbd6fdf0ad
+
+[deps]
+build = gcc meson ninja pkgconf glib
+runtime = glib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+glib-compile-resources = '/usr/bin/glib-compile-resources'
+glib-compile-schemas = '/usr/bin/glib-compile-schemas'
+gdbus-codegen = '/usr/bin/gdbus-codegen'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+rm -rf build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    "-Dc_args=-Dg_variant_builder_init_static=g_variant_builder_init" \
+    -Dintrospection=disabled \
+    -Dexamples=disabled \
+    -Dtests=disabled \
+    -Dbenchmarks=disabled \
+    -Dtools=disabled \
+    -Ddoc=disabled \
+    -Dnls=disabled \
+    -Dptp-helper=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

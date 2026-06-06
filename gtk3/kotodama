@@ -43,6 +43,9 @@ c = '${CC:-gcc}'
 ar = '${AR:-ar}'
 strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
+glib-compile-schemas = '/usr/bin/glib-compile-schemas'
+glib-compile-resources = '/usr/bin/glib-compile-resources'
+gdbus-codegen = '/usr/bin/gdbus-codegen'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
 pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']

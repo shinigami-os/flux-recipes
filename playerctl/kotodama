@@ -18,11 +18,6 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 if [ -n "$FLUX_CROSS_HOST" ]; then
-cat > cc-wrapper.sh << WRAPPER
-#!/bin/sh
-exec ${CC:-gcc} -Dg_variant_builder_init_static=g_variant_builder_init "\$@"
-WRAPPER
-chmod +x cc-wrapper.sh
 cat > cross-file.ini << EOF
 [host_machine]
 system = 'linux'
@@ -30,7 +25,7 @@ cpu_family = 'x86_64'
 cpu = 'x86_64'
 endian = 'little'
 [binaries]
-c = '$(pwd)/cc-wrapper.sh'
+c = '${CC:-gcc}'
 ar = '${AR:-ar}'
 strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
@@ -49,6 +44,7 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    "-Dc_args=-Dg_variant_builder_init_static=g_variant_builder_init" \
     -Dintrospection=false \
     -Dgtk-doc=false
 ninja -C build

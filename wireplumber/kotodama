@@ -35,8 +35,6 @@ gdbus-codegen = '/usr/bin/gdbus-codegen'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
 pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
-[built-in options]
-c_args = ['-Dg_variant_builder_init_static=g_variant_builder_init']
 EOF
 fi
 
@@ -46,6 +44,7 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    "-Dc_args=-Dg_variant_builder_init_static=g_variant_builder_init" \
     -Ddoc=disabled \
     -Dtests=false \
     -Dintrospection=disabled \

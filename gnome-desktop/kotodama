@@ -17,6 +17,7 @@ runtime = glib gtk3 gtk4 gsettings-desktop-schemas libxkbcommon fontconfig libse
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i "s/libgnome_desktop_base_gir = ''/libgnome_desktop_base_gir = []/" libgnome-desktop/meson.build
 cat > native-pkgconfig.sh << 'WRAPPER'
 #!/bin/sh
 unset PKG_CONFIG_LIBDIR

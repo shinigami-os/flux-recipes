@@ -30,9 +30,12 @@ pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
 glib-compile-schemas = '/usr/bin/glib-compile-schemas'
 glib-compile-resources = '/usr/bin/glib-compile-resources'
 gdbus-codegen = '/usr/bin/gdbus-codegen'
+sassc = '/usr/bin/sassc'
 [properties]
 pkg_config_libdir = ['/usr/lib/x86_64-linux-gnu/pkgconfig', '/usr/lib/pkgconfig', '/usr/share/pkgconfig']
 EOF
+sed -i "s/sassc = find_program('sassc', required: false)/sassc = find_program('sassc', required: false, native: true)/" src/stylesheet/meson.build
+sed -i "s/  sassc = find_program('sassc')/  sassc = find_program('sassc', native: true)/" src/stylesheet/meson.build
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

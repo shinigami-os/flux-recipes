@@ -65,7 +65,7 @@ meson setup build \
     -Dman-pages=disabled \
     -Dsystemd=disabled \
     -Dflatpak-interfaces=disabled \
-    -Dpipewiresupport=disabled
+    -Dpipewire=disabled
 ninja -C build
 
 %post-build

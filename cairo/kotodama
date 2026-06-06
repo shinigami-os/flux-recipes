@@ -10,7 +10,7 @@ url = https://cairographics.org/releases/cairo-1.18.2.tar.xz
 sha256 = a62b9bb42425e844cc3d6ddde043ff39dbabedd1542eba57a2eb79f85889d45a
 
 [deps]
-build = gcc meson ninja pkgconf pixman freetype fontconfig glib zlib
+build = gcc meson ninja pkgconf pixman freetype fontconfig glib zlib libpng
 runtime = pixman freetype fontconfig glib zlib
 
 [build]
@@ -46,8 +46,7 @@ meson setup build \
     -Dfontconfig=enabled \
     -Dxlib=disabled \
     -Dxcb=disabled \
-    -Dpng=disabled \
-    -Dsvg=enabled \
+    -Dpng=enabled \
     -Dspectre=disabled \
     -Dsymbol-lookup=disabled
 ninja -C build

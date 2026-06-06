@@ -69,7 +69,7 @@ meson setup build \
     -Dinstalled_tests=false \
     -Dman=false \
     -Dgtk_doc=false \
-    -Dprint_backends=file
+    -Dprint_backends=
 ninja -C build
 
 %post-build

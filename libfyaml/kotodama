@@ -1,0 +1,31 @@
+[meta]
+name = libfyaml
+version = 0.9.6
+description = "Fully feature complete YAML parser and emitter"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/pantoniou/libfyaml/releases/download/v0.9.6/libfyaml-0.9.6.tar.gz
+sha256 = a59cc3331e2eb903ec36933ad52a45888041cac31e44f553a00511131242c483
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr \
+    --disable-static \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

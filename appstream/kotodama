@@ -17,6 +17,8 @@ runtime = glib curl libxml2 libyaml zstd
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i "/'- Wincompatible-pointer-types-discards-qualifiers'/d" subprojects/libxmlb/meson.build 2>/dev/null || true
+sed -i '/Wincompatible-pointer-types-discards-qualifiers/d' subprojects/libxmlb/meson.build 2>/dev/null || true
 cat > native-pkgconfig.sh << 'WRAPPER'
 #!/bin/sh
 unset PKG_CONFIG_LIBDIR

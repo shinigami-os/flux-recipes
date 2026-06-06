@@ -1,25 +1,34 @@
 [meta]
 name = iso-codes
-version = 4.20.1
+version = 4.18.0
 description = "ISO language, territory, currency, script codes and their translations"
 license = LGPL-2.1-or-later
 size = 40
 
 [source]
-url = https://salsa.debian.org/iso-codes-team/iso-codes/-/archive/v4.20.1/iso-codes-v4.20.1.tar.gz
-sha256 = fb2edf81131cf937ce970f2bcb59a151dd30bd1ee99f5382f736f37fe71b9610
+url =
+sha256 =
 
 [deps]
-build = make
+build =
 runtime =
 
 [build]
-cflags = -O2 -pipe -march=x86-64-v2
+cflags =
 
 %pre-build
 
 %build
-./configure --prefix=/usr
 
 %install
-make DESTDIR=$DESTDIR install
+install -dm755 $DESTDIR/usr/share/iso-codes
+cp -r /usr/share/iso-codes/. $DESTDIR/usr/share/iso-codes/
+install -dm755 $DESTDIR/usr/share/pkgconfig
+cat > $DESTDIR/usr/share/pkgconfig/iso-codes.pc << 'EOF'
+prefix=/usr
+domains=iso_639-2 iso_639-3 iso_639-5 iso_3166-1 iso_3166-2 iso_3166-3 iso_4217 iso_15924
+
+Name: iso-codes
+Description: ISO country, language, script and currency codes and translations
+Version: 4.18.0
+EOF

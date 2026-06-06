@@ -17,6 +17,7 @@ runtime = glib alsa-lib dbus
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i '/#include <sound\/compress_offload.h>/i #include <time.h>' spa/plugins/alsa/compress-offload-api.h
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

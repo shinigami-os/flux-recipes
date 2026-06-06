@@ -1,13 +1,13 @@
 [meta]
 name = appstream
-version = 1.0.5
+version = 1.1.2
 description = "Tools and libraries to work with AppStream metadata"
 license = LGPL-2.1-or-later
 size = 4
 
 [source]
-url = https://github.com/ximion/appstream/releases/download/v1.0.5/appstream-1.0.5.tar.xz
-sha256 = 0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5
+url = https://github.com/ximion/appstream/archive/refs/tags/v1.1.2.tar.gz
+sha256 = 564ec87b16e9e4ee81fb021e612250fd27f3a3ecd31c209a5dd1ff59def3022d
 
 [deps]
 build = gcc meson ninja pkgconf glib curl libxml2 libfyaml zstd

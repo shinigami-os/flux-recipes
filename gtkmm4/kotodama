@@ -10,8 +10,8 @@ url = https://download.gnome.org/sources/gtkmm/4.12/gtkmm-4.12.0.tar.xz
 sha256 = fbc3e7618123345c0148ef71abb6548d421f52bb224fbda34875b677dc032c92
 
 [deps]
-build = gcc meson ninja pkgconf gtk4 glib
-runtime = gtk4 glib
+build = gcc meson ninja pkgconf gtk4 glib glibmm
+runtime = gtk4 glib glibmm
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

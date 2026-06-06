@@ -1,0 +1,67 @@
+[meta]
+name = glibmm
+version = 2.82.0
+description = "C++ bindings for GLib"
+license = LGPL-2.1-or-later
+size = 5
+
+[source]
+url = https://download.gnome.org/sources/glibmm/2.82/glibmm-2.82.0.tar.xz
+sha256 = 38684cff317273615c67b8fa9806f16299d51e5506d9b909bae15b589fa99cb6
+
+[deps]
+build = gcc meson ninja pkgconf glib
+runtime = glib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+cat > native-pkgconfig.sh << 'WRAPPER'
+#!/bin/sh
+unset PKG_CONFIG_LIBDIR
+unset PKG_CONFIG_PATH
+exec /usr/bin/pkg-config "$@"
+WRAPPER
+cat > native-file.ini << EOF
+[binaries]
+pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
+[properties]
+pkg_config_libdir = ['/usr/lib/x86_64-linux-gnu/pkgconfig', '/usr/lib/pkgconfig', '/usr/share/pkgconfig']
+EOF
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+cpp = '${CXX:-g++}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+rm -rf build
+meson setup build \
+    --native-file=native-file.ini \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dbuild-documentation=false \
+    -Dbuild-examples=false \
+    -Dbuild-tests=false \
+    -Dmaintainer-mode=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -47,6 +47,7 @@ meson setup build \
     -Dxlib=disabled \
     -Dxcb=disabled \
     -Dpng=disabled \
+    -Dsvg=enabled \
     -Dspectre=disabled \
     -Dsymbol-lookup=disabled
 ninja -C build

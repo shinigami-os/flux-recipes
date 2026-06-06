@@ -10,8 +10,8 @@ url = https://github.com/flatpak/xdg-desktop-portal-gtk/releases/download/1.15.3
 sha256 = 47a3743d2419a8601e691db37e85bb5fac5ae4b26842177065cd5f22ada23b37
 
 [deps]
-build = gcc meson ninja pkgconf gtk3 glib xdg-desktop-portal
-runtime = gtk3 glib xdg-desktop-portal
+build = gcc meson ninja pkgconf gtk3 glib xdg-desktop-portal gnome-desktop
+runtime = gtk3 glib xdg-desktop-portal gnome-desktop
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

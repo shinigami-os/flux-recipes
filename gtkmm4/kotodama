@@ -53,6 +53,7 @@ rm -rf build
 meson setup build \
     --prefix=/usr \
     --buildtype=release \
+    --wrap-mode=nodownload \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dbuild-documentation=false \
     -Dbuild-demos=false \

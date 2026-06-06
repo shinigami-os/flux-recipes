@@ -10,8 +10,8 @@ url = https://xkbcommon.org/download/libxkbcommon-1.7.0.tar.xz
 sha256 = 65782f0a10a4b455af9c6baab7040e2f537520caa2ec2092805cdfd36863b247
 
 [deps]
-build = gcc meson ninja pkgconf wayland wayland-protocols
-runtime = wayland
+build = gcc meson ninja pkgconf wayland wayland-protocols xkeyboard-config
+runtime = wayland xkeyboard-config
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -42,7 +42,7 @@ strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
-pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkg-config']
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
 EOF
 fi
 
@@ -55,7 +55,7 @@ meson setup build \
     -Denable-docs=false \
     -Denable-wayland=true \
     -Denable-x11=false \
-    -Denable-xkbregistry=false \
+    -Denable-xkbregistry=true \
     -Denable-tools=false
 ninja -C build
 

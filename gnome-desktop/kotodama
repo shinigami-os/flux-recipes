@@ -10,8 +10,8 @@ url = https://download.gnome.org/sources/gnome-desktop/44/gnome-desktop-44.3.tar
 sha256 = 40efa9aa8d50effed9227a3d70671e32e9dc35e20f331cab3b562975978f4f8d
 
 [deps]
-build = gcc meson ninja pkgconf glib gtk3 gtk4 gsettings-desktop-schemas xkeyboard-config fontconfig iso-codes
-runtime = glib gtk3 gtk4 gsettings-desktop-schemas fontconfig
+build = gcc meson ninja pkgconf glib gtk3 gtk4 gsettings-desktop-schemas xkeyboard-config libxkbcommon fontconfig iso-codes libseccomp
+runtime = glib gtk3 gtk4 gsettings-desktop-schemas libxkbcommon fontconfig libseccomp
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

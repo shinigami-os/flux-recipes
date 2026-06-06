@@ -1,0 +1,27 @@
+[meta]
+name = hwdata
+version = 0.390
+description = "Hardware identification databases (PCI, USB IDs)"
+license = GPL-2.0-or-later
+size = 8
+
+[source]
+url = https://github.com/vcrhonek/hwdata/archive/refs/tags/v0.390.tar.gz
+sha256 = f10684093d2a7780de8a96d3dd8a2dd544ed6136dd359197750c42bb08ce526f
+
+[deps]
+build = make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr --datadir=/usr/share --sysconfdir=/etc
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

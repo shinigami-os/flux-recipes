@@ -17,6 +17,7 @@ runtime = glib
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i '/GTK_DOC_CHECK/d' configure.ac
 autoreconf -fi
 
 %build

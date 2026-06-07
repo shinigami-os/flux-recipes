@@ -22,10 +22,10 @@ make -f Makefile.sharedlibrary \
     CFLAGS="$CFLAGS"
 
 %install
-install -Dm755 libduktape.so.207.* "$DESTDIR/usr/lib/libduktape.so.207.0.0"
-ln -sf libduktape.so.207.0.0 "$DESTDIR/usr/lib/libduktape.so.207"
-ln -sf libduktape.so.207.0.0 "$DESTDIR/usr/lib/libduktape.so"
-install -Dm755 libduk.so.* "$DESTDIR/usr/lib/libduk.so" 2>/dev/null || true
-install -Dm644 src/duktape.h src/duk_config.h "$DESTDIR/usr/include/"
-install -Dm644 pkg-config/duktape.pc "$DESTDIR/usr/lib/pkgconfig/duktape.pc"
-sed -i "s|^prefix=.*|prefix=/usr|" "$DESTDIR/usr/lib/pkgconfig/duktape.pc"
+mkdir -p "$DESTDIR/usr/lib/pkgconfig" "$DESTDIR/usr/include"
+install -m755 libduktape.so.207.20700 "$DESTDIR/usr/lib/libduktape.so.207.20700"
+ln -sf libduktape.so.207.20700 "$DESTDIR/usr/lib/libduktape.so.207"
+ln -sf libduktape.so.207.20700 "$DESTDIR/usr/lib/libduktape.so"
+install -m644 src/duktape.h src/duk_config.h "$DESTDIR/usr/include/"
+install -m644 duktape.pc "$DESTDIR/usr/lib/pkgconfig/duktape.pc"
+sed -i "s|^prefix=.*|prefix=/usr|; s|@LIBDIR@|/usr/lib|" "$DESTDIR/usr/lib/pkgconfig/duktape.pc"

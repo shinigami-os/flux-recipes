@@ -17,6 +17,7 @@ runtime = networkmanager gtk4 glib libnma libsecret
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+grep -rl "gdk/gdkx.h" src/ | xargs sed -i 's|#include <gdk/gdkx.h>||g'
 cat > native-pkgconfig.sh << 'WRAPPER'
 #!/bin/sh
 unset PKG_CONFIG_LIBDIR

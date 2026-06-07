@@ -1,17 +1,17 @@
 [meta]
-name = wlroots
-version = 0.19.0
-description = "Modular Wayland compositor library"
+name = scenefx
+version = 0.4
+description = "Wayland scene graph effects library for wlroots"
 license = MIT
-size = 5
+size = 2
 
 [source]
-url = https://gitlab.freedesktop.org/wlroots/wlroots/-/releases/0.19.0/downloads/wlroots-0.19.0.tar.gz
-sha256 = aefb0fe2633b0aad1d66123b2f41afab004fb625e2a7790492cdd39a805cac91
+url = https://github.com/wlrfx/scenefx/archive/refs/tags/0.4.tar.gz
+sha256 = b307a59160933d5d99824ef26c8ad44cf648f1ed18af26c8dc9343d2b2df0f74
 
 [deps]
-build = gcc meson ninja pkgconf wayland wayland-protocols libxkbcommon libdrm libinput seatd mesa libglvnd pixman
-runtime = wayland libxkbcommon libdrm libinput seatd mesa pixman
+build = gcc meson ninja pkgconf wayland wayland-protocols wlroots libdrm libxkbcommon pixman
+runtime = wayland wlroots libdrm libxkbcommon pixman
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -53,11 +53,8 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dxwayland=disabled \
     -Dexamples=false \
-    -Drenderers=gles2 \
-    -Dallocators=gbm \
-    -Dbackends=drm,libinput
+    -Drenderers=gles2
 ninja -C build
 
 %post-build

@@ -10,18 +10,36 @@ url = https://github.com/elkowar/eww/archive/refs/tags/v0.6.0.tar.gz
 sha256 = cef361946946c566b79f8ddc6208d1a3f16b4ff9961439a3f86935e1cfa174a1
 
 [deps]
-build = rust cargo pkgconf gtk3 gdk-pixbuf pango
+build = pkgconf gtk3 gdk-pixbuf pango
 runtime = gtk3 gdk-pixbuf pango
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+mkdir -p .cargo
+if [ -n "$FLUX_CROSS_HOST" ]; then
+perl -e '
+print "[target.x86_64-unknown-linux-musl]\n";
+print "linker = \"x86_64-linux-musl-gcc\"\n";
+' > .cargo/config.toml
+fi
 
 %build
-cargo build --release --locked --no-default-features --features=wayland
+export PATH="$PATH:$HOME/.cargo/bin"
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=x86_64-linux-musl-gcc
+    export PKG_CONFIG_SYSROOT_DIR="${FLUX_CROSS_SYSROOT}"
+    cargo build --release --locked --no-default-features --features=wayland --target x86_64-unknown-linux-musl
+else
+    cargo build --release --locked --no-default-features --features=wayland
+fi
 
 %post-build
 
 %install
-install -Dm755 target/release/eww "$DESTDIR/usr/bin/eww"
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    install -Dm755 target/x86_64-unknown-linux-musl/release/eww "$DESTDIR/usr/bin/eww"
+else
+    install -Dm755 target/release/eww "$DESTDIR/usr/bin/eww"
+fi

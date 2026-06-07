@@ -1,0 +1,33 @@
+[meta]
+name = lxqt2-build-tools
+version = 2.1.0
+description = "LXQt CMake build tools and modules"
+license = BSD-2-Clause
+size = 1
+
+[source]
+url = https://github.com/lxqt/lxqt-build-tools/releases/download/2.1.0/lxqt-build-tools-2.1.0.tar.xz
+sha256 = 2458b629936f5e1ff8850e9953e49d66b96ac419cb484fed0a4d28a711fd8ef9
+
+[deps]
+build = gcc cmake ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+rm -rf build
+cmake -S . -B build \
+    -GNinja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_TESTING=OFF
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

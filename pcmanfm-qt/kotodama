@@ -41,7 +41,8 @@ cmake -S . -B build \
     ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=toolchain.cmake} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH=/usr} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH_CMAKE_DIR=/usr/lib/x86_64-linux-gnu/cmake} \
-    -DQT_NO_PACKAGE_VERSION_CHECK=TRUE
+    -DQT_NO_PACKAGE_VERSION_CHECK=TRUE \
+    ${FLUX_CROSS_HOST:+-DQt6LinguistTools_DIR=/usr/lib/x86_64-linux-gnu/cmake/Qt6LinguistTools}
 cmake --build build
 
 %post-build

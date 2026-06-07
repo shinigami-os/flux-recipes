@@ -19,6 +19,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 perl -0777 -i -pe '
     s/GTK_DOC_CHECK\(\[1\.14\],\[--flavour no-tmpl\]\)/AM_CONDITIONAL([ENABLE_GTK_DOC], false)/;
+    s/IT_PROG_INTLTOOL\([^\)]*\)//;
     s/[ \t]*docs\/[^\n]*\n//gm;
 ' configure.ac
 perl -0777 -i -pe 's/^if ENABLE_GTK_DOC\b.*?^endif[^\n]*\n//ms' Makefile.am

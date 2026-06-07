@@ -7,7 +7,7 @@ size = 1
 
 [source]
 url = https://download.kde.org/stable/layer-shell-qt/6.3.4/layer-shell-qt-6.3.4.tar.xz
-sha256 = e63486571dfa1bc476785f0d881e2138c736708009589c05a93ab24575e06b4f
+sha256 = e0efff427b2155b09784851fa1645511ffb93629e557e887ec5dacff2fe223a0
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base wayland wayland-protocols

@@ -7,7 +7,7 @@ size = 10
 
 [source]
 url = https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz
-sha256 = c2b671e67e0c288a69fc33dc1b6f1b534d07882c2aceed37004bf48c601afa72
+sha256 = 053794d6671a3e397d849e478a80b82a63cb9d8ca296bd35b73317bb5ceb87b5
 
 [deps]
 build = gcc meson ninja pkgconf glib dbus

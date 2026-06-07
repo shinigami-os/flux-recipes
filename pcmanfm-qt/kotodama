@@ -18,6 +18,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 sed -i 's|#include <xcb/xcb.h>||' pcmanfm/desktopwindow.h
+sed -i '/#include <X11\/Xlib\.h>/d' pcmanfm/application.cpp
 perl -e '
 print "typedef void xcb_connection_t;\n";
 print "typedef unsigned int xcb_atom_t;\n";

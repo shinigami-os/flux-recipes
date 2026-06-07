@@ -26,7 +26,9 @@ print "linker = \"x86_64-linux-musl-gcc\"\n";
 fi
 
 %build
-REAL_HOME=$(getent passwd "${SUDO_USER:-$USER}" | cut -d: -f6)
+for _h in /home/*; do
+    [ -x "$_h/.cargo/bin/cargo" ] && REAL_HOME="$_h" && break
+done
 export PATH="$PATH:$REAL_HOME/.cargo/bin"
 export CARGO_HOME="$REAL_HOME/.cargo"
 export RUSTUP_HOME="$REAL_HOME/.rustup"

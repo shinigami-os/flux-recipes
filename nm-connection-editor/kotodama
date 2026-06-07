@@ -62,9 +62,7 @@ meson setup build \
     -Dappindicator=no \
     -Dselinux=false \
     -Dwwan=false \
-    -Dteam=false \
-    -Dintrospection=false \
-    -Dlibnma-gtk4=true
+    -Dteam=false
 ninja -C build
 
 %post-build

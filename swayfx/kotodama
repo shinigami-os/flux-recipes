@@ -10,8 +10,8 @@ url = https://github.com/WillPower3309/swayfx/archive/refs/tags/0.5.2.tar.gz
 sha256 = 075e1a9577f96a71154c61997355dce569816fff05a2c535ec15b252a9acbbe1
 
 [deps]
-build = gcc meson ninja pkgconf wayland wayland-protocols libxkbcommon cairo pango json-c libinput libdrm seatd basu
-runtime = wayland libxkbcommon cairo pango json-c libinput basu
+build = gcc meson ninja pkgconf wayland wayland-protocols libxkbcommon cairo pango json-c libinput libdrm seatd basu wlroots scenefx
+runtime = wayland libxkbcommon cairo pango json-c libinput basu wlroots scenefx
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

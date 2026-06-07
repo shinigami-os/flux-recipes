@@ -55,7 +55,8 @@ meson setup build \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Denable-cairo=enabled \
     -Dpng-backend=none \
-    -Dsvg-backend=none
+    -Dsvg-backend=none \
+    -Ddocs=disabled
 ninja -C build
 
 %post-build

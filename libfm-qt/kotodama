@@ -22,7 +22,14 @@ sed -i '/xdndworkaround\.cpp/d' src/CMakeLists.txt
 perl -0777 -i -pe 's/(\s*\$\{XCB_LIBRARIES\})//g; s/(\s*"\$\{XCB_INCLUDE_DIRS\}")//g' src/CMakeLists.txt
 cat > src/xdndworkaround.h << 'STUB'
 #pragma once
-struct XdndWorkaround { XdndWorkaround() {} };
+#include "xcb/xcb.h"
+#include <QByteArray>
+struct XdndWorkaround {
+    XdndWorkaround() {}
+    static xcb_atom_t internAtom(const char*, int) { return 0; }
+    static QByteArray windowProperty(xcb_window_t, xcb_atom_t, xcb_atom_t, int) { return {}; }
+    static void setWindowProperty(xcb_window_t, xcb_atom_t, xcb_atom_t, void*, int) {}
+};
 STUB
 mkdir -p src/xcb
 cat > src/xcb/xcb.h << 'STUB'

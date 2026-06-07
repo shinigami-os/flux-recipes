@@ -1,0 +1,66 @@
+[meta]
+name = elogind
+version = 257.16
+description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
+license = LGPL-2.1-or-later
+size = 3
+
+[source]
+url = https://github.com/elogind/elogind/archive/refs/tags/v257.16.tar.gz
+sha256 = 3c8146409bfb9daa77f272212c2b0bf0ae727c782ec87ece0d2d25e0e5bf5f4c
+
+[deps]
+build = gcc meson ninja pkgconf glib linux-pam eudev gperf python3
+runtime = glib linux-pam eudev dbus
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Drootprefix=/usr \
+    -Drootlibdir=/usr/lib \
+    -Dpkgconfigdatadir=/usr/lib/pkgconfig \
+    -Dpamlibdir=/usr/lib/security \
+    -Dpamconfdir=/etc/pam.d \
+    -Dcgroup-controller=elogind \
+    -Ddefault-kill-user-processes=false \
+    -Dman=false \
+    -Dhtml=false \
+    -Dcap=false \
+    -Dacl=false \
+    -Daudit=false \
+    -Dsmack=false \
+    -Dselinux=false \
+    -Dbashcompletiondir=no \
+    -Dzshcompletiondir=no \
+    -Dnss-systemd=false \
+    -Dlogind=true
+ninja -C build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

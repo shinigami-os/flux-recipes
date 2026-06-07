@@ -26,6 +26,8 @@ AC_DEFUN([AM_GLIB_GNU_GETTEXT], [AM_CONDITIONAL([USE_NLS], false)])
 STUB
 perl -0777 -i -pe '
     s/GTK_DOC_CHECK\(\[1\.14\],\[--flavour no-tmpl\]\)/AM_CONDITIONAL([ENABLE_GTK_DOC], false)/;
+    s/IT_PROG_INTLTOOL\([^\)]*\)//;
+    s/AM_GLIB_GNU_GETTEXT[^\n]*/AM_CONDITIONAL([USE_NLS], false)/;
     s/[ \t]*docs\/[^\n]*\n//gm;
     s/[ \t]*po\/[^\n]*\n//gm;
 ' configure.ac

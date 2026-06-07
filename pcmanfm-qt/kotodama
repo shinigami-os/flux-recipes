@@ -10,8 +10,8 @@ url = https://github.com/lxqt/pcmanfm-qt/releases/download/2.1.0/pcmanfm-qt-2.1.
 sha256 = bfa03ee1d8ae9e50f33b31d50a5cb0ffbca5e6d6f5dd3a0df04c8300fc1a29d7
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base libfm-qt layer-shell-qt lxqt-sudo
-runtime = qt6-base libfm-qt layer-shell-qt lxqt-sudo
+build = gcc cmake ninja pkgconf qt6-base libfm-qt layer-shell-qt
+runtime = qt6-base libfm-qt layer-shell-qt
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

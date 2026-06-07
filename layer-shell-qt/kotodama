@@ -10,8 +10,8 @@ url = https://github.com/KDE/layer-shell-qt/archive/refs/tags/v6.6.91.tar.gz
 sha256 = 5c1827ed1cff41d4809cb26272c7b8d066f77ae7fba6e1cd5d5aec43678add2f
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base wayland wayland-protocols ecm
-runtime = qt6-base wayland
+build = gcc cmake ninja pkgconf qt6-base qt6-wayland wayland wayland-protocols ecm
+runtime = qt6-base qt6-wayland wayland
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

@@ -17,6 +17,7 @@ runtime = wayland libxkbcommon cairo pango
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i "/subdir('doc')/d" meson.build
 cat > native-pkgconfig.sh << 'WRAPPER'
 #!/bin/sh
 unset PKG_CONFIG_LIBDIR
@@ -55,8 +56,7 @@ meson setup build \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Denable-cairo=enabled \
     -Dpng-backend=none \
-    -Dsvg-backend=none \
-    -Ddocs=disabled
+    -Dsvg-backend=none
 ninja -C build
 
 %post-build

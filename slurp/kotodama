@@ -10,7 +10,7 @@ url = https://github.com/emersion/slurp/archive/v1.5.0.tar.gz
 sha256 = 0fa880d4a93e1c795e3b5929fbea47546df0955bea34fc2f7ffeb1751678f663
 
 [deps]
-build = gcc meson ninja pkgconf wayland wayland-protocols cairo scdoc
+build = gcc meson ninja pkgconf wayland wayland-protocols cairo
 runtime = wayland cairo
 
 [build]
@@ -40,7 +40,7 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dman-pages=enabled
+    -Dman-pages=disabled
 ninja -C build
 
 %install

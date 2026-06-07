@@ -1,0 +1,54 @@
+[meta]
+name = libdbusmenu
+version = 18.10.20180917
+description = "Library for passing menus over DBus"
+license = LGPL-2.1-or-later
+size = 1
+
+[source]
+url = https://launchpadlibrarian.net/723553639/libdbusmenu_18.10.20180917~bzr492+repack1.orig.tar.xz
+sha256 = 41298b926573419f21864205317461750b833c596af6ab0bd206e13336f8cee3
+
+[deps]
+build = gcc make autoconf automake libtool pkgconf glib gtk3
+runtime = glib gtk3
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p m4
+perl -e '
+print "AC_DEFUN([IT_PROG_INTLTOOL], [AM_CONDITIONAL([USE_NLS], false)])\n";
+' > m4/intltool.m4
+perl -e '
+print "AC_DEFUN([AM_GLIB_GNU_GETTEXT], [AM_CONDITIONAL([USE_NLS], false)])\n";
+' > m4/glib-gettext.m4
+perl -0777 -i -pe '
+    s/GTK_DOC_CHECK\(\[1\.14\],\[--flavour no-tmpl\]\)/AM_CONDITIONAL([ENABLE_GTK_DOC], false)/;
+    s/IT_PROG_INTLTOOL\([^\)]*\)//;
+    s/AM_GLIB_GNU_GETTEXT[^\n]*/AM_CONDITIONAL([USE_NLS], false)/;
+    s/[ \t]*docs\/[^\n]*\n//gm;
+    s/[ \t]*po\/Makefile[^\n]*\n//gm;
+' configure.ac
+perl -0777 -i -pe 's/^if ENABLE_GTK_DOC\b.*?^endif[^\n]*\n//ms' Makefile.am
+autoreconf -fi
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --with-gtk=3 \
+    --disable-gtk-doc \
+    --disable-introspection \
+    --disable-tests \
+    --disable-dumper \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${CC:+CC=$CC} \
+    ${CXX:+CXX=$CXX}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

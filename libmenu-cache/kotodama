@@ -17,8 +17,11 @@ runtime = glib
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-perl -0777 -i -pe 's/m4_ifdef\(\[GTK_DOC_CHECK\].*?AM_CONDITIONAL\(\[ENABLE_GTK_DOC\], false\)\s*\]\)/AM_CONDITIONAL([ENABLE_GTK_DOC], false)/s' configure.ac
-find . -name "Makefile.am" -exec sed -i '/gtk-doc\.make/d; /GTK_DOC/d' {} \;
+perl -0777 -i -pe '
+    s/m4_ifdef\(\[GTK_DOC_CHECK\].*?AM_CONDITIONAL\(\[ENABLE_GTK_DOC\], false\)\s*\]\)/AM_CONDITIONAL([ENABLE_GTK_DOC], false)/s;
+    s/[ \t]*docs\/[^\n]*\n//gm;
+' configure.ac
+perl -0777 -i -pe 's/^if ENABLE_GTK_DOC\b.*?^endif[^\n]*\n//ms' Makefile.am
 mkdir -p m4
 autoreconf -fi
 

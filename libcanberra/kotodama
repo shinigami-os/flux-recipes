@@ -1,0 +1,39 @@
+[meta]
+name = libcanberra
+version = 0.30
+description = "XDG sound theme and event sound library"
+license = LGPL-2.1-or-later
+size = 1
+
+[source]
+url = https://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz
+sha256 = 053794d6671a3e397d849e478a80b82a63cb9d8ca296bd35b73317bb5ceb87b5
+
+[deps]
+build = gcc make pkgconf glib pulseaudio
+runtime = glib pulseaudio
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --disable-gtk \
+    --disable-gtk3 \
+    --disable-alsa \
+    --disable-oss \
+    --disable-null \
+    --enable-pulse \
+    --disable-gstreamer \
+    --disable-tdb \
+    --disable-udev \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} ${CC:+CC=$CC}
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

@@ -1,0 +1,80 @@
+[meta]
+name = pulseaudio
+version = 17.0
+description = "PulseAudio sound server (client libraries)"
+license = LGPL-2.1-or-later
+size = 10
+
+[source]
+url = https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.xz
+sha256 = c2b671e67e0c288a69fc33dc1b6f1b534d07882c2aceed37004bf48c601afa72
+
+[deps]
+build = gcc meson ninja pkgconf glib dbus
+runtime = glib dbus
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+glib-compile-resources = '/usr/bin/glib-compile-resources'
+glib-compile-schemas = '/usr/bin/glib-compile-schemas'
+gdbus-codegen = '/usr/bin/gdbus-codegen'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+rm -rf build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    "-Dc_args=-Dg_variant_builder_init_static=g_variant_builder_init" \
+    -Ddaemon=false \
+    -Dclient=true \
+    -Ddbus=enabled \
+    -Dalsa=disabled \
+    -Dasyncns=disabled \
+    -Davahi=disabled \
+    -Dbluez5=disabled \
+    -Dfftw=disabled \
+    -Dglib=enabled \
+    -Dgsettings=disabled \
+    -Dgstreamer=disabled \
+    -Dgtk=disabled \
+    -Dhal-compat=false \
+    -Dipv6=false \
+    -Djack=disabled \
+    -Dlirc=disabled \
+    -Dopenssl=disabled \
+    -Dorc=disabled \
+    -Dsamplerate=disabled \
+    -Dsoxr=disabled \
+    -Dspeex=disabled \
+    -Dsystemd=disabled \
+    -Dtcpwrap=disabled \
+    -Dtests=false \
+    -Dudev=disabled \
+    -Dwebrtc-aec=disabled \
+    -Dx11=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

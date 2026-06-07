@@ -1,0 +1,31 @@
+[meta]
+name = duktape
+version = 2.7.0
+description = "Embeddable JavaScript engine"
+license = MIT
+size = 1
+
+[source]
+url = https://duktape.org/duktape-2.7.0.tar.xz
+sha256 = 90f8d2fa8b5567c6899830ddef2c03f3c27960b11aca222fa17aa7ac613c2890
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%build
+make -f Makefile.sharedlibrary \
+    CC="${CC:-gcc}" \
+    CFLAGS="$CFLAGS"
+
+%install
+install -Dm755 libduktape.so.207.* "$DESTDIR/usr/lib/libduktape.so.207.0.0"
+ln -sf libduktape.so.207.0.0 "$DESTDIR/usr/lib/libduktape.so.207"
+ln -sf libduktape.so.207.0.0 "$DESTDIR/usr/lib/libduktape.so"
+install -Dm755 libduk.so.* "$DESTDIR/usr/lib/libduk.so" 2>/dev/null || true
+install -Dm644 src/duktape.h src/duk_config.h "$DESTDIR/usr/include/"
+install -Dm644 pkg-config/duktape.pc "$DESTDIR/usr/lib/pkgconfig/duktape.pc"
+sed -i "s|^prefix=.*|prefix=/usr|" "$DESTDIR/usr/lib/pkgconfig/duktape.pc"

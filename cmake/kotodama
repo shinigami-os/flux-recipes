@@ -19,8 +19,8 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-./bootstrap --prefix=/usr --parallel=$(nproc) -- -DCMAKE_USE_OPENSSL=ON
-make
+CC=/usr/bin/gcc CXX=/usr/bin/g++ ./bootstrap --prefix=/usr --parallel=$(nproc) -- -DCMAKE_USE_OPENSSL=ON
+make CC=/usr/bin/gcc CXX=/usr/bin/g++
 
 %post-build
 

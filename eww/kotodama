@@ -26,7 +26,10 @@ print "linker = \"x86_64-linux-musl-gcc\"\n";
 fi
 
 %build
-export PATH="$PATH:$HOME/.cargo/bin"
+REAL_HOME=$(getent passwd "${SUDO_USER:-$USER}" | cut -d: -f6)
+export PATH="$PATH:$REAL_HOME/.cargo/bin"
+export CARGO_HOME="$REAL_HOME/.cargo"
+export RUSTUP_HOME="$REAL_HOME/.rustup"
 if [ -n "$FLUX_CROSS_HOST" ]; then
     export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=x86_64-linux-musl-gcc
     export PKG_CONFIG_SYSROOT_DIR="${FLUX_CROSS_SYSROOT}"

@@ -17,12 +17,8 @@ runtime = qt6-base qt6-wayland wayland
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-cat > native-pkgconfig.sh << 'WRAPPER'
-#!/bin/sh
-unset PKG_CONFIG_LIBDIR
-unset PKG_CONFIG_PATH
-exec /usr/bin/pkg-config "$@"
-WRAPPER
+sed -i 's/REQUIRED COMPONENTS WaylandClient Qml/REQUIRED COMPONENTS WaylandClient/' CMakeLists.txt
+sed -i 's/add_subdirectory(declarative)/if(TARGET Qt6::Qml)\nadd_subdirectory(declarative)\nendif()/' src/CMakeLists.txt
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)

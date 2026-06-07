@@ -35,6 +35,7 @@ export RUSTUP_HOME="$REAL_HOME/.rustup"
 if [ -n "$FLUX_CROSS_HOST" ]; then
     export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=x86_64-linux-musl-gcc
     export PKG_CONFIG_SYSROOT_DIR="${FLUX_CROSS_SYSROOT}"
+    export RUSTFLAGS="-C target-feature=-crt-static"
     cargo build --release --locked --no-default-features --features=wayland --target x86_64-unknown-linux-musl
 else
     cargo build --release --locked --no-default-features --features=wayland

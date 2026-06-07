@@ -10,8 +10,8 @@ url = https://freedesktop.org/software/pulseaudio/pavucontrol/pavucontrol-6.2.ta
 sha256 = e93a7836c7307dcbc989e95fc7ec0878322514c475fabd90e89ed52fd4f15d32
 
 [deps]
-build = gcc meson ninja pkgconf pipewire gtk4 libadwaita gtkmm4
-runtime = pipewire gtk4 libadwaita
+build = gcc meson ninja pkgconf pipewire gtk4 libadwaita gtkmm4 pulseaudio
+runtime = pipewire gtk4 libadwaita pulseaudio
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -59,7 +59,8 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    "-Dc_args=-Dg_variant_builder_init_static=g_variant_builder_init"
+    "-Dc_args=-Dg_variant_builder_init_static=g_variant_builder_init" \
+    -Daudio-feedback=disabled
 ninja -C build
 
 %post-build

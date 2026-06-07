@@ -32,7 +32,9 @@ perl -0777 -i -pe '
     s/[ \t]*po\/Makefile[^\n]*\n//gm;
 ' configure.ac
 perl -0777 -i -pe 's/^if ENABLE_GTK_DOC\b.*?^endif[^\n]*\n//ms' Makefile.am
-sed -i 's/\bdocs\b//; s/\bpo\b//' Makefile.am
+sed -i 's/\bdocs\b//; s/\bpo\b//; s/\btests\b//' Makefile.am
+perl -0777 -i -pe 's/^-include \$\(INTROSPECTION_MAKEFILE\).*?^endif\b[^\n]*\n//ms' libdbusmenu-gtk/Makefile.am
+sed -i '/INTROSPECTION\|_gir\|\.gir\|\.typelib/d' libdbusmenu-gtk/Makefile.am
 sed -i '/^AC_OUTPUT/i AM_CONDITIONAL([HAVE_VALGRIND], false)' configure.ac
 autoreconf -fi
 

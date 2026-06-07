@@ -24,6 +24,13 @@ cat > src/xdndworkaround.h << 'STUB'
 #pragma once
 struct XdndWorkaround { XdndWorkaround() {} };
 STUB
+mkdir -p src/xcb
+cat > src/xcb/xcb.h << 'STUB'
+#pragma once
+typedef unsigned int xcb_window_t;
+typedef unsigned int xcb_atom_t;
+typedef unsigned int xcb_timestamp_t;
+STUB
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)

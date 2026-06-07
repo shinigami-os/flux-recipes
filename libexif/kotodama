@@ -1,0 +1,31 @@
+[meta]
+name = libexif
+version = 0.6.25
+description = "Library to parse EXIF files"
+license = LGPL-2.1-or-later
+size = 2
+
+[source]
+url = https://github.com/libexif/libexif/releases/download/v0.6.25/libexif-0.6.25.tar.xz
+sha256 = e0efff427b2155b09784851fa1645511ffb93629e557e887ec5dacff2fe223a0
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

@@ -17,7 +17,7 @@ runtime = wayland libxkbcommon cairo pango
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-sed -i "/subdir('doc')/d" meson.build
+sed -i "s|subdir('doc')||" meson.build
 cat > native-pkgconfig.sh << 'WRAPPER'
 #!/bin/sh
 unset PKG_CONFIG_LIBDIR

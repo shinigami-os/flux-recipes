@@ -1,13 +1,13 @@
 [meta]
 name = layer-shell-qt
-version = 6.6.91
+version = 6.3.4
 description = "Qt component to allow applications to make use of the Wayland wlr-layer-shell protocol"
 license = LGPL-2.1-or-later
 size = 1
 
 [source]
-url = https://github.com/KDE/layer-shell-qt/archive/refs/tags/v6.6.91.tar.gz
-sha256 = 5c1827ed1cff41d4809cb26272c7b8d066f77ae7fba6e1cd5d5aec43678add2f
+url = https://download.kde.org/stable/plasma/6.3.4/layer-shell-qt-6.3.4.tar.xz
+sha256 = f80c983f48d3abefd6684ce93fc67368ce207f2160734d4e113a418c69a26346
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-wayland wayland wayland-protocols ecm

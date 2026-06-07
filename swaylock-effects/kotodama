@@ -1,6 +1,6 @@
 [meta]
 name = swaylock-effects
-version = 1.6-4
+version = 1.6.4
 description = "Screen locker for Wayland with blur and effects"
 license = MIT
 size = 1

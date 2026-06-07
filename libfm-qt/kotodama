@@ -20,24 +20,18 @@ cflags = -O2 -pipe -march=x86-64-v2
 sed -i 's/find_package(XCB REQUIRED)/find_package(XCB)/' CMakeLists.txt
 sed -i '/xdndworkaround\.cpp/d' src/CMakeLists.txt
 perl -0777 -i -pe 's/(\s*\$\{XCB_LIBRARIES\})//g; s/(\s*"\$\{XCB_INCLUDE_DIRS\}")//g' src/CMakeLists.txt
-cat > src/xdndworkaround.h << 'STUB'
-#pragma once
-#include "xcb/xcb.h"
-#include <QByteArray>
-struct XdndWorkaround {
-    XdndWorkaround() {}
-    static xcb_atom_t internAtom(const char*, int) { return 0; }
-    static QByteArray windowProperty(xcb_window_t, xcb_atom_t, xcb_atom_t, int) { return {}; }
-    static void setWindowProperty(xcb_window_t, xcb_atom_t, xcb_atom_t, void*, int) {}
-};
-STUB
-mkdir -p src/xcb
-cat > src/xcb/xcb.h << 'STUB'
-#pragma once
-typedef unsigned int xcb_window_t;
-typedef unsigned int xcb_atom_t;
-typedef unsigned int xcb_timestamp_t;
-STUB
+perl -e '
+print "#pragma once\n";
+print "#include <QByteArray>\n";
+print "typedef unsigned int xcb_window_t;\n";
+print "typedef unsigned int xcb_atom_t;\n";
+print "struct XdndWorkaround {\n";
+print "    XdndWorkaround() {}\n";
+print "    static xcb_atom_t internAtom(const char*, int) { return 0; }\n";
+print "    static QByteArray windowProperty(xcb_window_t, xcb_atom_t, xcb_atom_t, int) { return {}; }\n";
+print "    static void setWindowProperty(xcb_window_t, xcb_atom_t, xcb_atom_t, void*, int) {}\n";
+print "};\n";
+' > src/xdndworkaround.h
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)

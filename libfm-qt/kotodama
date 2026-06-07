@@ -10,13 +10,16 @@ url = https://github.com/lxqt/libfm-qt/releases/download/2.1.0/libfm-qt-2.1.0.ta
 sha256 = bfa03ee1d8ae9e50f33b31d50a5cb0ffbca5e6d6f5dd3a0df04c8300fc1a29d7
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base glib libexif libmenu-cache lxqt2-build-tools
+build = gcc cmake ninja pkgconf qt6-base glib libexif libmenu-cache lxqt2-build-tools lxqt-menu-data
 runtime = qt6-base glib libexif libmenu-cache
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i 's/find_package(XCB REQUIRED)/find_package(XCB)/' CMakeLists.txt
+sed -i '/xdndworkaround\.cpp/d' src/CMakeLists.txt
+perl -0777 -i -pe 's/(\s*\$\{XCB_LIBRARIES\})//g; s/(\s*"\$\{XCB_INCLUDE_DIRS\}")//g' src/CMakeLists.txt
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)

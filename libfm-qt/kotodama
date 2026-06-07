@@ -21,6 +21,7 @@ sed -i 's/find_package(XCB REQUIRED)/find_package(XCB)/' CMakeLists.txt
 sed -i '/xdndworkaround\.cpp/d' src/CMakeLists.txt
 perl -0777 -i -pe 's/(\s*\$\{XCB_LIBRARIES\})//g; s/(\s*"\$\{XCB_INCLUDE_DIRS\}")//g' src/CMakeLists.txt
 sed -i 's|#include <xcb/xcb.h>.*|typedef unsigned int xcb_window_t; typedef unsigned int xcb_atom_t;|' src/folderview.cpp
+sed -i '/#include <X11\/X\.h>/d' src/fontbutton.cpp
 perl -0777 -i -pe 's|#include <X11/Xlib\.h>\n||;
   s|(static char\* fm_app_launch_context_get_display[^{]+\{)[^}]*(\}[^}]*\}[^}]*\})|${1}\n  return nullptr;\n}|s' src/applaunchcontext.cpp
 perl -e '

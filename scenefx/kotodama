@@ -61,3 +61,4 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+cp -r include/types "$DESTDIR/usr/include/scenefx-0.4/"

@@ -1,13 +1,13 @@
 [meta]
 name = raleway-fonts
-version = 4.020
+version = 4.101
 description = "Raleway - elegant sans-serif typeface"
 license = OFL-1.1
 size = 5
 
 [source]
-url = https://www.1001fonts.com/download/raleway.zip
-sha256 = 82a48346d59f395ac365b4aca6d3bc782d9286767ab0963e6182962d765b9034
+url = https://github.com/theleagueof/raleway/archive/refs/tags/4.101.tar.gz
+sha256 = 1224c4b158b3eda947de275d2f371d671363f87e947a5259d4af1643968e9d0d
 
 [deps]
 build =

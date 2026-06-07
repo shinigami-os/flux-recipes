@@ -26,9 +26,10 @@ print "typedef struct { xcb_atom_t atom; } xcb_intern_atom_reply_t;\n";
 print "#define XCB_PROP_MODE_REPLACE 0\n";
 print "static inline xcb_intern_atom_reply_t* xcb_intern_atom(xcb_connection_t*,int,int,const char*){return new xcb_intern_atom_reply_t{0};}\n";
 print "static inline xcb_intern_atom_reply_t* xcb_intern_atom_reply(xcb_connection_t*,xcb_intern_atom_reply_t* c,void*){return c;}\n";
-print "static inline void xcb_change_property(xcb_connection_t*,int,unsigned,xcb_atom_t,xcb_atom_t,int,int,const void*){};\n";
+print "static inline void xcb_change_property(xcb_connection_t*,int,unsigned,xcb_atom_t,xcb_atom_t,int,int,const void*){}\n";
 ' > pcmanfm/xcb_stub.h
 sed -i 's|#include <xcb/xcb.h>|#include "xcb_stub.h"|' pcmanfm/desktopwindow.cpp
+perl -0777 -i -pe 's|        // set freedesktop\.org EWMH hints properly\n        if\(QGuiApplication::platformName\(\) == QStringLiteral\("xcb"\)\) \{.*?\n        \}\n||s' pcmanfm/desktopwindow.cpp
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)

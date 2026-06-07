@@ -10,13 +10,14 @@ url = https://github.com/lxde/menu-cache/archive/refs/tags/1.1.1.tar.gz
 sha256 = e8af90467df271c3c8700c840ca470ca2915699c6f213c502a87d74608748f08
 
 [deps]
-build = gcc make pkgconf glib
+build = gcc make autoconf automake libtool pkgconf glib
 runtime = glib
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+autoreconf -fi
 
 %build
 ./configure \

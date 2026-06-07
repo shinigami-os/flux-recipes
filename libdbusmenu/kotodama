@@ -32,6 +32,7 @@ perl -0777 -i -pe '
     s/[ \t]*po\/Makefile[^\n]*\n//gm;
 ' configure.ac
 perl -0777 -i -pe 's/^if ENABLE_GTK_DOC\b.*?^endif[^\n]*\n//ms' Makefile.am
+sed -i 's/\bdocs\b//' Makefile.am
 sed -i '/^AC_OUTPUT/i AM_CONDITIONAL([HAVE_VALGRIND], false)' configure.ac
 autoreconf -fi
 

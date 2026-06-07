@@ -1,0 +1,52 @@
+[meta]
+name = gtk-layer-shell
+version = 0.10.1
+description = "Library to create Wayland desktop components using the layer-shell protocol"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/wmww/gtk-layer-shell/archive/refs/tags/v0.10.1.tar.gz
+sha256 = 88c3a3e0a5300532f3d368d5df64838a87f1fb85273f22d41df0a6b8d0ec59c6
+
+[deps]
+build = gcc meson ninja pkgconf gtk3 wayland wayland-protocols
+runtime = gtk3 wayland
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Ddocs=false \
+    -Dexamples=false \
+    -Dintrospection=false \
+    -Dtests=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

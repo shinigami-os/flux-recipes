@@ -18,8 +18,11 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 sed -i '/GTK_DOC_CHECK/d' configure.ac
+find . -name "Makefile.am" -exec sed -i '/gtk-doc\.make/d; /GTK_DOC/d' {} \;
 mkdir -p m4
-autoreconf -fi -I /usr/share/aclocal
+rm -f aclocal.m4
+aclocal -I m4 -I /usr/share/aclocal --force --install
+autoreconf -fi
 
 %build
 ./configure \

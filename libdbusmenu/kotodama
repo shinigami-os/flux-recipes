@@ -41,6 +41,7 @@ autoreconf -fi
     --with-gtk=3 \
     --disable-gtk-doc \
     --disable-introspection \
+    --disable-vala \
     --disable-tests \
     --disable-dumper \
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \

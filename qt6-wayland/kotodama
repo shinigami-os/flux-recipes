@@ -43,7 +43,9 @@ cmake -S . -B build \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH_CMAKE_DIR=/usr/lib/x86_64-linux-gnu/cmake} \
     -DQT_NO_PACKAGE_VERSION_CHECK=TRUE \
     -DQT_BUILD_TESTS=OFF \
-    -DQT_BUILD_EXAMPLES=OFF
+    -DQT_BUILD_EXAMPLES=OFF \
+    -DFEATURE_wayland_compositor=OFF \
+    -DFEATURE_wayland_qml_plugin=OFF
 cmake --build build
 
 %post-build

@@ -1,0 +1,47 @@
+[meta]
+name = grim
+version = 1.4.1
+description = "Screenshot tool for Wayland compositors"
+license = MIT
+size = 1
+
+[source]
+url = https://git.sr.ht/~emersion/grim/archive/v1.4.1.tar.gz
+sha256 = 5ed8e70fcd83a7e203e92d34dbb82a1342d3f13ad98a6b0310cc97e1a9342ded
+
+[deps]
+build = gcc meson ninja pkgconf wayland wayland-protocols libjpeg-turbo scdoc
+runtime = wayland libjpeg-turbo
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dman-pages=enabled
+ninja -C build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

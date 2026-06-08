@@ -10,8 +10,8 @@ url = https://archive.mesa3d.org/mesa-24.3.4.tar.xz
 sha256 = e641ae27191d387599219694560d221b7feaa91c900bcec46bf444218ed66025
 
 [deps]
-build = gcc meson ninja pkgconf python3 libdrm libglvnd libX11 libxcb xorgproto libXfixes libXxf86vm libpciaccess expat zlib llvm libelf
-runtime = libdrm libglvnd libX11 libxcb libXfixes libXxf86vm expat zlib libelf
+build = gcc meson ninja pkgconf python3 libdrm libglvnd libX11 libxcb xorgproto libXfixes libXxf86vm libXrender libXrandr libpciaccess expat zlib llvm libelf
+runtime = libdrm libglvnd libX11 libxcb libXfixes libXxf86vm libXrender libXrandr expat zlib libelf
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

@@ -6,8 +6,8 @@ license = MIT
 size = 1
 
 [source]
-url = https://xorg.freedesktop.org/releases/individual/lib/xshmfence-1.3.3.tar.xz
-sha256 = 9a7f93a1bbb88ed939cbdc23cfd3483560c856b27f87f736130af18b0e3676f7
+url = https://xorg.freedesktop.org/releases/individual/lib/libxshmfence-1.3.3.tar.xz
+sha256 = d4a4df096aba96fea02c029ee3a44e11a47eb7f7213c1a729be83e85ec3fde10
 
 [deps]
 build = gcc make pkgconf util-macros xorgproto

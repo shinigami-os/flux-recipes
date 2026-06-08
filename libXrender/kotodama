@@ -1,0 +1,37 @@
+[meta]
+name = libXrender
+version = 0.9.11
+description = "X11 Render extension library"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/lib/libXrender-0.9.11.tar.xz
+sha256 = bc53759a3a83d1ff702fb59641b3d2f7c56e05051fa0cfa93501166fa782dc24
+
+[deps]
+build = gcc make pkgconf util-macros xorgproto libX11
+runtime = libX11
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    export PKG_CONFIG_LIBDIR="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+fi
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --enable-malloc0returnsnull=no \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%install
+make DESTDIR="$DESTDIR" install

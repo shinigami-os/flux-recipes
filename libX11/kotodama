@@ -7,10 +7,10 @@ size = 2
 
 [source]
 url = https://xorg.freedesktop.org/releases/individual/lib/libX11-1.8.10.tar.xz
-sha256 = edb59fa23994e405fdc5b400afdf5820ae6160b94f35e3dc3da4457a16e89753
+sha256 = 2b3b3dad9347db41dca56beb7db5878f283bde1142f04d9f8e478af435dfdc53
 
 [deps]
-build = gcc make pkgconf xorgproto xtrans libxcb
+build = gcc make pkgconf util-macros xorgproto xtrans libxcb
 runtime = libxcb
 
 [build]
@@ -20,6 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 if [ -n "$FLUX_CROSS_HOST" ]; then
     export PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
     export PKG_CONFIG_LIBDIR="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    export ac_cv_func_malloc_0_nonnull=yes
 fi
 
 %build

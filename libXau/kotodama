@@ -10,7 +10,7 @@ url = https://xorg.freedesktop.org/releases/individual/lib/libXau-1.0.12.tar.xz
 sha256 = 74d0e4dfa3d39ad8939e99bda37f5967aba528211076828464d2777d477fc0fb
 
 [deps]
-build = gcc make pkgconf xorgproto
+build = gcc make pkgconf util-macros xorgproto
 runtime =
 
 [build]
@@ -20,6 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 if [ -n "$FLUX_CROSS_HOST" ]; then
     export PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
     export PKG_CONFIG_LIBDIR="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    export ac_cv_func_malloc_0_nonnull=yes
 fi
 
 %build

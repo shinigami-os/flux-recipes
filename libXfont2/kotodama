@@ -7,10 +7,10 @@ size = 1
 
 [source]
 url = https://xorg.freedesktop.org/releases/individual/lib/libXfont2-2.0.7.tar.xz
-sha256 = 2b3b3dad9347db41dca56beb7db5878f283bde1142f04d9f8e478af435dfdc53
+sha256 = 8b7b82fdeba48769b69433e8e3fbb984a5f6bf368b0d5f47abeec49de3e58efb
 
 [deps]
-build = gcc make pkgconf xorgproto xtrans libXau freetype libfontenc zlib
+build = gcc make pkgconf util-macros xorgproto xtrans libXau freetype libfontenc zlib
 runtime = freetype libfontenc zlib
 
 [build]
@@ -20,6 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 if [ -n "$FLUX_CROSS_HOST" ]; then
     export PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
     export PKG_CONFIG_LIBDIR="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    export ac_cv_func_malloc_0_nonnull=yes
 fi
 
 %build

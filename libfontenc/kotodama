@@ -7,10 +7,10 @@ size = 1
 
 [source]
 url = https://xorg.freedesktop.org/releases/individual/lib/libfontenc-1.1.8.tar.xz
-sha256 = 599ebf9996710fea71622e6e184f3a8ad5b43d0e5fa8c4e407123c88a59a6d55
+sha256 = 7b02c3d405236e0d86806b1de9d6868fe60c313628b38350b032914aa4fd14c6
 
 [deps]
-build = gcc make pkgconf xorgproto zlib
+build = gcc make pkgconf util-macros xorgproto zlib
 runtime = zlib
 
 [build]
@@ -20,6 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 if [ -n "$FLUX_CROSS_HOST" ]; then
     export PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
     export PKG_CONFIG_LIBDIR="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    export ac_cv_func_malloc_0_nonnull=yes
 fi
 
 %build

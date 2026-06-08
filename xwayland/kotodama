@@ -45,7 +45,7 @@ meson setup build \
     -Dxdm-auth-1=false \
     -Dsecure-rpc=false \
     -Dglamor=true \
-    -Dglx=true \
+    -Dglx=false \
     -Ddri3=true \
     -Dsha1=libmd \
     -Dlibdecor=false \

@@ -43,7 +43,6 @@ meson setup build \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dauthfw=pam \
-    -Djs_engine=duktape \
     -Dsession_tracking=elogind \
     -Dintrospection=false \
     -Dman=false \

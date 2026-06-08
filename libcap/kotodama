@@ -1,0 +1,37 @@
+[meta]
+name = libcap
+version = 2.78
+description = "POSIX 1003.1e capabilities library"
+license = BSD-3-Clause OR GPL-2.0-only
+size = 1
+
+[source]
+url = https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-2.78.tar.xz
+sha256 = 0d621e562fd932ccf67b9660fb018e468a683d7b827541df27813228c996bb11
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%build
+make \
+    CC="${CC:-gcc}" \
+    AR="${AR:-ar}" \
+    RANLIB="${RANLIB:-ranlib}" \
+    lib=lib \
+    DYNAMIC=yes \
+    GOLANG=no \
+    RAISE_SETFCAP=no \
+    BUILD_CC=gcc
+
+%install
+make \
+    lib=lib \
+    GOLANG=no \
+    RAISE_SETFCAP=no \
+    DESTDIR="$DESTDIR" \
+    prefix=/usr \
+    install

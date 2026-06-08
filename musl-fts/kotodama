@@ -1,0 +1,32 @@
+[meta]
+name = musl-fts
+version = 1.2.7
+description = "fts (file tree traversal) implementation for musl libc"
+license = BSD-3-Clause
+size = 1
+
+[source]
+url = https://github.com/pullmoll/musl-fts/archive/refs/tags/v1.2.7.tar.gz
+sha256 = 49ae567a96dbab22823d045ffebe0d6b14b9b799925e9ca9274d47d26ff482a6
+
+[deps]
+build = gcc make autoconf automake libtool pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+autoreconf -fi
+
+%build
+./configure \
+    --prefix=/usr \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%install
+make DESTDIR="$DESTDIR" install

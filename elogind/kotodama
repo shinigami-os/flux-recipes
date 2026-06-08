@@ -10,8 +10,8 @@ url = https://github.com/elogind/elogind/archive/refs/tags/v257.16.tar.gz
 sha256 = 3c8146409bfb9daa77f272212c2b0bf0ae727c782ec87ece0d2d25e0e5bf5f4c
 
 [deps]
-build = gcc meson ninja pkgconf glib linux-pam eudev gperf python3
-runtime = glib linux-pam eudev dbus
+build = gcc meson ninja pkgconf glib linux-pam eudev libcap gperf python3
+runtime = glib linux-pam eudev libcap dbus
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

@@ -10,7 +10,7 @@ url = https://sourceware.org/elfutils/ftp/0.192/elfutils-0.192.tar.bz2
 sha256 = 616099beae24aba11f9b63d86ca6cc8d566d968b802391334c91df54eab416b4
 
 [deps]
-build = gcc make pkgconf zlib zstd argp-standalone
+build = gcc make pkgconf zlib zstd argp-standalone musl-fts
 runtime = zlib zstd
 
 [build]
@@ -30,7 +30,7 @@ cflags = -O2 -pipe -march=x86-64-v2
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
     ${CC:+CC=$CC} \
-    LDFLAGS="-largp"
+    LDFLAGS="-largp -lfts"
 make -C lib
 make -C libelf
 

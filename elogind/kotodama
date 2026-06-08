@@ -24,6 +24,9 @@ done
 grep -rl 'struct stat\b' src/libelogind/sd-journal/ | grep '\.h$' | while read f; do
     grep -q '#include <sys/stat.h>' "$f" || sed -i '1s|^|#include <sys/stat.h>\n|' "$f"
 done
+grep -rl '\bbasename\b\|\bdirname\b' src/ | grep '\.c$\|\.h$' | while read f; do
+    grep -q '#include <libgen.h>' "$f" || sed -i '1s|^|#include <libgen.h>\n|' "$f"
+done
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

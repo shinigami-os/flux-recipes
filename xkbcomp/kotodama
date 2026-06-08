@@ -1,0 +1,33 @@
+[meta]
+name = xkbcomp
+version = 1.5.0
+description = "XKB keymap compiler"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/app/xkbcomp-1.5.0.tar.xz
+sha256 = 2ac31f26600776db6d9cd79b3fcd272263faebac7eb85fb2f33c7141b8486060
+
+[deps]
+build = gcc make pkgconf util-macros xorgproto libX11 libxkbfile
+runtime = libX11 libxkbfile
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    export PKG_CONFIG_LIBDIR="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+fi
+
+%build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --enable-malloc0returnsnull=no
+make
+
+%install
+make DESTDIR="$DESTDIR" install

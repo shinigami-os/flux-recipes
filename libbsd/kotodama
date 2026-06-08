@@ -29,7 +29,9 @@ cflags = -O2 -pipe -march=x86-64-v2
     ${CC:+CC=$CC}
 make
 
-%post-build
-
 %install
 make DESTDIR="$DESTDIR" install
+if [ -f "$DESTDIR/usr/lib/libbsd.so" ]; then
+    sed -i 's|GROUP(/usr/lib/ AS_NEEDED(-lmd))|GROUP(libbsd.so.0 AS_NEEDED(-lmd))|' \
+        "$DESTDIR/usr/lib/libbsd.so"
+fi

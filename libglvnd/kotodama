@@ -46,8 +46,7 @@ meson setup build \
     -Dentrypoint-patching=disabled \
     -Dgles1=true \
     -Dgles2=true \
-    -Degl=true \
-    -Dopengl=true
+    -Degl=true
 ninja -C build
 
 %install

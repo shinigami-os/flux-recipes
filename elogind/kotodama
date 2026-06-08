@@ -17,6 +17,7 @@ runtime = glib linux-pam eudev libcap dbus
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i '1s|^|#include <sys/stat.h>\n|' src/libelogind/sd-journal/journal-file.h
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

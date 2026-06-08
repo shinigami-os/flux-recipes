@@ -1,0 +1,59 @@
+[meta]
+name = xwayland
+version = 24.1.12
+description = "X server for running X11 apps under Wayland"
+license = MIT
+size = 3
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/xserver/xwayland-24.1.12.tar.xz
+sha256 = 6df02c511b92c1b9848734d9d1b03a4c24f8375ba3cada44e9684a21b5f78e21
+
+[deps]
+build = gcc meson ninja pkgconf xorgproto libXau libxcb libX11 libXext libXfont2 libxkbfile pixman mesa libdrm libepoxy libglvnd libmd wayland wayland-protocols
+runtime = libXau libxcb libX11 libXext libXfont2 libxkbfile pixman mesa libdrm libepoxy libmd wayland
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dxvfb=false \
+    -Dxdmcp=false \
+    -Dxdm-auth-1=false \
+    -Dsecure-rpc=false \
+    -Dglamor=true \
+    -Dglx=true \
+    -Ddri3=true \
+    -Dsha1=libmd \
+    -Dlibdecor=false \
+    -Dsystemd_notify=false \
+    -Dxwayland_ei=false \
+    -Ddocs=false \
+    -Ddevel-docs=false
+ninja -C build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

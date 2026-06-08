@@ -1,0 +1,36 @@
+[meta]
+name = libX11
+version = 1.8.10
+description = "Core X11 client library"
+license = MIT
+size = 2
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/lib/libX11-1.8.10.tar.xz
+sha256 = edb59fa23994e405fdc5b400afdf5820ae6160b94f35e3dc3da4457a16e89753
+
+[deps]
+build = gcc make pkgconf xorgproto xtrans libxcb
+runtime = libxcb
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    export PKG_CONFIG_LIBDIR="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+fi
+
+%build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --disable-static \
+    --disable-xdmcp \
+    --without-xmlto \
+    --without-fop
+make
+
+%install
+make DESTDIR="$DESTDIR" install

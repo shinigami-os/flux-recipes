@@ -1,0 +1,46 @@
+[meta]
+name = xcb-proto
+version = 1.17.0
+description = "XCB protocol descriptions (Python + XML, build tool)"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/xcb/xcb-proto-1.17.0.tar.xz
+sha256 = 372225fd40815b8423547f5d890c5debc72e88b91088fbfb13158c20495ccb59
+
+[deps]
+build = gcc meson ninja python3
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini}
+ninja -C build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -1,0 +1,36 @@
+[meta]
+name = libxcb
+version = 1.17.0
+description = "X11 C binding library"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/xcb/libxcb-1.17.0.tar.xz
+sha256 = 7b02c3d405236e0d86806b1de9d6868fe60c313628b38350b032914aa4fd14c6
+
+[deps]
+build = gcc make pkgconf python3 xcb-proto libXau
+runtime = libXau
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    export PKG_CONFIG_LIBDIR="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    XCBGEN_DIR=$(find "${FLUX_CROSS_SYSROOT}/usr/lib" -name xcbgen -type d 2>/dev/null | head -1)
+    [ -n "$XCBGEN_DIR" ] && export PYTHONPATH="$(dirname "$XCBGEN_DIR")${PYTHONPATH:+:$PYTHONPATH}"
+fi
+
+%build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --disable-static \
+    --without-doxygen
+make
+
+%install
+make DESTDIR="$DESTDIR" install

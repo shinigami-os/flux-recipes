@@ -6,12 +6,12 @@ license = MIT
 size = 2
 
 [source]
-url = https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v1.7.0/libglvnd-v1.7.0.tar.gz
-sha256 = 2b6e15b06aafb4c0b6e2348124808cbd9b291c647299eaaba2e3202f51ff2f3d
+url = https://github.com/NVIDIA/libglvnd/archive/refs/tags/v1.7.0.tar.gz
+sha256 = 073e7292788d4d3eeb45ea6c7bdcce9bfdb3b3eef8d7dbd47f2f30dce046ef98
 
 [deps]
-build = gcc meson ninja pkgconf
-runtime =
+build = gcc meson ninja pkgconf python3 libX11 libxcb xorgproto
+runtime = libX11 libxcb
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -31,7 +31,7 @@ strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
-pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
 EOF
 fi
 
@@ -40,16 +40,15 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dx11=disabled \
-    -Dglx=disabled \
+    -Dx11=enabled \
+    -Dglx=enabled \
     -Dasm=disabled \
     -Dentrypoint-patching=disabled \
-    -Dgles1=false \
+    -Dgles1=true \
     -Dgles2=true \
-    -Degl=true
+    -Degl=true \
+    -Dopengl=true
 ninja -C build
-
-%post-build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install

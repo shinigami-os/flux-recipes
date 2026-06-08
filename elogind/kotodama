@@ -29,6 +29,20 @@ grep -rl '\bbasename\b\|\bdirname\b' src/ | grep '\.c$\|\.h$' | while read f; do
 done
 sed -i 's/(uintmax_t)rl\.rlim_cur/(unsigned long long)rl.rlim_cur/g' src/basic/rlimit-util.c
 sed -i '/x25_hdlc_proto/d' src/basic/linux/if.h
+# musl has no gshadow.h - provide a stub (glibc-only header)
+cat > src/shared/gshadow.h << 'GSHADOW_EOF'
+#pragma once
+struct sgrp {
+    char *sg_namp;
+    char *sg_passwd;
+    char **sg_adm;
+    char **sg_mem;
+};
+struct sgrp *getsgnam(const char *);
+struct sgrp *getsgent(void);
+void setsgent(void);
+void endsgent(void);
+GSHADOW_EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

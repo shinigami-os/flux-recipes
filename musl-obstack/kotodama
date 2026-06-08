@@ -1,0 +1,32 @@
+[meta]
+name = musl-obstack
+version = 1.2.3
+description = "GNU obstack implementation for musl libc"
+license = LGPL-2.1
+size = 1
+
+[source]
+url = https://github.com/pullmoll/musl-obstack/archive/refs/tags/v1.2.3.tar.gz
+sha256 = d5558cd419c8d46bdc958064cb97f963d1ea793866414c025906ec15033512ed
+
+[deps]
+build = gcc make autoconf automake libtool pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+autoreconf -fi
+
+%build
+./configure \
+    --prefix=/usr \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%install
+make DESTDIR="$DESTDIR" install

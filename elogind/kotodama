@@ -42,24 +42,25 @@ meson setup build \
     --localstatedir=/var \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Drootprefix=/usr \
-    -Drootlibdir=/usr/lib \
-    -Dpkgconfigdatadir=/usr/lib/pkgconfig \
+    -Dpkgconfiglibdir=/usr/lib/pkgconfig \
     -Dpamlibdir=/usr/lib/security \
     -Dpamconfdir=/etc/pam.d \
     -Dcgroup-controller=elogind \
     -Ddefault-kill-user-processes=false \
     -Dman=false \
     -Dhtml=false \
-    -Dcap=false \
     -Dacl=false \
     -Daudit=false \
     -Dsmack=false \
     -Dselinux=false \
     -Dbashcompletiondir=no \
     -Dzshcompletiondir=no \
-    -Dnss-systemd=false \
-    -Dlogind=true
+    -Dtests=false \
+    -Defi=false \
+    -Dnss-elogind=false \
+    -Duserdb=false \
+    -Dvarlink=false \
+    -Dpolkit=false
 ninja -C build
 
 %install

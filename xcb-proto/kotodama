@@ -7,7 +7,7 @@ size = 1
 
 [source]
 url = https://xorg.freedesktop.org/releases/individual/xcb/xcb-proto-1.17.0.tar.xz
-sha256 = 372225fd40815b8423547f5d890c5debc72e88b91088fbfb13158c20495ccb59
+sha256 = 2c1bacd2110f4799f74de6ebb714b94cf6f80fb112316b1219480fd22562148c
 
 [deps]
 build = gcc meson ninja python3

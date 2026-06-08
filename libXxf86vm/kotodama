@@ -1,0 +1,37 @@
+[meta]
+name = libXxf86vm
+version = 1.1.5
+description = "X11 XFree86 video mode extension library"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/lib/libXxf86vm-1.1.5.tar.xz
+sha256 = 247fef48b3e0e7e67129e41f1e789e8d006ba47dba1c0cdce684b9b703f888e7
+
+[deps]
+build = gcc make pkgconf util-macros xorgproto libX11 libXext
+runtime = libX11 libXext
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+    export PKG_CONFIG_LIBDIR="${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig:${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig"
+fi
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --enable-malloc0returnsnull=no \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%install
+make DESTDIR="$DESTDIR" install

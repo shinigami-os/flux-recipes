@@ -17,6 +17,7 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i 's/#ifdef __OPTIMIZE__/#if 0/' argp-fmtstream.h
 
 %build
 ./configure \

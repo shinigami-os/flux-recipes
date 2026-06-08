@@ -17,6 +17,13 @@ runtime = glib linux-pam eudev libcap dbus
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# musl does not provide transitive includes that glibc does
+grep -rl 'sigfillset\|pthread_sigmask\|SIG_BLOCK\|SIG_SETMASK\|sigprocmask\|sigaction\|sigemptyset' src/ | grep '\.c$\|\.h$' | while read f; do
+    grep -q '#include <signal.h>' "$f" || sed -i '1s|^|#include <signal.h>\n|' "$f"
+done
+grep -rl 'struct stat\b' src/libelogind/sd-journal/ | grep '\.h$' | while read f; do
+    grep -q '#include <sys/stat.h>' "$f" || sed -i '1s|^|#include <sys/stat.h>\n|' "$f"
+done
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

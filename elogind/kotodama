@@ -27,6 +27,7 @@ done
 grep -rl '\bbasename\b\|\bdirname\b' src/ | grep '\.c$\|\.h$' | while read f; do
     grep -q '#include <libgen.h>' "$f" || sed -i '1s|^|#include <libgen.h>\n|' "$f"
 done
+sed -i 's/(uintmax_t)rl\.rlim_cur/(unsigned long long)rl.rlim_cur/g' src/basic/rlimit-util.c
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

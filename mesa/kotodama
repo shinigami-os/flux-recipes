@@ -59,7 +59,7 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dplatforms=wayland \
+    -Dplatforms=wayland,x11 \
     -Dgallium-drivers=radeonsi,iris,crocus,nouveau,r600,softpipe,virgl,svga \
     -Dintel-clc=system \
     -Dvulkan-drivers='' \

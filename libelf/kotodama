@@ -1,0 +1,38 @@
+[meta]
+name = libelf
+version = 0.192
+description = "ELF object file access library (from elfutils)"
+license = GPL-2.0 AND LGPL-3.0
+size = 2
+
+[source]
+url = https://sourceware.org/elfutils/ftp/0.192/elfutils-0.192.tar.bz2
+sha256 = 616099beae24aba11f9b63d86ca6cc8d566d968b802391334c91df54eab416b4
+
+[deps]
+build = gcc make pkgconf zlib zstd
+runtime = zlib zstd
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-nls \
+    --disable-debuginfod \
+    --disable-libdebuginfod \
+    --disable-progs \
+    --enable-libelf \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make -C lib
+make -C libelf
+
+%install
+make -C libelf DESTDIR="$DESTDIR" install
+make -C lib DESTDIR="$DESTDIR" install

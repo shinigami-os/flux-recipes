@@ -7,7 +7,7 @@ size = 1
 
 [source]
 url = https://xorg.freedesktop.org/releases/individual/lib/libXau-1.0.12.tar.xz
-sha256 = d8a5222828c3adab70adf69a5583f1d32eb5ece04304f7f8392b6a353aa2228c
+sha256 = 74d0e4dfa3d39ad8939e99bda37f5967aba528211076828464d2777d477fc0fb
 
 [deps]
 build = gcc make pkgconf xorgproto

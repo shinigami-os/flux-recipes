@@ -7,7 +7,7 @@ size = 3
 
 [source]
 url = https://github.com/elogind/elogind/archive/refs/tags/v252.39.tar.gz
-sha256 = bef140a1a96994029153dca8c00b1750b9a5a764fb9db2dc68d7bb40e8a29e8a
+sha256 = 5789c9d483dc236fbf72143dc9989329c399b6a507892c160b3c5852913123d5
 
 [deps]
 build = gcc meson ninja pkgconf glib linux-pam eudev libcap gperf python3

@@ -10,8 +10,8 @@ url = https://archive.mesa3d.org/mesa-24.3.4.tar.xz
 sha256 = e641ae27191d387599219694560d221b7feaa91c900bcec46bf444218ed66025
 
 [deps]
-build = gcc meson ninja pkgconf python3 libdrm libglvnd libpciaccess expat zlib llvm
-runtime = libdrm libglvnd expat zlib
+build = gcc meson ninja pkgconf python3 libdrm libglvnd libX11 libxcb xorgproto libpciaccess expat zlib llvm
+runtime = libdrm libglvnd libX11 libxcb expat zlib
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -46,7 +46,7 @@ strip = '${STRIP:-strip}'
 pkg-config = 'pkg-config'
 [properties]
 sys_root = '${FLUX_CROSS_SYSROOT}'
-pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
 EOF
 fi
 
@@ -60,10 +60,10 @@ meson setup build \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dplatforms=wayland \
-    -Dgallium-drivers=softpipe,virgl,nouveau,r600,svga \
+    -Dgallium-drivers=radeonsi,iris,crocus,nouveau,r600,softpipe,virgl,svga \
     -Dintel-clc=system \
     -Dvulkan-drivers='' \
-    -Dglx=disabled \
+    -Dglx=dri \
     -Degl=enabled \
     -Dgbm=enabled \
     -Dgles1=disabled \

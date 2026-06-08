@@ -10,37 +10,17 @@ url = https://xorg.freedesktop.org/releases/individual/xcb/xcb-proto-1.17.0.tar.
 sha256 = 2c1bacd2110f4799f74de6ebb714b94cf6f80fb112316b1219480fd22562148c
 
 [deps]
-build = gcc meson ninja python3
+build = gcc make pkgconf python3
 runtime =
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
-%pre-build
-if [ -n "$FLUX_CROSS_HOST" ]; then
-cat > cross-file.ini << EOF
-[host_machine]
-system = 'linux'
-cpu_family = 'x86_64'
-cpu = 'x86_64'
-endian = 'little'
-[binaries]
-c = '${CC:-gcc}'
-ar = '${AR:-ar}'
-strip = '${STRIP:-strip}'
-pkg-config = 'pkg-config'
-[properties]
-sys_root = '${FLUX_CROSS_SYSROOT}'
-pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
-EOF
-fi
-
 %build
-meson setup build \
-    --prefix=/usr \
-    --buildtype=release \
-    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini}
-ninja -C build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr
+make
 
 %install
-DESTDIR="$DESTDIR" ninja -C build install
+make DESTDIR="$DESTDIR" install

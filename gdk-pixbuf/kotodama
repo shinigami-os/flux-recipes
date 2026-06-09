@@ -10,8 +10,8 @@ url = https://download.gnome.org/sources/gdk-pixbuf/2.42/gdk-pixbuf-2.42.12.tar.
 sha256 = b9505b3445b9a7e48ced34760c3bcb73e966df3ac94c95a148cb669ab748e3c7
 
 [deps]
-build = gcc meson ninja pkgconf glib libpng libjpeg
-runtime = glib libpng libjpeg
+build = gcc meson ninja pkgconf glib libpng libjpeg-turbo
+runtime = glib libpng libjpeg-turbo
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

@@ -6,12 +6,12 @@ license = GPL-2.0-or-later
 size = 8
 
 [source]
-url = https://archive.xfce.org/src/xfce/thunar/4.20/thunar-4.20.0.tar.bz2
-sha256 = 27731a76f3aecf3752b1ca35afad89e264c52244f70083d933507dd4a17548b0
+url = https://archive.xfce.org/src/xfce/thunar/4.20/thunar-4.20.0.tar.xz
+sha256 = 7515bf959b73b956ceb967351c7e299cbb3668a53d35f9c770eb72e00d93ced6
 
 [deps]
-build = gcc make autoconf automake libtool pkgconf glib gtk3 libexo libxfce4util libxfce4ui xfconf
-runtime = glib gtk3 libexo libxfce4util libxfce4ui xfconf
+build = gcc make pkgconf glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
+runtime = glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -26,7 +26,6 @@ cflags = -O2 -pipe -march=x86-64-v2
     --enable-shared \
     --disable-debug \
     --disable-nls \
-    --without-x \
     ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \

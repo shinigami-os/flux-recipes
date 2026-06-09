@@ -1,0 +1,32 @@
+[meta]
+name = libpng
+version = 1.6.47
+description = "PNG image format library"
+license = libpng
+size = 1
+
+[source]
+url = https://download.sourceforge.net/libpng/libpng-1.6.47.tar.xz
+sha256 = b213cb381fbb1175327bd708a77aab708a05adde7b471bc267bd15ac99893631
+
+[deps]
+build = gcc make pkgconf zlib
+runtime = zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%install
+make DESTDIR="$DESTDIR" install

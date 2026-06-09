@@ -1,0 +1,35 @@
+[meta]
+name = libjpeg-turbo
+version = 3.1.0
+description = "JPEG image codec with SIMD acceleration"
+license = BSD-3-Clause AND IJG AND Zlib
+size = 2
+
+[source]
+url = https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/3.1.0/libjpeg-turbo-3.1.0.tar.gz
+sha256 = 9564c72b1dfd1d6fe6274c5f95a8d989b59854575d4bbee44ade7bc17aa9bc93
+
+[deps]
+build = gcc cmake ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DENABLE_STATIC=OFF \
+    ${FLUX_CROSS_HOST:+-DCMAKE_SYSTEM_NAME=Linux} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_C_COMPILER=$CC} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH=$FLUX_CROSS_SYSROOT} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY} \
+    ${FLUX_CROSS_HOST:+-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY}
+cmake --build build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

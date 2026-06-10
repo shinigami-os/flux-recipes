@@ -55,9 +55,11 @@ meson setup build \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dpolkit=disabled
 if [ -n "$FLUX_CROSS_HOST" ]; then
+    # compiled binaries: must run on host
     sed -i "s|${FLUX_CROSS_SYSROOT}/usr/bin/glib-compile-resources|/usr/bin/glib-compile-resources|g" build/build.ninja
     sed -i "s|${FLUX_CROSS_SYSROOT}/usr/bin/glib-compile-schemas|/usr/bin/glib-compile-schemas|g" build/build.ninja
-    sed -i "s|${FLUX_CROSS_SYSROOT}/usr/bin/gdbus-codegen|/usr/bin/gdbus-codegen|g" build/build.ninja
+    # gdbus-codegen is a Python script: keep sysroot version so generated code matches sysroot glib 2.82
+    sed -i "s|/usr/bin/gdbus-codegen|${FLUX_CROSS_SYSROOT}/usr/bin/gdbus-codegen|g" build/build.ninja
 fi
 ninja -C build
 

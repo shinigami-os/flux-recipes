@@ -17,6 +17,7 @@ runtime = glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i 's|#include <gdk/gdkx.h>|/* gdkx.h excluded: session management disabled */|' thunar/thunar-session-client.c
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

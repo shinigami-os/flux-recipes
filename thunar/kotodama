@@ -1,13 +1,13 @@
 [meta]
 name = thunar
-version = 4.20.0
+version = 4.21.5
 description = "Xfce file manager"
 license = GPL-2.0-or-later
 size = 8
 
 [source]
-url = https://archive.xfce.org/src/xfce/thunar/4.20/thunar-4.20.0.tar.xz
-sha256 = 7515bf959b73b956ceb967351c7e299cbb3668a53d35f9c770eb72e00d93ced6
+url = https://github.com/xfce-mirror/thunar/archive/refs/tags/thunar-4.21.5.tar.gz
+sha256 = a48a0bee39c5656159ede03a51d04f93e3c798adac6f2738cb92b7a08aed66c1
 
 [deps]
 build = gcc make pkgconf glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11

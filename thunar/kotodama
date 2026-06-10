@@ -17,6 +17,12 @@ runtime = glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+cat > native-file.ini << 'NATIVE'
+[binaries]
+glib-compile-resources = '/usr/bin/glib-compile-resources'
+glib-compile-schemas = '/usr/bin/glib-compile-schemas'
+gdbus-codegen = '/usr/bin/gdbus-codegen'
+NATIVE
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]
@@ -40,6 +46,7 @@ meson setup build \
     --prefix=/usr \
     --sysconfdir=/etc \
     --buildtype=release \
+    --native-file=native-file.ini \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dpolkit=disabled
 ninja -C build

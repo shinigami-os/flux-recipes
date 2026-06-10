@@ -44,7 +44,7 @@ meson setup build \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dpolkit=disabled \
     -Dsession-management=disabled \
-    -Dintrospection=disabled
+    -Dintrospection=false
 if [ -n "$FLUX_CROSS_HOST" ]; then
     # glib-compile-resources and glib-compile-schemas are compiled binaries that can't run on
     # the host — patch to host versions. gdbus-codegen is a Python script so leave it as-is

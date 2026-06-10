@@ -17,17 +17,6 @@ runtime = glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-cat > native-pkgconfig.sh << 'WRAPPER'
-#!/bin/sh
-unset PKG_CONFIG_LIBDIR
-unset PKG_CONFIG_PATH
-exec /usr/bin/pkg-config "$@"
-WRAPPER
-chmod +x native-pkgconfig.sh
-cat > native-file.ini << EOF
-[binaries]
-pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
-EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]
@@ -51,15 +40,14 @@ meson setup build \
     --prefix=/usr \
     --sysconfdir=/etc \
     --buildtype=release \
-    --native-file=native-file.ini \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dpolkit=disabled
 if [ -n "$FLUX_CROSS_HOST" ]; then
-    # compiled binaries: must run on host
+    # glib-compile-resources and glib-compile-schemas are compiled binaries that can't run on
+    # the host — patch to host versions. gdbus-codegen is a Python script so leave it as-is
+    # (sysroot version generates glib 2.82-compatible code, host 2.84+ version does not).
     sed -i "s|${FLUX_CROSS_SYSROOT}/usr/bin/glib-compile-resources|/usr/bin/glib-compile-resources|g" build/build.ninja
     sed -i "s|${FLUX_CROSS_SYSROOT}/usr/bin/glib-compile-schemas|/usr/bin/glib-compile-schemas|g" build/build.ninja
-    # gdbus-codegen is a Python script: keep sysroot version so generated code matches sysroot glib 2.82
-    sed -i "s|/usr/bin/gdbus-codegen|${FLUX_CROSS_SYSROOT}/usr/bin/gdbus-codegen|g" build/build.ninja
 fi
 ninja -C build
 

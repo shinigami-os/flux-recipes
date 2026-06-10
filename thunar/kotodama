@@ -41,7 +41,7 @@ meson setup build \
     --sysconfdir=/etc \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dpolkit=false
+    -Dpolkit=disabled
 ninja -C build
 
 %post-build

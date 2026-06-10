@@ -10,30 +10,42 @@ url = https://github.com/xfce-mirror/thunar/archive/refs/tags/thunar-4.21.5.tar.
 sha256 = a48a0bee39c5656159ede03a51d04f93e3c798adac6f2738cb92b7a08aed66c1
 
 [deps]
-build = gcc make autoconf automake libtool pkgconf glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
+build = gcc meson ninja pkgconf glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
 runtime = glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-autoreconf -fi
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
 
 %build
-./configure \
+meson setup build \
     --prefix=/usr \
     --sysconfdir=/etc \
-    --disable-static \
-    --enable-shared \
-    --disable-debug \
-    --disable-nls \
-    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
-    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
-    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
-    ${CC:+CC=$CC}
-make
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Ddocs=false \
+    -Dpolkit=false
+ninja -C build
 
 %post-build
 
 %install
-make DESTDIR="$DESTDIR" install
+DESTDIR="$DESTDIR" ninja -C build install

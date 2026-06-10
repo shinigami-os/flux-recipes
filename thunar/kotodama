@@ -17,12 +17,17 @@ runtime = glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-cat > native-file.ini << 'NATIVE'
+cat > native-pkgconfig.sh << 'WRAPPER'
+#!/bin/sh
+unset PKG_CONFIG_LIBDIR
+unset PKG_CONFIG_PATH
+exec /usr/bin/pkg-config "$@"
+WRAPPER
+chmod +x native-pkgconfig.sh
+cat > native-file.ini << EOF
 [binaries]
-glib-compile-resources = '/usr/bin/glib-compile-resources'
-glib-compile-schemas = '/usr/bin/glib-compile-schemas'
-gdbus-codegen = '/usr/bin/gdbus-codegen'
-NATIVE
+pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
+EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

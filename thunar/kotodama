@@ -10,13 +10,14 @@ url = https://github.com/xfce-mirror/thunar/archive/refs/tags/thunar-4.21.5.tar.
 sha256 = a48a0bee39c5656159ede03a51d04f93e3c798adac6f2738cb92b7a08aed66c1
 
 [deps]
-build = gcc make pkgconf glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
+build = gcc make autoconf automake libtool pkgconf glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
 runtime = glib gtk3 libexo libxfce4util libxfce4ui xfconf libX11
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+autoreconf -fi
 
 %build
 ./configure \

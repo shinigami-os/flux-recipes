@@ -9,9 +9,6 @@ size = 5
 url =
 sha256 =
 
-[deps]
-runtime = musl
-
 [build]
 
 %install

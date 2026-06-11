@@ -88,7 +88,8 @@ meson setup build \
     -Dpam=true \
     -Dbashcompletiondir=no \
     -Dzshcompletiondir=no \
-    -Dtests=false
+    -Dtests=false \
+    -Dutmp=disabled
 ninja -C build
 
 %install

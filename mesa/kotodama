@@ -30,6 +30,7 @@ wayland-scanner = '/usr/bin/wayland-scanner'
 pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
 EOF
 if [ -n "$FLUX_CROSS_HOST" ]; then
+cp /usr/lib/pkgconfig/libclc.pc "$FLUX_CROSS_SYSROOT/usr/lib/pkgconfig/"
 cat > cross-file.ini << EOF
 [host_machine]
 system = 'linux'

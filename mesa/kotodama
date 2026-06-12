@@ -29,27 +29,6 @@ cat > native-file.ini << EOF
 wayland-scanner = '/usr/bin/wayland-scanner'
 pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
 EOF
-unset CC CXX AR LD STRIP CPP PKG_CONFIG_PATH PKG_CONFIG_LIBDIR PKG_CONFIG_SYSROOT_DIR
-meson setup build-intel-clc \
-    --buildtype=release \
-    -Dplatforms='' \
-    -Dgallium-drivers='' \
-    -Dvulkan-drivers='' \
-    -Dglx=disabled \
-    -Degl=disabled \
-    -Dgbm=disabled \
-    -Dgles1=disabled \
-    -Dgles2=disabled \
-    -Dglvnd=disabled \
-    -Dopengl=false \
-    -Dllvm=enabled \
-    -Dintel-clc=enabled \
-    -Dgallium-opencl=disabled \
-    -Dgallium-va=disabled \
-    -Dgallium-vdpau=disabled \
-    -Dgallium-xa=disabled
-ninja -C build-intel-clc
-install -Dm755 build-intel-clc/src/intel/compiler/intel_clc /usr/local/bin/intel_clc
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]
@@ -87,7 +66,6 @@ meson setup build \
     -Dllvm=disabled \
     -Dopengl=true \
     -Dglvnd=enabled \
-    -Dintel-clc=system \
     -Dgallium-opencl=disabled \
     -Dgallium-va=disabled \
     -Dgallium-vdpau=disabled \

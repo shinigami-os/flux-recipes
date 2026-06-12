@@ -47,6 +47,27 @@ sys_root = '${FLUX_CROSS_SYSROOT}'
 pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
 EOF
 fi
+unset CC CXX AR LD STRIP CPP PKG_CONFIG_PATH PKG_CONFIG_LIBDIR PKG_CONFIG_SYSROOT_DIR
+meson setup build-intel-clc \
+    --buildtype=release \
+    -Dplatforms='' \
+    -Dgallium-drivers='' \
+    -Dvulkan-drivers='' \
+    -Dglx=disabled \
+    -Degl=disabled \
+    -Dgbm=disabled \
+    -Dgles1=disabled \
+    -Dgles2=disabled \
+    -Dglvnd=disabled \
+    -Dopengl=false \
+    -Dllvm=enabled \
+    -Dintel-clc=enabled \
+    -Dgallium-opencl=disabled \
+    -Dgallium-va=disabled \
+    -Dgallium-vdpau=disabled \
+    -Dgallium-xa=disabled
+ninja -C build-intel-clc
+install -Dm755 build-intel-clc/src/intel/compiler/intel_clc /usr/local/bin/intel_clc
 
 %build
 rm -rf build
@@ -66,6 +87,7 @@ meson setup build \
     -Dllvm=disabled \
     -Dopengl=true \
     -Dglvnd=enabled \
+    -Dintel-clc=system \
     -Dgallium-opencl=disabled \
     -Dgallium-va=disabled \
     -Dgallium-vdpau=disabled \

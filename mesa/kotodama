@@ -66,6 +66,7 @@ meson setup build \
     -Dllvm=disabled \
     -Dopengl=true \
     -Dglvnd=enabled \
+    -Dintel-clc=disabled \
     -Dgallium-opencl=disabled \
     -Dgallium-va=disabled \
     -Dgallium-vdpau=disabled \

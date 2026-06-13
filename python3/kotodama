@@ -22,11 +22,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 ./configure \
   --prefix=/usr \
   --enable-shared \
-  --with-system-ffi \
   --with-openssl="${FLUX_CROSS_SYSROOT:-}/usr" \
-  --enable-optimizations \
-    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
-    ${CC:+CC=$CC}
+  ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+  ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+  ${CC:+CC=$CC}
 make
 
 %post-build

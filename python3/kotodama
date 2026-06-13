@@ -26,6 +26,7 @@ cflags = -O2 -pipe -march=x86-64-v2
   ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
   ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
   ${FLUX_CROSS_HOST:+--with-build-python=$(which python3)} \
+  ${FLUX_CROSS_HOST:+ac_cv_buggy_getaddrinfo=no} \
   ${CC:+CC=$CC}
 make
 

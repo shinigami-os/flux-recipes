@@ -1,13 +1,13 @@
 [meta]
 name = python3
-version = 3.14.5
+version = 3.13.5
 description = "High-level interpreted programming language"
 license = PSF-2.0
 size = 30
 
 [source]
-url = https://www.python.org/ftp/python/3.14.5/Python-3.14.5.tar.xz
-sha256 = 7e32597b99e5d9a39abed35de4693fa169df3e5850d4c334337ffd6a19a36db6
+url = https://www.python.org/ftp/python/3.13.5/Python-3.13.5.tar.xz
+sha256 = 93e583f243454e6e9e4588ca2c2662206ad961659863277afcdb96801647d640
 
 [deps]
 build = gcc make zlib openssl libffi

@@ -49,7 +49,7 @@ fi
 
 %install
 if [ -n "$FLUX_CROSS_HOST" ]; then
-    cmake --install build --prefix /usr --destdir $DESTDIR
+    DESTDIR=$DESTDIR cmake --install build --prefix /usr
 else
     make DESTDIR=$DESTDIR install
 fi

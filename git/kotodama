@@ -26,6 +26,8 @@ if [ -n "$FLUX_CROSS_HOST" ]; then
         --host=$FLUX_CROSS_HOST \
         --without-tcltk \
         --without-gettext \
+        ac_cv_iconv_omits_bom=no \
+        ac_cv_have_iconv_omits_bom=no \
         CC="$CC" AR="$AR" STRIP="$STRIP" CFLAGS="$CFLAGS"
 fi
 make prefix=/usr \

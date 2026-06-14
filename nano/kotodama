@@ -25,7 +25,7 @@ cflags = -O2 -pipe -march=x86-64-v2
     --enable-utf8 \
     ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
-    ${FLUX_CROSS_HOST:+ac_cv_func_strcasecmp=yes} \
+    ${FLUX_CROSS_HOST:+gl_cv_func_strcasecmp_works=yes} \
     ${CC:+CC=$CC}
 make
 

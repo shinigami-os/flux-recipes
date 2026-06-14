@@ -1,17 +1,17 @@
 [meta]
 name = git
-version = 2.54.0
-description = "Fast, scalable, distributed revision control system"
-license = GPL-2.0
-size = 32
+version = 2.49.0
+description = "Distributed version control system"
+license = GPL-2.0-only
+size = 20
 
 [source]
-url = https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.54.0.tar.gz
-sha256 = 45e8107643a44e3ce46f5665beb35af3932fb0d70017687905ab5d4e3aafa8eb
+url = https://www.kernel.org/pub/software/scm/git/git-2.49.0.tar.xz
+sha256 = 618190cf590b7e9f6c11f91f23b1d267cd98c3ab33b850416d8758f8b5a85628
 
 [deps]
-build = gcc make curl zlib openssl
-runtime = curl zlib openssl
+build = gcc make libressl zlib expat pcre2 curl
+runtime = libressl zlib expat pcre2 curl
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -19,9 +19,27 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-make prefix=/usr all
+make prefix=/usr \
+    ${CC:+CC=$CC} \
+    ${AR:+AR=$AR} \
+    ${STRIP:+STRIP=$STRIP} \
+    CFLAGS="$CFLAGS" \
+    NO_TCLTK=1 \
+    NO_GETTEXT=1 \
+    NO_INSTALL_HARDLINKS=1 \
+    USE_LIBPCRE2=1 \
+    OPENSSLDIR=/usr \
+    CURLDIR=/usr \
+    all
 
 %post-build
 
 %install
-make prefix=/usr DESTDIR=$DESTDIR install
+make prefix=/usr \
+    ${CC:+CC=$CC} \
+    NO_TCLTK=1 \
+    NO_GETTEXT=1 \
+    NO_INSTALL_HARDLINKS=1 \
+    USE_LIBPCRE2=1 \
+    DESTDIR=$DESTDIR \
+    install

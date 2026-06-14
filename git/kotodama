@@ -39,7 +39,8 @@ make prefix=/usr \
     USE_LIBPCRE2=1 \
     OPENSSLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
     CURLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
-    all
+    V=1 \
+    all 2>&1 | tail -50
 
 %post-build
 

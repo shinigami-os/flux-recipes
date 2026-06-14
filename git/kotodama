@@ -19,12 +19,20 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    ./configure \
+        --prefix=/usr \
+        --build=$(gcc -dumpmachine) \
+        --host=$FLUX_CROSS_HOST \
+        --without-tcltk \
+        --without-gettext \
+        CC="$CC" AR="$AR" STRIP="$STRIP" CFLAGS="$CFLAGS"
+fi
 make prefix=/usr \
     ${CC:+CC=$CC} \
     ${AR:+AR=$AR} \
     ${STRIP:+STRIP=$STRIP} \
-    CFLAGS="$CFLAGS ${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}" \
-    LDFLAGS="${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}" \
+    CFLAGS="$CFLAGS" \
     NO_TCLTK=1 \
     NO_GETTEXT=1 \
     NO_INSTALL_HARDLINKS=1 \

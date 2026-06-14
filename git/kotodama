@@ -36,8 +36,8 @@ make prefix=/usr \
     NO_GETTEXT=1 \
     NO_INSTALL_HARDLINKS=1 \
     USE_LIBPCRE2=1 \
-    OPENSSLDIR=/usr \
-    CURLDIR=/usr \
+    OPENSSLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
+    CURLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
     all
 
 %post-build
@@ -54,5 +54,7 @@ make prefix=/usr \
     NO_GETTEXT=1 \
     NO_INSTALL_HARDLINKS=1 \
     USE_LIBPCRE2=1 \
+    OPENSSLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
+    CURLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
     DESTDIR=$DESTDIR \
     install

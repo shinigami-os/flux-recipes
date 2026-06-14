@@ -10,19 +10,46 @@ url = https://github.com/Kitware/CMake/archive/refs/tags/v4.3.2.tar.gz
 sha256 = 5e5ddea1fcdc28c4e447f767e3f6fa971a7f853ddd262b884871b889715bc96a
 
 [deps]
-build = gcc make openssl zlib
-runtime = openssl zlib
+build = gcc make libressl zlib
+runtime = libressl zlib
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > toolchain.cmake << EOF
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
+set(CMAKE_C_COMPILER ${CC:-gcc})
+set(CMAKE_CXX_COMPILER ${CXX:-g++})
+set(CMAKE_SYSROOT ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+EOF
+fi
 
 %build
-CC=/usr/bin/gcc CXX=/usr/bin/g++ ./bootstrap --prefix=/usr --parallel=$(nproc) -- -DCMAKE_USE_OPENSSL=ON
-make CC=/usr/bin/gcc CXX=/usr/bin/g++
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    cmake -S . -B build \
+        -DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_USE_OPENSSL=ON \
+        -DBUILD_TESTING=OFF
+    cmake --build build --parallel $(nproc)
+else
+    CC=/usr/bin/gcc CXX=/usr/bin/g++ ./bootstrap --prefix=/usr --parallel=$(nproc) -- -DCMAKE_USE_OPENSSL=ON
+    make
+fi
 
 %post-build
 
 %install
-make DESTDIR=$DESTDIR install
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    cmake --install build --prefix /usr --destdir $DESTDIR
+else
+    make DESTDIR=$DESTDIR install
+fi

@@ -25,8 +25,7 @@ make PREFIX=/usr \
     TARGET=gtk3 \
     ${CC:+CC=$CC} \
     ${AR:+AR=$AR} \
-    BUILD_CC=gcc \
-    CFLAGS="$CFLAGS"
+    BUILD_CC=gcc
 
 %post-build
 

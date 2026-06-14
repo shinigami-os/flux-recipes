@@ -28,6 +28,8 @@ if [ -n "$FLUX_CROSS_HOST" ]; then
         --without-gettext \
         ac_cv_iconv_omits_bom=no \
         ac_cv_have_iconv_omits_bom=no \
+        ac_cv_fread_reads_directories=no \
+        ac_cv_snprintf_returns_bogus=no \
         CC="$CC" AR="$AR" STRIP="$STRIP" CFLAGS="$CFLAGS"
 fi
 make prefix=/usr \

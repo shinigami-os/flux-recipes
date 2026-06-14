@@ -19,24 +19,19 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-if [ -n "$FLUX_CROSS_HOST" ]; then
-    ./configure \
-        --prefix=/usr \
-        --build=$(gcc -dumpmachine) \
-        --host=$FLUX_CROSS_HOST \
-        --without-tcltk \
-        --without-gettext \
-        ac_cv_iconv_omits_bom=no \
-        ac_cv_have_iconv_omits_bom=no \
-        ac_cv_fread_reads_directories=no \
-        ac_cv_snprintf_returns_bogus=no \
-        CC="$CC" AR="$AR" STRIP="$STRIP" CFLAGS="$CFLAGS"
+if [ -n "$FLUX_CROSS_SYSROOT" ]; then
+    _CC="$CC --sysroot=$FLUX_CROSS_SYSROOT"
+    _LDFLAGS="--sysroot=$FLUX_CROSS_SYSROOT"
+else
+    _CC="${CC:-gcc}"
+    _LDFLAGS=""
 fi
 make prefix=/usr \
-    ${CC:+CC=$CC} \
+    CC="$_CC" \
     ${AR:+AR=$AR} \
     ${STRIP:+STRIP=$STRIP} \
     CFLAGS="$CFLAGS" \
+    LDFLAGS="$_LDFLAGS" \
     NO_TCLTK=1 \
     NO_GETTEXT=1 \
     NO_INSTALL_HARDLINKS=1 \
@@ -48,8 +43,13 @@ make prefix=/usr \
 %post-build
 
 %install
+if [ -n "$FLUX_CROSS_SYSROOT" ]; then
+    _CC="$CC --sysroot=$FLUX_CROSS_SYSROOT"
+else
+    _CC="${CC:-gcc}"
+fi
 make prefix=/usr \
-    ${CC:+CC=$CC} \
+    CC="$_CC" \
     NO_TCLTK=1 \
     NO_GETTEXT=1 \
     NO_INSTALL_HARDLINKS=1 \

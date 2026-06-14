@@ -38,9 +38,9 @@ make prefix=/usr \
     NO_REGEX=NeedsStartEnd \
     USE_LIBPCRE2=1 \
     OPENSSLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
-    CURLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
-    V=1 \
-    all 2>&1 | tail -50
+    CURL_LIBCURL="-L${FLUX_CROSS_SYSROOT:-}/usr/lib -lcurl" \
+    CURL_INCLUDE="-I${FLUX_CROSS_SYSROOT:-}/usr/include" \
+    all
 
 %post-build
 
@@ -58,6 +58,7 @@ make prefix=/usr \
     NO_REGEX=NeedsStartEnd \
     USE_LIBPCRE2=1 \
     OPENSSLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
-    CURLDIR="${FLUX_CROSS_SYSROOT:-}/usr" \
+    CURL_LIBCURL="-L${FLUX_CROSS_SYSROOT:-}/usr/lib -lcurl" \
+    CURL_INCLUDE="-I${FLUX_CROSS_SYSROOT:-}/usr/include" \
     DESTDIR=$DESTDIR \
     install

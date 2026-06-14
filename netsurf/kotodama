@@ -20,6 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %build
 make PREFIX=/usr \
+    NSSHARED="${FLUX_CROSS_SYSROOT:-}/usr/share/netsurf-buildsystem" \
     NETSURF_GTK_RESOURCES=/usr/share/netsurf \
     TARGET=gtk3 \
     ${CC:+CC=$CC} \
@@ -31,6 +32,7 @@ make PREFIX=/usr \
 
 %install
 make PREFIX=/usr \
+    NSSHARED="${FLUX_CROSS_SYSROOT:-}/usr/share/netsurf-buildsystem" \
     NETSURF_GTK_RESOURCES=/usr/share/netsurf \
     TARGET=gtk3 \
     ${CC:+CC=$CC} \

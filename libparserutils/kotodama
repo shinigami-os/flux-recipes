@@ -20,6 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %build
 make PREFIX=/usr \
+    NSSHARED="${FLUX_CROSS_SYSROOT:-}/usr/share/netsurf-buildsystem" \
     ${CC:+CC=$CC} \
     ${AR:+AR=$AR} \
     BUILD_CC=gcc \
@@ -29,6 +30,7 @@ make PREFIX=/usr \
 
 %install
 make PREFIX=/usr DESTDIR=$DESTDIR \
+    NSSHARED="${FLUX_CROSS_SYSROOT:-}/usr/share/netsurf-buildsystem" \
     ${CC:+CC=$CC} \
     BUILD_CC=gcc \
     install

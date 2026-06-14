@@ -1,0 +1,25 @@
+[meta]
+name = netsurf-buildsystem
+version = 1.10
+description = "NetSurf browser shared build system"
+license = MIT
+size = 1
+
+[source]
+url = https://download.netsurf-browser.org/libs/releases/buildsystem-1.10.tar.gz
+sha256 = 3d3e39d569e44677c4b179129bde614c65798e2b3e6253160239d1fd6eae4d79
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR=$DESTDIR install

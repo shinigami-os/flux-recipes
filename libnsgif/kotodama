@@ -1,0 +1,34 @@
+[meta]
+name = libnsgif
+version = 1.0.0
+description = "NetSurf GIF decoder library"
+license = MIT
+size = 1
+
+[source]
+url = https://download.netsurf-browser.org/libs/releases/libnsgif-1.0.0-src.tar.gz
+sha256 = 6014c842f61454d2f5a0f8243d7a8d7bde9b7da3ccfdca2d346c7c0b2c4c061b
+
+[deps]
+build = gcc make pkgconf netsurf-buildsystem
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make PREFIX=/usr \
+    ${CC:+CC=$CC} \
+    ${AR:+AR=$AR} \
+    BUILD_CC=gcc \
+    CFLAGS="$CFLAGS"
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR=$DESTDIR \
+    ${CC:+CC=$CC} \
+    BUILD_CC=gcc \
+    install

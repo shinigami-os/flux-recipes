@@ -1,0 +1,34 @@
+[meta]
+name = libhubbub
+version = 0.3.8
+description = "NetSurf HTML5 parser library"
+license = MIT
+size = 1
+
+[source]
+url = https://download.netsurf-browser.org/libs/releases/libhubbub-0.3.8-src.tar.gz
+sha256 = 8ac1e6f5f3d48c05141d59391719534290c59cd029efc249eb4fdbac102cd5a5
+
+[deps]
+build = gcc make pkgconf netsurf-buildsystem libparserutils
+runtime = libparserutils
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make PREFIX=/usr \
+    ${CC:+CC=$CC} \
+    ${AR:+AR=$AR} \
+    BUILD_CC=gcc \
+    CFLAGS="$CFLAGS"
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR=$DESTDIR \
+    ${CC:+CC=$CC} \
+    BUILD_CC=gcc \
+    install

@@ -1,0 +1,34 @@
+[meta]
+name = nano
+version = 8.4
+description = "Small and friendly text editor"
+license = GPL-3.0-or-later
+size = 3
+
+[source]
+url = https://www.nano-editor.org/dist/v8/nano-8.4.tar.xz
+sha256 = 5ad29222bbd55624d87ea677928b3106a743114d6c6f9b41f36c97be2a8e628d
+
+[deps]
+build = gcc make ncurses
+runtime = ncurses
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --enable-utf8 \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

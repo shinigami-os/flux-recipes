@@ -1,0 +1,34 @@
+[meta]
+name = libnsutils
+version = 0.1.1
+description = "NetSurf utility library"
+license = MIT
+size = 1
+
+[source]
+url = https://download.netsurf-browser.org/libs/releases/libnsutils-0.1.1-src.tar.gz
+sha256 = 5694b4526e458ed000413ce6027589cbe10a257a7ecf065a01421dc7299dea92
+
+[deps]
+build = gcc make pkgconf netsurf-buildsystem
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make PREFIX=/usr \
+    ${CC:+CC=$CC} \
+    ${AR:+AR=$AR} \
+    BUILD_CC=gcc \
+    CFLAGS="$CFLAGS"
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR=$DESTDIR \
+    ${CC:+CC=$CC} \
+    BUILD_CC=gcc \
+    install

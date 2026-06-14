@@ -1,0 +1,39 @@
+[meta]
+name = netsurf
+version = 3.11
+description = "Lightweight web browser"
+license = GPL-2.0-only
+size = 10
+
+[source]
+url = https://download.netsurf-browser.org/netsurf/releases/source/netsurf-3.11.tar.gz
+sha256 = 5f87e11189564d01458d82ee7cf8d507a7fb92a74d15282bbd5cdfd2a5e2ca96
+
+[deps]
+build = gcc make pkgconf netsurf-buildsystem libnsutils libwapcaplet libparserutils libhubbub libdom libcss libnsgif gtk3 cairo pango libpng libjpeg-turbo curl libressl
+runtime = gtk3 cairo pango libpng libjpeg-turbo curl libressl libdom libcss libnsgif libhubbub libparserutils libwapcaplet libnsutils
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make PREFIX=/usr \
+    NETSURF_GTK_RESOURCES=/usr/share/netsurf \
+    TARGET=gtk3 \
+    ${CC:+CC=$CC} \
+    ${AR:+AR=$AR} \
+    BUILD_CC=gcc \
+    CFLAGS="$CFLAGS"
+
+%post-build
+
+%install
+make PREFIX=/usr \
+    NETSURF_GTK_RESOURCES=/usr/share/netsurf \
+    TARGET=gtk3 \
+    ${CC:+CC=$CC} \
+    BUILD_CC=gcc \
+    DESTDIR=$DESTDIR \
+    install

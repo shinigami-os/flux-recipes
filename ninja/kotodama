@@ -25,4 +25,4 @@ cmake --build build --parallel $(nproc)
 %post-build
 
 %install
-cmake --install build --prefix /usr DESTDIR=$DESTDIR
+DESTDIR=$DESTDIR cmake --install build --prefix /usr

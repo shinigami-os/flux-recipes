@@ -6,8 +6,8 @@ license = GPL-2.0-only
 size = 10
 
 [source]
-url = https://download.netsurf-browser.org/netsurf/releases/source/netsurf-3.11.tar.gz
-sha256 = 5f87e11189564d01458d82ee7cf8d507a7fb92a74d15282bbd5cdfd2a5e2ca96
+url = https://download.netsurf-browser.org/netsurf/releases/source/netsurf-3.11-src.tar.gz
+sha256 = c28a626aefee428d053b13f88b5c440922245976522d12eaf137cfd32d201cb2
 
 [deps]
 build = gcc make pkgconf netsurf-buildsystem libnsutils libwapcaplet libparserutils libhubbub libdom libcss libnsgif gtk3 cairo pango libpng libjpeg-turbo curl libressl

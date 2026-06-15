@@ -19,12 +19,27 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-make PREFIX=/usr \
-    ${CC:+CC=$CC} \
-    ${AR:+AR=$AR} \
-    CFLAGS="$CFLAGS ${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}"
+_CC="${CC:-gcc}"
+_AR="${AR:-ar}"
+_SYSROOT="${FLUX_CROSS_SYSROOT:-}"
+_CFLAGS="$CFLAGS${_SYSROOT:+ --sysroot=$_SYSROOT} -Iinclude"
+for src in src/*.c; do
+    $_CC $_CFLAGS -fPIC -c "$src" -o "${src%.c}.o"
+done
+OBJS=$(echo src/*.o)
+$_CC -shared -Wl,-soname,libvterm.so.0 $_CFLAGS -o libvterm.so.0.0 $OBJS
+ln -sf libvterm.so.0.0 libvterm.so.0
+ln -sf libvterm.so.0.0 libvterm.so
+$_AR rcs libvterm.a $OBJS
 
 %post-build
 
 %install
-make PREFIX=/usr DESTDIR="$DESTDIR" install
+install -dm755 "$DESTDIR/usr/lib" "$DESTDIR/usr/include" "$DESTDIR/usr/lib/pkgconfig"
+install -m644 libvterm.a "$DESTDIR/usr/lib/libvterm.a"
+install -m755 libvterm.so.0.0 "$DESTDIR/usr/lib/libvterm.so.0.0"
+ln -sf libvterm.so.0.0 "$DESTDIR/usr/lib/libvterm.so.0"
+ln -sf libvterm.so.0.0 "$DESTDIR/usr/lib/libvterm.so"
+install -m644 include/vterm.h "$DESTDIR/usr/include/vterm.h"
+install -m644 include/vterm_keycodes.h "$DESTDIR/usr/include/vterm_keycodes.h" 2>/dev/null || true
+printf 'prefix=/usr\nlibdir=${prefix}/lib\nincludedir=${prefix}/include\n\nName: vterm\nDescription: Abstract VT220/Xterm terminal emulator library\nVersion: 0.3.3\nLibs: -L${libdir} -lvterm\nCflags: -I${includedir}\n' > "$DESTDIR/usr/lib/pkgconfig/vterm.pc"

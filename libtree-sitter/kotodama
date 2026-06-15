@@ -19,7 +19,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-make PREFIX=/usr
+make PREFIX=/usr \
+    ${CC:+CC=$CC} \
+    ${AR:+AR=$AR} \
+    CFLAGS="$CFLAGS ${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}"
 
 %post-build
 

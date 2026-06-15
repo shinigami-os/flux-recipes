@@ -17,18 +17,29 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-mkdir -p build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > toolchain.cmake << EOF
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
+set(CMAKE_C_COMPILER ${CC:-gcc})
+set(CMAKE_SYSROOT ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+EOF
+fi
 
 %build
-cd build
-cmake .. \
-    -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -B build \
+    ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake} \
     -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF
-make
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_TESTING=OFF \
+    -DBUILD_SHARED_LIBS=ON
+cmake --build build --parallel $(nproc)
 
 %post-build
 
 %install
-cd build
-make DESTDIR="$DESTDIR" install
+DESTDIR=$DESTDIR cmake --install build --prefix /usr

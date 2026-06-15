@@ -1,0 +1,44 @@
+[meta]
+name = libutf8proc
+version = 2.11.3
+description = "C library for processing UTF-8 encoded Unicode strings"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/JuliaStrings/utf8proc/archive/refs/tags/v2.11.3.tar.gz
+sha256 = abfed50b6d4da51345713661370290f4f4747263ee73dc90356299dfc7990c78
+
+[deps]
+build = gcc cmake make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > toolchain.cmake << EOF
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
+set(CMAKE_C_COMPILER ${CC:-gcc})
+set(CMAKE_SYSROOT ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+EOF
+fi
+
+%build
+cmake -B build \
+    ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_SHARED_LIBS=ON
+cmake --build build --parallel $(nproc)
+
+%post-build
+
+%install
+DESTDIR=$DESTDIR cmake --install build --prefix /usr

@@ -43,7 +43,8 @@ cmake -B build \
     ${_SYSROOT:+-DLIBUV_INCLUDE_DIR="$_SYSROOT/usr/include"} \
     ${_SYSROOT:+-DLIBUV_LIBRARIES="$_SYSROOT/usr/lib/libuv.so"} \
     ${_SYSROOT:+-DLUA_INCLUDE_DIR="$_SYSROOT/usr/include/luajit-2.1"} \
-    ${_SYSROOT:+-DLUA_LIBRARY="$_SYSROOT/usr/lib/libluajit-5.1.so"}
+    ${_SYSROOT:+-DLUA_LIBRARY="$_SYSROOT/usr/lib/libluajit-5.1.so"} \
+    ${_SYSROOT:+-DCMAKE_C_FLAGS="--sysroot=$_SYSROOT -I$_SYSROOT/usr/include"}
 cmake --build build --parallel $(nproc)
 
 %post-build

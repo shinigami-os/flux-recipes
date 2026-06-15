@@ -32,66 +32,31 @@ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 EOF
 fi
-
 cmake -B build \
-    ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-    -DUSE_BUNDLED=OFF \
-    -DPREFER_LUA=OFF \
-    -G Ninja
-
+${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake} \
+-DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_INSTALL_PREFIX=/usr \
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+-DUSE_BUNDLED=OFF \
+-DPREFER_LUA=OFF \
+-G Ninja
 if [ -n "$FLUX_CROSS_HOST" ]; then
-    # Build the cross-compiled nlua0 first to populate CMakeFiles/nlua0.dir/
-    # and set timestamps on all its object files.
-    ninja -C build nlua0
-
-    # Recompile each nlua0 object with the HOST gcc so the host luajit
-    # can dlopen libnlua0.so during the code generation step.
-    cat > /tmp/nvim_host_nlua0.py << 'PYEOF'
-import json, re, subprocess, os, sys
-sysroot = os.environ.get('FLUX_CROSS_SYSROOT', '')
-nlua0_dir = 'build/CMakeFiles/nlua0.dir'
-nlua0_rel = set()
-for root, dirs, files in os.walk(nlua0_dir):
- for fn in files:
-  if fn.endswith('.c.o'):
-   nlua0_rel.add(os.path.relpath(os.path.join(root, fn), 'build'))
-if not nlua0_rel:
- print("No nlua0 objects found", file=sys.stderr); sys.exit(0)
-with open('build/compile_commands.json') as f:
- commands = json.load(f)
-host_objs = []
-for info in commands:
- output = info.get('output', '')
- if output not in nlua0_rel:
-  continue
- cmd = info['command']
- cmd = re.sub(r'^\S+', 'gcc', cmd)
- cmd = re.sub(r'--sysroot=\S+', '', cmd)
- if sysroot:
-  cmd = re.sub(r'-I' + re.escape(sysroot) + r'(/\S*)', r'-I\1', cmd)
-  cmd = re.sub(r'-I' + re.escape(sysroot) + r'\b', '-I/', cmd)
- if 'luajit-2.1' not in cmd:
-  cmd += ' -I/usr/include/luajit-2.1'
- print(f"  [host] {info['file']}", file=sys.stderr)
- r = subprocess.run(cmd, shell=True, cwd=info.get('directory', '.'))
- if r.returncode == 0:
-  host_objs.append(output)
-if not host_objs:
- print("No objects recompiled", file=sys.stderr); sys.exit(1)
-libs = subprocess.run(['pkg-config','--libs','luajit'], capture_output=True, text=True).stdout.strip() or '-lluajit-5.1'
-objs = ' '.join(f'build/{o}' for o in host_objs)
-subprocess.run(f"gcc -shared -Wl,-soname,libnlua0.so -o build/lib/libnlua0.so {objs} {libs}", shell=True, check=True)
-print("  [host] libnlua0.so rebuilt", file=sys.stderr)
-PYEOF
-    python3 /tmp/nvim_host_nlua0.py
-
-    # Touch so ninja considers it up-to-date and won't cross-rebuild it
-    touch build/lib/libnlua0.so
+ninja -C build nlua0
+printf '%s\n' 'import json,re,subprocess,os,sys' > /tmp/nvim_host_nlua0.py
+printf '%s\n' 'sysroot=os.environ.get("FLUX_CROSS_SYSROOT","")' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'nlua0_rel=set(os.path.relpath(os.path.join(r,f),"build") for r,d,fs in os.walk("build/CMakeFiles/nlua0.dir") for f in fs if f.endswith(".c.o"))' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'cmds=json.load(open("build/compile_commands.json")) if nlua0_rel else []' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'def strip_cross(cmd,s=sysroot):' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' '    cmd=re.sub(r"^\S+","gcc",cmd); cmd=re.sub(r"--sysroot=\S+","",cmd)' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' '    if s: cmd=re.sub(r"-I"+re.escape(s)+r"(/\S*)",r"-I\1",cmd); cmd=re.sub(r"-I"+re.escape(s)+r"\b","-I/",cmd)' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' '    return cmd if "luajit-2.1" in cmd else cmd+" -I/usr/include/luajit-2.1"' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'objs=[c["output"] for c in cmds if c.get("output","") in nlua0_rel and subprocess.run(strip_cross(c["command"]),shell=True,cwd=c.get("directory",".")).returncode==0]' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'if not objs: sys.exit(1)' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'libs=subprocess.run(["pkg-config","--libs","luajit"],capture_output=True,text=True).stdout.strip() or "-lluajit-5.1"' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'subprocess.run("gcc -shared -Wl,-soname,libnlua0.so -o build/lib/libnlua0.so "+" ".join("build/"+o for o in objs)+" "+libs,shell=True,check=True)' >> /tmp/nvim_host_nlua0.py
+python3 /tmp/nvim_host_nlua0.py
+touch build/lib/libnlua0.so
 fi
-
 ninja -C build
 
 %post-build

@@ -19,6 +19,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
+set -e
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)
@@ -53,7 +54,9 @@ printf '%s\n' '    if s: cmd=re.sub(r"-I"+re.escape(s)+r"(/\S*)",r"-I\1",cmd); c
 printf '%s\n' '    return cmd if "luajit-2.1" in cmd else cmd+" -I/usr/include/luajit-2.1"' >> /tmp/nvim_host_nlua0.py
 printf '%s\n' 'objs=[c["output"] for c in cmds if c.get("output","") in nlua0_rel and subprocess.run(strip_cross(c["command"]),shell=True,cwd=c.get("directory",".")).returncode==0]' >> /tmp/nvim_host_nlua0.py
 printf '%s\n' 'if not objs: sys.exit(1)' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'libs=subprocess.run(["pkg-config","--libs","luajit"],capture_output=True,text=True).stdout.strip() or "-lluajit-5.1"' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'henv={k:v for k,v in os.environ.items() if "PKG_CONFIG" not in k}' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'henv["PKG_CONFIG_PATH"]="/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig"' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'libs=subprocess.run(["pkg-config","--libs","luajit"],capture_output=True,text=True,env=henv).stdout.strip() or "-L/usr/lib/x86_64-linux-gnu -lluajit-5.1"' >> /tmp/nvim_host_nlua0.py
 printf '%s\n' 'subprocess.run("gcc -shared -Wl,-soname,libnlua0.so -o build/lib/libnlua0.so "+" ".join("build/"+o for o in objs)+" "+libs,shell=True,check=True)' >> /tmp/nvim_host_nlua0.py
 python3 /tmp/nvim_host_nlua0.py
 touch build/lib/libnlua0.so

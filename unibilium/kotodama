@@ -17,16 +17,26 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-autoreconf -fi
 
 %build
-make PREFIX=/usr \
-    LIBTOOL="$(pwd)/libtool" \
-    ${CC:+CC=$CC} \
-    ${AR:+AR=$AR} \
-    CFLAGS="$CFLAGS ${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}"
+_CC="${CC:-gcc}"
+_AR="${AR:-ar}"
+_SYSROOT="${FLUX_CROSS_SYSROOT:-}"
+_CFLAGS="$CFLAGS${_SYSROOT:+ --sysroot=$_SYSROOT}"
+$_CC $_CFLAGS -fPIC -c unibilium.c -o unibilium.o
+$_CC -shared -Wl,-soname,libunibilium.so.0 $_CFLAGS -o libunibilium.so.0.0 unibilium.o
+ln -sf libunibilium.so.0.0 libunibilium.so.0
+ln -sf libunibilium.so.0.0 libunibilium.so
+$_AR rcs libunibilium.a unibilium.o
 
 %post-build
 
 %install
-make PREFIX=/usr DESTDIR="$DESTDIR" install
+install -dm755 "$DESTDIR/usr/lib" "$DESTDIR/usr/include" "$DESTDIR/usr/lib/pkgconfig"
+install -m644 libunibilium.a "$DESTDIR/usr/lib/libunibilium.a"
+install -m755 libunibilium.so.0.0 "$DESTDIR/usr/lib/libunibilium.so.0.0"
+ln -sf libunibilium.so.0.0 "$DESTDIR/usr/lib/libunibilium.so.0"
+ln -sf libunibilium.so.0.0 "$DESTDIR/usr/lib/libunibilium.so"
+install -m644 unibilium.h "$DESTDIR/usr/include/unibilium.h"
+sed "s|prefix=/usr|prefix=$DESTDIR/usr|" unibilium.pc > "$DESTDIR/usr/lib/pkgconfig/unibilium.pc" || \
+  printf 'prefix=/usr\nlibdir=${prefix}/lib\nincludedir=${prefix}/include\n\nName: unibilium\nDescription: Terminfo parsing library\nVersion: %s\nLibs: -L${libdir} -lunibilium\nCflags: -I${includedir}\n' "$version" > "$DESTDIR/usr/lib/pkgconfig/unibilium.pc"

@@ -7,7 +7,7 @@ size = 2
 
 [source]
 url = https://github.com/tree-sitter/tree-sitter/archive/refs/tags/v0.26.9.tar.gz
-sha256 = 7504b7af7e7b9002ce529d4f941e1b7fb1fb435768780ce7da4abaac79bb156f
+sha256 = 8e14780500933f43d86662fcaa1b0ce99ebe9c220f4680bc929dce09a0e0cfc6
 
 [deps]
 build = gcc make

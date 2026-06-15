@@ -1,6 +1,6 @@
 [meta]
 name = luajit
-version = 2.1-rolling-20260517
+version = 2.1.20260517
 description = "Just-in-time compiler and runtime for Lua 5.1"
 license = MIT
 size = 2

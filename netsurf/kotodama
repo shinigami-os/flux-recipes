@@ -10,8 +10,8 @@ url = https://download.netsurf-browser.org/netsurf/releases/source/netsurf-3.11-
 sha256 = c28a626aefee428d053b13f88b5c440922245976522d12eaf137cfd32d201cb2
 
 [deps]
-build = gcc make pkgconf netsurf-buildsystem libnsutils libwapcaplet libparserutils libhubbub libdom libcss libnsgif gtk3 cairo pango libpng libjpeg-turbo curl libressl
-runtime = gtk3 cairo pango libpng libjpeg-turbo curl libressl libdom libcss libnsgif libhubbub libparserutils libwapcaplet libnsutils
+build = gcc make pkgconf netsurf-buildsystem libutf8proc libnsutils libwapcaplet libparserutils libhubbub libdom libcss libnsgif gtk3 cairo pango libpng libjpeg-turbo curl libressl
+runtime = gtk3 cairo pango libpng libjpeg-turbo curl libressl libutf8proc libdom libcss libnsgif libhubbub libparserutils libwapcaplet libnsutils
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

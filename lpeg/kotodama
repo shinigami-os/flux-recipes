@@ -1,0 +1,34 @@
+[meta]
+name = lpeg
+version = 1.1.0
+description = "Pattern-matching library for Lua (required by neovim)"
+license = MIT
+size = 1
+
+[source]
+url = https://www.inf.puc-rio.br/~roberto/lpeg/lpeg-1.1.0.tar.gz
+sha256 = 4b155d67d2246c1ffa7ad7bc466c1ea899bbc40fef0257cc9c03cecbaed4352a
+
+[deps]
+build = gcc make luajit
+runtime = luajit
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make \
+    ${CC:+CC=$CC} \
+    LUADIR="${FLUX_CROSS_SYSROOT:-}/usr/include/luajit-2.1" \
+    CFLAGS="$CFLAGS -fPIC ${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}"
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/lib/lua/5.1"
+install -m644 lpeg.so "$DESTDIR/usr/lib/lua/5.1/lpeg.so"
+install -m644 lpeg.h "$DESTDIR/usr/include/lpeg.h"
+ar rcs liblpeg_a.a lpeg.o
+install -m644 liblpeg_a.a "$DESTDIR/usr/lib/liblpeg_a.a"

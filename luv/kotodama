@@ -1,0 +1,47 @@
+[meta]
+name = luv
+version = 1.52.1.0
+description = "Lua bindings for libuv (used by neovim)"
+license = Apache-2.0
+size = 1
+
+[source]
+url = https://github.com/luvit/luv/releases/download/1.52.1-0/luv-1.52.1-0.tar.gz
+sha256 = 3e6eb820a3aee034f85f9cce9bd77b5d42f34d128a1ccec877adf28c913577c7
+
+[deps]
+build = gcc cmake make luajit libuv
+runtime = luajit libuv
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > toolchain.cmake << EOF
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
+set(CMAKE_C_COMPILER ${CC:-gcc})
+set(CMAKE_SYSROOT ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+EOF
+fi
+
+%build
+cmake -B build \
+    ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_SHARED_LIBS=ON \
+    -DWITH_SHARED_LIBUV=ON \
+    -DLUA_BUILD_TYPE=System \
+    -DWITH_LUA_ENGINE=LuaJIT
+cmake --build build --parallel $(nproc)
+
+%post-build
+
+%install
+DESTDIR=$DESTDIR cmake --install build --prefix /usr

@@ -17,9 +17,11 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+autoreconf -fi
 
 %build
 make PREFIX=/usr \
+    LIBTOOL="$(pwd)/libtool" \
     ${CC:+CC=$CC} \
     ${AR:+AR=$AR} \
     CFLAGS="$CFLAGS ${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}"

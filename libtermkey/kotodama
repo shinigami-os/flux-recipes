@@ -17,9 +17,11 @@ runtime = unibilium
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+autoreconf -fi
 
 %build
 make PREFIX=/usr \
+    LIBTOOL="$(pwd)/libtool" \
     ${CC:+CC=$CC} \
     ${AR:+AR=$AR} \
     PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT:-}/usr/lib/pkgconfig" \

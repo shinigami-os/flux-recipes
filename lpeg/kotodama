@@ -28,7 +28,7 @@ make \
 
 %install
 install -dm755 "$DESTDIR/usr/lib/lua/5.1"
-install -m644 lpeg.so "$DESTDIR/usr/lib/lua/5.1/lpeg.so"
-install -m644 lpeg.h "$DESTDIR/usr/include/lpeg.h"
-ar rcs liblpeg_a.a lpeg.o
-install -m644 liblpeg_a.a "$DESTDIR/usr/lib/liblpeg_a.a"
+install -m755 lpeg.so "$DESTDIR/usr/lib/lua/5.1/lpeg.so"
+ar rcs liblpeg.a lpeg.o lpcap.o lptree.o lpcode.o lpprint.o lpcset.o
+install -dm755 "$DESTDIR/usr/lib"
+install -m644 liblpeg.a "$DESTDIR/usr/lib/liblpeg.a"

@@ -6,24 +6,42 @@ license = Apache-2.0
 size = 14
 
 [source]
-url = https://github.com/neovim/neovim/archive/refs/tags/nightly.tar.gz
-sha256 = c72b4951ffcb9b4a9260beeb95f045fe186da9fdec6c7735bd17648bf73f6a4f
+url = https://github.com/neovim/neovim/archive/refs/tags/v0.12.2.tar.gz
+sha256 = ef9f58da7d687ed4d1dad9715542bf0dabdeedbfe8089e2ce17fff21b920a268
 
 [deps]
-build = gcc clang cmake ninja make curl git pkgconf luajit
-runtime = luajit
+build = gcc cmake ninja make pkgconf luajit libuv msgpack-c unibilium libtermkey libvterm libtree-sitter
+runtime = luajit libuv msgpack-c unibilium libtermkey libvterm libtree-sitter
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > toolchain.cmake << EOF
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
+set(CMAKE_C_COMPILER ${CC:-gcc})
+set(CMAKE_CXX_COMPILER ${CXX:-g++})
+set(CMAKE_SYSROOT ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH ${FLUX_CROSS_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+EOF
+fi
 
 %build
-unset DESTDIR
-make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr \
-    DEPS_CMAKE_FLAGS="-DLUAJIT_INCLUDE_DIR=/usr/include/luajit-2.1 -DLUAJIT_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so"
+cmake -B build \
+    ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DUSE_BUNDLED=OFF \
+    -DPREFER_LUA=OFF \
+    -G Ninja
+ninja -C build
 
 %post-build
 
 %install
-make DESTDIR="$DESTDIR" CMAKE_INSTALL_PREFIX=/usr install
+DESTDIR=$DESTDIR ninja -C build install

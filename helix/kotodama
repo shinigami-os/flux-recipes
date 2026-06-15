@@ -17,6 +17,7 @@ runtime =
 cflags =
 
 %pre-build
+sed -i '/dannylongeuay\/tree-sitter-go-template/d' languages.toml
 
 %build
 for _d in /home/*/.cargo/bin /root/.cargo/bin; do

@@ -19,7 +19,15 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-make PREFIX=/usr BUILDMODE=dynamic
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    CROSS_PREFIX="${CC%gcc}"
+    make HOST_CC="gcc" CROSS="$CROSS_PREFIX" \
+        TARGET_CFLAGS="$CFLAGS --sysroot=$FLUX_CROSS_SYSROOT" \
+        TARGET_LDFLAGS="--sysroot=$FLUX_CROSS_SYSROOT" \
+        BUILDMODE=dynamic PREFIX=/usr
+else
+    make HOST_CC="gcc" BUILDMODE=dynamic PREFIX=/usr
+fi
 
 %post-build
 

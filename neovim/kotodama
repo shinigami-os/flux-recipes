@@ -19,48 +19,12 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-set -e
-if [ -n "$FLUX_CROSS_HOST" ]; then
-cat > toolchain.cmake << EOF
-set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR x86_64)
-set(CMAKE_C_COMPILER ${CC:-gcc})
-set(CMAKE_CXX_COMPILER ${CXX:-g++})
-set(CMAKE_SYSROOT ${FLUX_CROSS_SYSROOT})
-set(CMAKE_FIND_ROOT_PATH ${FLUX_CROSS_SYSROOT})
-set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-EOF
-fi
 cmake -B build \
-${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake} \
 -DCMAKE_BUILD_TYPE=Release \
 -DCMAKE_INSTALL_PREFIX=/usr \
--DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
 -DUSE_BUNDLED=OFF \
 -DPREFER_LUA=OFF \
 -G Ninja
-if [ -n "$FLUX_CROSS_HOST" ]; then
-ninja -C build nlua0
-printf '%s\n' 'import json,re,subprocess,os,sys' > /tmp/nvim_host_nlua0.py
-printf '%s\n' 'sysroot=os.environ.get("FLUX_CROSS_SYSROOT","")' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'nlua0_dir=next((os.path.join(r,"nlua0.dir") for r,d,_ in os.walk("build") if "nlua0.dir" in d),"")' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'nlua0_rel=set(os.path.relpath(os.path.join(r,f),"build") for r,d,fs in os.walk(nlua0_dir) for f in fs if f.endswith(".c.o")) if nlua0_dir else set()' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'cmds=json.load(open("build/compile_commands.json")) if nlua0_rel else []' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'def strip_cross(cmd,s=sysroot):' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' '    cmd=re.sub(r"^\S+","gcc",cmd); cmd=re.sub(r"--sysroot=\S+","",cmd)' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' '    if s: cmd=re.sub(r"-I"+re.escape(s)+r"(/\S*)",r"-I\1",cmd); cmd=re.sub(r"-I"+re.escape(s)+r"\b","-I/",cmd)' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' '    return cmd if "luajit-2.1" in cmd else cmd+" -I/usr/include/luajit-2.1"' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'objs=[c["output"] for c in cmds if c.get("output","") in nlua0_rel and subprocess.run(strip_cross(c["command"]),shell=True,cwd=c.get("directory",".")).returncode==0]' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'if not objs: sys.exit(1)' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'henv={k:v for k,v in os.environ.items() if "PKG_CONFIG" not in k}' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'henv["PKG_CONFIG_PATH"]="/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig"' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'libs=subprocess.run(["pkg-config","--libs","luajit"],capture_output=True,text=True,env=henv).stdout.strip() or "-L/usr/lib/x86_64-linux-gnu -lluajit-5.1"' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'subprocess.run("gcc -shared -Wl,-soname,libnlua0.so -o build/lib/libnlua0.so "+" ".join("build/"+o for o in objs)+" "+libs,shell=True,check=True)' >> /tmp/nvim_host_nlua0.py
-python3 /tmp/nvim_host_nlua0.py
-touch build/lib/libnlua0.so
-fi
 ninja -C build
 
 %post-build

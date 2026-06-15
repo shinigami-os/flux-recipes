@@ -19,11 +19,14 @@ cflags =
 %pre-build
 
 %build
+for _d in /home/*/.cargo/bin /root/.cargo/bin; do
+[ -x "$_d/cargo" ] && export PATH="$_d:$PATH" && break
+done
 if [ -n "$FLUX_CROSS_HOST" ]; then
-    export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER="$CC"
-    cargo build --release --locked --target x86_64-unknown-linux-musl
+export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER="$CC"
+cargo build --release --locked --target x86_64-unknown-linux-musl
 else
-    cargo build --release --locked
+cargo build --release --locked
 fi
 
 %post-build

@@ -31,6 +31,7 @@ EOF
 fi
 
 %build
+_SYSROOT="${FLUX_CROSS_SYSROOT:-}"
 cmake -B build \
     ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake} \
     -DCMAKE_BUILD_TYPE=Release \
@@ -38,7 +39,11 @@ cmake -B build \
     -DBUILD_SHARED_LIBS=ON \
     -DWITH_SHARED_LIBUV=ON \
     -DLUA_BUILD_TYPE=System \
-    -DWITH_LUA_ENGINE=LuaJIT
+    -DWITH_LUA_ENGINE=LuaJIT \
+    ${_SYSROOT:+-DLIBUV_INCLUDE_DIR="$_SYSROOT/usr/include"} \
+    ${_SYSROOT:+-DLIBUV_LIBRARIES="$_SYSROOT/usr/lib/libuv.so"} \
+    ${_SYSROOT:+-DLUA_INCLUDE_DIR="$_SYSROOT/usr/include/luajit-2.1"} \
+    ${_SYSROOT:+-DLUA_LIBRARY="$_SYSROOT/usr/lib/libluajit-5.1.so"}
 cmake --build build --parallel $(nproc)
 
 %post-build

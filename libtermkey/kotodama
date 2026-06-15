@@ -19,14 +19,24 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-make PREFIX=/usr \
-    ${CC:+CC=$CC} \
-    ${AR:+AR=$AR} \
-    PKG_CONFIG_PATH="${FLUX_CROSS_SYSROOT:-}/usr/lib/pkgconfig" \
-    CFLAGS="$CFLAGS ${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}" \
-    LDFLAGS="${FLUX_CROSS_SYSROOT:+--sysroot=$FLUX_CROSS_SYSROOT}"
+_CC="${CC:-gcc}"
+_AR="${AR:-ar}"
+_SYSROOT="${FLUX_CROSS_SYSROOT:-}"
+_CFLAGS="$CFLAGS${_SYSROOT:+ --sysroot=$_SYSROOT} -DNCURSES_WIDECHAR -I${_SYSROOT}/usr/include"
+_LDFLAGS="${_SYSROOT:+--sysroot=$_SYSROOT} -L${_SYSROOT}/usr/lib -lunibilium"
+$_CC $_CFLAGS -fPIC -c termkey.c -o termkey.o
+$_CC -shared -Wl,-soname,libtermkey.so.0 $_CFLAGS $_LDFLAGS -o libtermkey.so.0.0 termkey.o
+ln -sf libtermkey.so.0.0 libtermkey.so.0
+ln -sf libtermkey.so.0.0 libtermkey.so
+$_AR rcs libtermkey.a termkey.o
 
 %post-build
 
 %install
-make PREFIX=/usr DESTDIR="$DESTDIR" install
+install -dm755 "$DESTDIR/usr/lib" "$DESTDIR/usr/include" "$DESTDIR/usr/lib/pkgconfig"
+install -m644 libtermkey.a "$DESTDIR/usr/lib/libtermkey.a"
+install -m755 libtermkey.so.0.0 "$DESTDIR/usr/lib/libtermkey.so.0.0"
+ln -sf libtermkey.so.0.0 "$DESTDIR/usr/lib/libtermkey.so.0"
+ln -sf libtermkey.so.0.0 "$DESTDIR/usr/lib/libtermkey.so"
+install -m644 termkey.h "$DESTDIR/usr/include/termkey.h"
+printf 'prefix=/usr\nlibdir=${prefix}/lib\nincludedir=${prefix}/include\n\nName: libtermkey\nDescription: Terminal keypress reading library\nVersion: 0.22\nLibs: -L${libdir} -ltermkey\nLibs.private: -lunibilium\nCflags: -I${includedir}\n' > "$DESTDIR/usr/lib/pkgconfig/libtermkey.pc"

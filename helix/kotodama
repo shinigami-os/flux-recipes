@@ -17,7 +17,7 @@ runtime =
 cflags =
 
 %pre-build
-sed -i '/dannylongeuay\/tree-sitter-go-template/d' languages.toml
+L=$(grep -n 'dannylongeuay' languages.toml | cut -d: -f1); [ -n "$L" ] && sed -i "$((L-2)),$((L))d" languages.toml
 
 %build
 for _d in /home/*/.cargo/bin /root/.cargo/bin; do

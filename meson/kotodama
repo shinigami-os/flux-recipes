@@ -1,0 +1,26 @@
+[meta]
+name = meson
+version = 1.11.1
+description = "High productivity build system"
+license = Apache-2.0
+size = 3
+
+[source]
+url = https://github.com/mesonbuild/meson/releases/download/1.11.1/meson-1.11.1.tar.gz
+sha256 = 6788ae299979643f8d841bcaf64352558436cae45a0355148a3aeeccf7913866
+
+[deps]
+build = python3
+runtime = python3 ninja
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+python3 setup.py install --prefix=/usr --root="$DESTDIR" --optimize=1

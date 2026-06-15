@@ -1,0 +1,27 @@
+[meta]
+name = noto-fonts-emoji
+version = 2.051
+description = "Noto Color Emoji font"
+license = OFL-1.1
+size = 25
+
+[source]
+url = https://github.com/googlefonts/noto-emoji/archive/refs/tags/v2.051.tar.gz
+sha256 = 04f3d1e5605edebebac00a7a0becb390a4a3ead015066905b27935b30c18e745
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/share/fonts/noto"
+install -m644 fonts/NotoColorEmoji.ttf "$DESTDIR/usr/share/fonts/noto/"

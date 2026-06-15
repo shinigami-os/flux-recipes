@@ -1,0 +1,27 @@
+[meta]
+name = ttf-liberation
+version = 2.1.5
+description = "Liberation fonts — metric-compatible replacements for Arial, Times New Roman, Courier New"
+license = OFL-1.1
+size = 3
+
+[source]
+url = https://github.com/liberationfonts/liberation-fonts/releases/download/2.1.5/liberation-fonts-ttf-2.1.5.tar.gz
+sha256 = 0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/share/fonts/liberation"
+install -m644 *.ttf "$DESTDIR/usr/share/fonts/liberation/"

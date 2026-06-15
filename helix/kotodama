@@ -1,0 +1,38 @@
+[meta]
+name = helix
+version = 25.07.1
+description = "Post-modern modal text editor"
+license = MPL-2.0
+size = 20
+
+[source]
+url = https://github.com/helix-editor/helix/archive/refs/tags/25.07.1.tar.gz
+sha256 = 27c8bc3eba46bc7bab1e3629c6b28ff94882eeff17366b3ea69cd8ceffba7541
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER="$CC"
+    cargo build --release --locked --target x86_64-unknown-linux-musl
+else
+    cargo build --release --locked
+fi
+
+%post-build
+
+%install
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    install -Dm755 target/x86_64-unknown-linux-musl/release/hx "$DESTDIR/usr/bin/hx"
+else
+    install -Dm755 target/release/hx "$DESTDIR/usr/bin/hx"
+fi
+install -dm755 "$DESTDIR/usr/share/helix"
+cp -r runtime "$DESTDIR/usr/share/helix/runtime"

@@ -1,7 +1,7 @@
 [meta]
 name = kira-desktop-fonts
 version = 1.0
-description = "Font meta-package: Raleway + JetBrains Mono Nerd Font"
+description = "Font meta-package: Raleway, JetBrains Mono Nerd, DejaVu, Liberation, Noto"
 license = MIT
 size = 1
 
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = raleway-fonts jetbrains-mono-nerd-font
+runtime = raleway-fonts jetbrains-mono-nerd-font ttf-dejavu ttf-liberation noto-fonts noto-fonts-emoji
 
 [build]
 cflags =

@@ -1,0 +1,35 @@
+[meta]
+name = noto-fonts
+version = 20201206
+description = "Noto font family — comprehensive Unicode coverage (Sans, Serif, Mono)"
+license = OFL-1.1
+size = 80
+
+[source]
+url = https://github.com/notofonts/noto-fonts/archive/refs/tags/v20201206-phase3.tar.gz
+sha256 = 18a513b6cfb99209d9ffe88f31659a514845e34ee8e7a0b534e37aa19e2c4270
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/share/fonts/noto"
+install -m644 \
+    hinted/ttf/NotoSans/NotoSans-Regular.ttf \
+    hinted/ttf/NotoSans/NotoSans-Bold.ttf \
+    hinted/ttf/NotoSans/NotoSans-Italic.ttf \
+    hinted/ttf/NotoSans/NotoSans-BoldItalic.ttf \
+    hinted/ttf/NotoSerif/NotoSerif-Regular.ttf \
+    hinted/ttf/NotoSerif/NotoSerif-Bold.ttf \
+    hinted/ttf/NotoMono/NotoMono-Regular.ttf \
+    "$DESTDIR/usr/share/fonts/noto/"

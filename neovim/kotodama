@@ -10,8 +10,8 @@ url = https://github.com/neovim/neovim/archive/refs/tags/v0.12.2.tar.gz
 sha256 = ef9f58da7d687ed4d1dad9715542bf0dabdeedbfe8089e2ce17fff21b920a268
 
 [deps]
-build = gcc cmake ninja make pkgconf luajit libuv msgpack-c unibilium libtermkey libvterm libtree-sitter
-runtime = luajit libuv msgpack-c unibilium libtermkey libvterm libtree-sitter
+build = gcc cmake ninja make pkgconf luajit luv lpeg libuv msgpack-c unibilium libtermkey libvterm libtree-sitter
+runtime = luajit luv lpeg libuv msgpack-c unibilium libtermkey libvterm libtree-sitter
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

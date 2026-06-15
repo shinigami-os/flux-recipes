@@ -17,6 +17,8 @@ runtime = luajit luv lpeg libuv msgpack-c unibilium libtermkey libvterm libtree-
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+
+%build
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)
@@ -31,14 +33,82 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 EOF
 fi
 
-%build
 cmake -B build \
     ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=$(pwd)/toolchain.cmake} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
     -DUSE_BUNDLED=OFF \
     -DPREFER_LUA=OFF \
     -G Ninja
+
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    # Build the cross-compiled nlua0 first to populate CMakeFiles/nlua0.dir/
+    # and set timestamps on all its object files.
+    ninja -C build nlua0
+
+    # Recompile each nlua0 object with the HOST gcc so the host luajit
+    # can dlopen libnlua0.so during the code generation step.
+    python3 - << 'PYEOF'
+import json, re, subprocess, os, sys
+
+sysroot = os.environ.get('FLUX_CROSS_SYSROOT', '')
+nlua0_dir = 'build/CMakeFiles/nlua0.dir'
+
+# Collect all .o files that belong to the nlua0 target
+nlua0_rel = set()
+for root, dirs, files in os.walk(nlua0_dir):
+    for fn in files:
+        if fn.endswith('.c.o'):
+            full = os.path.join(root, fn)
+            nlua0_rel.add(os.path.relpath(full, 'build'))
+
+if not nlua0_rel:
+    print("No nlua0 objects found — skipping host rebuild", file=sys.stderr)
+    sys.exit(0)
+
+with open('build/compile_commands.json') as f:
+    commands = json.load(f)
+
+host_objs = []
+for info in commands:
+    output = info.get('output', '')
+    if output not in nlua0_rel:
+        continue
+    cmd = info['command']
+    # Use host gcc instead of the cross-compiler
+    cmd = re.sub(r'^\S+', 'gcc', cmd)
+    # Strip --sysroot
+    cmd = re.sub(r'--sysroot=\S+', '', cmd)
+    # Replace sysroot-prefixed include paths with bare paths
+    if sysroot:
+        cmd = re.sub(r'-I' + re.escape(sysroot) + r'(/\S*)', r'-I\1', cmd)
+        cmd = re.sub(r'-I' + re.escape(sysroot) + r'\b', '-I/', cmd)
+    # Ensure host luajit headers are present
+    if 'luajit-2.1' not in cmd:
+        cmd += ' -I/usr/include/luajit-2.1'
+    print(f"  [host] {info['file']}", file=sys.stderr)
+    r = subprocess.run(cmd, shell=True, cwd=info.get('directory', '.'))
+    if r.returncode == 0:
+        host_objs.append(output)
+
+if not host_objs:
+    print("No objects recompiled — build will likely fail", file=sys.stderr)
+    sys.exit(1)
+
+luajit_libs = subprocess.run(
+    ['pkg-config', '--libs', 'luajit'],
+    capture_output=True, text=True).stdout.strip() or '-lluajit-5.1'
+objs_str = ' '.join(f'build/{o}' for o in host_objs)
+cmd = f"gcc -shared -Wl,-soname,libnlua0.so -o build/lib/libnlua0.so {objs_str} {luajit_libs}"
+subprocess.run(cmd, shell=True, check=True)
+print("  [host] libnlua0.so rebuilt for host", file=sys.stderr)
+PYEOF
+
+    # Touch so ninja considers it up-to-date and won't cross-rebuild it
+    touch build/lib/libnlua0.so
+fi
+
 ninja -C build
 
 %post-build

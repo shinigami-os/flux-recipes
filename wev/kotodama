@@ -1,0 +1,39 @@
+[meta]
+name = wev
+version = 1.0.0
+description = "Wayland event viewer"
+license = MIT
+size = 1
+
+[source]
+url = https://git.sr.ht/~sircmpwn/wev/archive/1.0.0.tar.gz
+sha256 = 613a1df1a4879d50ce72023de14aaf05be2e6f51346e84a69f50fc6d8502bbf4
+
+[deps]
+build = gcc make pkgconf wayland wayland-protocols libxkbcommon
+runtime = wayland libxkbcommon
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+_SYSROOT="${FLUX_CROSS_SYSROOT:-}"
+if [ -n "$_SYSROOT" ]; then
+_SCANNER=$(which wayland-scanner 2>/dev/null || echo /usr/bin/wayland-scanner)
+_PROTOCOLS="$_SYSROOT/usr/share/wayland-protocols"
+else
+_SCANNER=$(pkg-config --variable=wayland_scanner wayland-scanner)
+_PROTOCOLS=$(pkg-config --variable=pkgdatadir wayland-protocols)
+fi
+make wev \
+${CC:+CC=$CC} \
+WAYLAND_SCANNER="$_SCANNER" \
+WAYLAND_PROTOCOLS="$_PROTOCOLS" \
+CFLAGS="$CFLAGS${_SYSROOT:+ --sysroot=$_SYSROOT}"
+
+%post-build
+
+%install
+install -Dm755 wev "$DESTDIR/usr/bin/wev"

@@ -17,6 +17,7 @@ runtime = gtk3 cairo pango libpng libjpeg-turbo curl libressl libutf8proc libdom
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+sed -i 's/#if OPENSSL_VERSION_NUMBER < 0x1010000fL || defined(LIBRESSL_VERSION_NUMBER)/#if OPENSSL_VERSION_NUMBER < 0x1010000fL \&\& !defined(LIBRESSL_VERSION_NUMBER)/' content/fetchers/about/certificate.c
 
 %build
 make PREFIX=/usr \

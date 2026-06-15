@@ -42,3 +42,5 @@ cmake --build build --parallel $(nproc)
 
 %install
 DESTDIR=$DESTDIR cmake --install build --prefix /usr
+install -dm755 "$DESTDIR/usr/include/libutf8proc"
+ln -sf ../utf8proc.h "$DESTDIR/usr/include/libutf8proc/utf8proc.h"

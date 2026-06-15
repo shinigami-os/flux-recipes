@@ -1,13 +1,13 @@
 [meta]
 name = msgpack-c
-version = 7.0.0
-description = "MessagePack C/C++ implementation"
+version = 6.1.0
+description = "MessagePack C implementation"
 license = BSL-1.0
 size = 1
 
 [source]
-url = https://github.com/msgpack/msgpack-c/releases/download/cpp-7.0.0/msgpack-cxx-7.0.0.tar.gz
-sha256 = 7504b7af7e7b9002ce529d4f941e1b7fb1fb435768780ce7da4abaac79bb156f
+url = https://github.com/msgpack/msgpack-c/releases/download/c-6.1.0/msgpack-c-6.1.0.tar.gz
+sha256 = 674119f1a85b5f2ecc4c7d5c2859edf50c0b05e0c10aa0df85eefa2c8c14b796
 
 [deps]
 build = gcc make cmake
@@ -22,7 +22,6 @@ cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 set(CMAKE_C_COMPILER ${CC:-gcc})
-set(CMAKE_CXX_COMPILER ${CXX:-g++})
 set(CMAKE_SYSROOT ${FLUX_CROSS_SYSROOT})
 set(CMAKE_FIND_ROOT_PATH ${FLUX_CROSS_SYSROOT})
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
@@ -38,7 +37,8 @@ cmake -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DMSGPACK_BUILD_TESTS=OFF \
     -DMSGPACK_BUILD_EXAMPLES=OFF \
-    -DMSGPACK_CXX20=ON
+    -DMSGPACK_ENABLE_SHARED=ON \
+    -DMSGPACK_ENABLE_STATIC=ON
 cmake --build build --parallel $(nproc)
 
 %post-build

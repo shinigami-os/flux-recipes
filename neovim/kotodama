@@ -44,7 +44,8 @@ if [ -n "$FLUX_CROSS_HOST" ]; then
 ninja -C build nlua0
 printf '%s\n' 'import json,re,subprocess,os,sys' > /tmp/nvim_host_nlua0.py
 printf '%s\n' 'sysroot=os.environ.get("FLUX_CROSS_SYSROOT","")' >> /tmp/nvim_host_nlua0.py
-printf '%s\n' 'nlua0_rel=set(os.path.relpath(os.path.join(r,f),"build") for r,d,fs in os.walk("build/CMakeFiles/nlua0.dir") for f in fs if f.endswith(".c.o"))' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'nlua0_dir=next((os.path.join(r,"nlua0.dir") for r,d,_ in os.walk("build") if "nlua0.dir" in d),"")' >> /tmp/nvim_host_nlua0.py
+printf '%s\n' 'nlua0_rel=set(os.path.relpath(os.path.join(r,f),"build") for r,d,fs in os.walk(nlua0_dir) for f in fs if f.endswith(".c.o")) if nlua0_dir else set()' >> /tmp/nvim_host_nlua0.py
 printf '%s\n' 'cmds=json.load(open("build/compile_commands.json")) if nlua0_rel else []' >> /tmp/nvim_host_nlua0.py
 printf '%s\n' 'def strip_cross(cmd,s=sysroot):' >> /tmp/nvim_host_nlua0.py
 printf '%s\n' '    cmd=re.sub(r"^\S+","gcc",cmd); cmd=re.sub(r"--sysroot=\S+","",cmd)' >> /tmp/nvim_host_nlua0.py

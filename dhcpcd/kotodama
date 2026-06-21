@@ -27,6 +27,7 @@ cflags = -O2 -pipe -march=x86-64-v2
     --runstatedir=/run \
     --without-dev \
     --disable-auth \
+    --without-openssl \
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${CC:+CC=$CC}
 make

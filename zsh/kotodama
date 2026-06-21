@@ -1,0 +1,53 @@
+[meta]
+name = zsh
+version = 5.9
+description = "Extended Bourne shell with many improvements"
+license = MIT
+size = 8
+
+[source]
+url = https://sourceforge.net/projects/zsh/files/zsh/5.9/zsh-5.9.tar.xz
+sha256 = 9b8d1ecedd5b5e81fbf1918e876752a7dd948e05c1a0dba10ab863842d45acd5
+
+[deps]
+build = gcc make ncurses
+runtime = ncurses
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+sed -i 's/^static char \*boolcodes\[\]/const char *const boolcodes[]/' Src/Modules/termcap.c
+sed -i 's/^static const char \*const boolcodes\[\]/const char *const boolcodes[]/' Src/Modules/termcap.c
+sed -i '/#include.*zsh\.mdh/a #include <termcap.h>' Src/prompt.c
+rm -f config.cache
+[ -f /usr/share/misc/config.sub ] && cp /usr/share/misc/config.sub config.sub || true
+[ -f /usr/share/misc/config.guess ] && cp /usr/share/misc/config.guess config.guess || true
+
+%build
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc/zsh \
+    --with-term-lib=ncursesw \
+    --disable-gdbm \
+    --disable-pcre \
+    --enable-dynamic \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${CC:+CC=$CC} \
+    CFLAGS="$CFLAGS -DNCURSES_WIDECHAR=1" \
+    LIBS="-lncursesw -ldl"
+sed -i 's|/\* #undef HAVE_TERM_H \*/|#define HAVE_TERM_H 1|' config.h
+sed -i 's|/\* #undef ZSH_HAVE_TERM_H \*/|#define ZSH_HAVE_TERM_H 1|' config.h
+sed -i 's|/\* #undef HAVE_TERMCAP_H \*/|#define HAVE_TERMCAP_H 1|' config.h
+sed -i 's|/\* #undef HAVE_TGOTO \*/|#define HAVE_TGOTO 1|' config.h
+sed -i 's|/\* #undef DYNAMIC \*/|#define DYNAMIC 1|' config.h
+sed -i 's|/\* The extension used for dynamically loaded modules\. \*/|/* The extension used for dynamically loaded modules. */\n#define MODULE_EXT ".so"|' config.h
+sed -i '/name=zsh\/main\|name=zsh\/db\/gdbm/!s/link=static/link=dynamic/g' config.modules
+sed -i '/name=zsh\/db\/gdbm/!s/link=no auto=yes load=no/link=dynamic auto=yes load=yes/g' config.modules
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

@@ -1,0 +1,13 @@
+#!/bin/sh
+i=0
+while [ -z "$(find /sys/devices -path '*/input/input*/event*' -type d 2>/dev/null)" ] && [ $i -lt 30 ]; do
+    sleep 1
+    i=$((i + 1))
+done
+sleep 2
+
+find /sys/devices -path "*/input/input*/event*" -type d | while read dev; do
+    parent=$(dirname "$dev")
+    udevadm test "$parent" > /dev/null 2>&1
+done
+touch /etc/sv/udev-input-trigger/down

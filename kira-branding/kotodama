@@ -1,0 +1,30 @@
+[meta]
+name = kira-branding
+version = 1.0
+description = "Kira Linux shell branding: zshrc, powerlevel10k theme, fetch script, keymaps"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = zsh zsh-plugins
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/root" "$DESTDIR/etc/skel" "$DESTDIR/usr/bin" "$DESTDIR/etc/keymaps"
+install -m644 "$FLUX_RECIPE_DIR/files/zshrc" "$DESTDIR/root/.zshrc"
+install -m644 "$FLUX_RECIPE_DIR/files/p10k.zsh" "$DESTDIR/root/.p10k.zsh"
+install -m644 "$FLUX_RECIPE_DIR/files/zshrc" "$DESTDIR/etc/skel/.zshrc"
+install -m644 "$FLUX_RECIPE_DIR/files/p10k.zsh" "$DESTDIR/etc/skel/.p10k.zsh"
+install -m755 "$FLUX_RECIPE_DIR/files/fetch" "$DESTDIR/usr/bin/fetch"
+cp -r "$FLUX_RECIPE_DIR/files/keymaps/." "$DESTDIR/etc/keymaps/"

@@ -1,0 +1,23 @@
+[meta]
+name = kira-installer-tools
+version = 1.0
+description = "Tools required only inside the installer environment: partitioning, filesystem creation, bootloader, EFI boot management, user/group tools"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = efivar efibootmgr grub parted e2fsprogs dosfstools shadow
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

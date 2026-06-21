@@ -1,0 +1,26 @@
+[meta]
+name = kira-net
+version = 1.0
+description = "Networking stack: NetworkManager, dhcpcd, wpa_supplicant, libnl plus their runit services"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = networkmanager dhcpcd wpa_supplicant libnl
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/dhcpcd"
+install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
+install -m755 "$FLUX_RECIPE_DIR/files/dhcpcd/run" "$DESTDIR/etc/sv/dhcpcd/run"

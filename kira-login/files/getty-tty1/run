@@ -1,0 +1,2 @@
+#!/bin/sh
+exec setsid sh -c 'exec /sbin/getty -n -l /usr/bin/zsh-login 38400 tty1 </dev/tty1 >/dev/tty1 2>&1'

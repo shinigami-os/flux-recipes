@@ -51,3 +51,8 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+_EGL=$(basename "$(ls "$DESTDIR/usr/lib"/libEGL.so.*.*.* 2>/dev/null | head -1)")
+if [ -n "$_EGL" ]; then
+    ln -sf "$_EGL" "$DESTDIR/usr/lib/libEGL.so.1"
+    ln -sf "$_EGL" "$DESTDIR/usr/lib/libEGL.so"
+fi

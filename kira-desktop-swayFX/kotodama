@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = swayfx eww fuzzel mako swaylock-effects swaybg flameshot foot yazi thunar qt6-wayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw nm-connection-editor pipewire wireplumber pavucontrol raleway-fonts jetbrains-mono-nerd-font
+runtime = mesa libglvnd xwayland swayfx eww fuzzel mako swaylock-effects swaybg flameshot foot yazi thunar qt6-wayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw nm-connection-editor pipewire wireplumber pavucontrol raleway-fonts jetbrains-mono-nerd-font
 
 [build]
 cflags =
@@ -23,3 +23,4 @@ cflags =
 %install
 install -Dm644 "$FLUX_RECIPE_DIR/files/swayFX.desktop-env" "$DESTDIR/usr/share/kira-desktop/swayFX.desktop-env"
 install -Dm755 "$FLUX_RECIPE_DIR/files/kira-start-swayFX" "$DESTDIR/usr/bin/kira-start-swayFX"
+install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/kira/wallpapers/default.png"

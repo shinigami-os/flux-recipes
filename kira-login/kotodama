@@ -1,0 +1,26 @@
+[meta]
+name = kira-login
+version = 1.0
+description = "TTY1 login: getty-tty1 runit service and zsh-login launcher script"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = zsh
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/etc/sv/getty-tty1" "$DESTDIR/usr/bin"
+install -m755 "$FLUX_RECIPE_DIR/files/getty-tty1/run" "$DESTDIR/etc/sv/getty-tty1/run"
+install -m755 "$FLUX_RECIPE_DIR/files/zsh-login.sh" "$DESTDIR/usr/bin/zsh-login"

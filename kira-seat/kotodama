@@ -1,0 +1,26 @@
+[meta]
+name = kira-seat
+version = 1.0
+description = "Seat management: seatd daemon plus seatd and udev-input-trigger runit services"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = seatd
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/etc/sv/seatd" "$DESTDIR/etc/sv/udev-input-trigger"
+install -m755 "$FLUX_RECIPE_DIR/files/seatd/run" "$DESTDIR/etc/sv/seatd/run"
+install -m755 "$FLUX_RECIPE_DIR/files/udev-input-trigger/run" "$DESTDIR/etc/sv/udev-input-trigger/run"

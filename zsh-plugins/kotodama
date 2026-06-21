@@ -1,0 +1,42 @@
+[meta]
+name = zsh-plugins
+version = 1.0
+description = "zsh-autosuggestions, zsh-syntax-highlighting, powerlevel10k and oh-my-zsh git plugin"
+license = MIT
+size = 4
+
+[source]
+
+[deps]
+build = curl
+runtime = zsh
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+curl -fsSL -o autosuggestions.tar.gz https://github.com/zsh-users/zsh-autosuggestions/archive/refs/tags/v0.7.1.tar.gz
+tar xzf autosuggestions.tar.gz
+mv zsh-autosuggestions-0.7.1 zsh-autosuggestions
+
+curl -fsSL -o syntax-highlighting.tar.gz https://github.com/zsh-users/zsh-syntax-highlighting/archive/refs/tags/0.8.0.tar.gz
+tar xzf syntax-highlighting.tar.gz
+mv zsh-syntax-highlighting-0.8.0 zsh-syntax-highlighting
+
+curl -fsSL -o powerlevel10k.tar.gz https://github.com/romkatv/powerlevel10k/archive/refs/tags/v1.20.0.tar.gz
+tar xzf powerlevel10k.tar.gz
+mv powerlevel10k-1.20.0 powerlevel10k
+
+mkdir -p git
+curl -fsSL -o git/git.plugin.zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git/git.plugin.zsh
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/share/zsh/plugins"
+cp -r zsh-autosuggestions "$DESTDIR/usr/share/zsh/plugins/zsh-autosuggestions"
+cp -r zsh-syntax-highlighting "$DESTDIR/usr/share/zsh/plugins/zsh-syntax-highlighting"
+cp -r powerlevel10k "$DESTDIR/usr/share/zsh/plugins/powerlevel10k"
+cp -r git "$DESTDIR/usr/share/zsh/plugins/git"

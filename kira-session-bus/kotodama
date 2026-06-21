@@ -1,0 +1,26 @@
+[meta]
+name = kira-session-bus
+version = 1.0
+description = "System message bus and policy daemon: dbus and polkit plus their runit services"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = dbus polkit
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/etc/sv/dbus" "$DESTDIR/etc/sv/polkitd"
+install -m755 "$FLUX_RECIPE_DIR/files/dbus/run" "$DESTDIR/etc/sv/dbus/run"
+install -m755 "$FLUX_RECIPE_DIR/files/polkitd/run" "$DESTDIR/etc/sv/polkitd/run"

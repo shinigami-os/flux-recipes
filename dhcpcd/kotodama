@@ -26,6 +26,7 @@ cflags = -O2 -pipe -march=x86-64-v2
     --libexecdir=/usr/lib/dhcpcd \
     --runstatedir=/run \
     --without-dev \
+    --disable-auth \
     ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
     ${CC:+CC=$CC}
 make

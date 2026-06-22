@@ -1,0 +1,32 @@
+[meta]
+name = gperf
+version = 3.1
+description = "Perfect hash function generator"
+license = GPL-3.0-or-later
+size = 1
+
+[source]
+url = https://ftp.gnu.org/gnu/gperf/gperf-3.1.tar.gz
+sha256 = 588546b945bba4b70b6a3a616e80b4ab466e3f33024a352fc2198112cdbb3ae2
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

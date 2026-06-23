@@ -24,3 +24,14 @@ cflags =
 install -dm755 "$DESTDIR/etc/sv/dbus" "$DESTDIR/etc/sv/polkitd"
 install -m755 "$FLUX_RECIPE_DIR/files/dbus/run" "$DESTDIR/etc/sv/dbus/run"
 install -m755 "$FLUX_RECIPE_DIR/files/polkitd/run" "$DESTDIR/etc/sv/polkitd/run"
+
+%post-install
+grep -q "^messagebus:" /etc/passwd || \
+    echo "messagebus:x:81:81:System message bus:/:/sbin/nologin" >> /etc/passwd
+grep -q "^messagebus:" /etc/group || \
+    echo "messagebus:x:81:" >> /etc/group
+
+grep -q "^polkitd:" /etc/passwd || \
+    echo "polkitd:x:82:82:PolicyKit daemon:/:/sbin/nologin" >> /etc/passwd
+grep -q "^polkitd:" /etc/group || \
+    echo "polkitd:x:82:" >> /etc/group

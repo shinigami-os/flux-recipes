@@ -24,3 +24,10 @@ cflags =
 install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/dhcpcd"
 install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
 install -m755 "$FLUX_RECIPE_DIR/files/dhcpcd/run" "$DESTDIR/etc/sv/dhcpcd/run"
+
+%post-install
+grep -q "^dhcpcd:" /etc/passwd || \
+    echo "dhcpcd:x:83:83:dhcpcd:/var/lib/dhcpcd:/sbin/nologin" >> /etc/passwd
+grep -q "^dhcpcd:" /etc/group || \
+    echo "dhcpcd:x:83:" >> /etc/group
+mkdir -p /var/lib/dhcpcd

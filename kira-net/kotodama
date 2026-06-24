@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = networkmanager dhcpcd wpa_supplicant libnl
+runtime = networkmanager dhcpcd wpa_supplicant libnl openssh
 
 [build]
 cflags =

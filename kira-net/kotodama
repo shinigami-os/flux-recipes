@@ -21,9 +21,10 @@ cflags =
 %post-build
 
 %install
-install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/dhcpcd"
+install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/dhcpcd" "$DESTDIR/etc/sv/sshd"
 install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
 install -m755 "$FLUX_RECIPE_DIR/files/dhcpcd/run" "$DESTDIR/etc/sv/dhcpcd/run"
+install -m755 "$FLUX_RECIPE_DIR/files/sshd/run" "$DESTDIR/etc/sv/sshd/run"
 
 %post-install
 grep -q "^dhcpcd:" /etc/passwd || \
@@ -31,3 +32,11 @@ grep -q "^dhcpcd:" /etc/passwd || \
 grep -q "^dhcpcd:" /etc/group || \
     echo "dhcpcd:x:83:" >> /etc/group
 mkdir -p /var/lib/dhcpcd
+
+grep -q "^sshd:" /etc/passwd || \
+    echo "sshd:x:84:84:sshd privilege separation:/var/empty:/sbin/nologin" >> /etc/passwd
+grep -q "^sshd:" /etc/group || \
+    echo "sshd:x:84:" >> /etc/group
+mkdir -p /var/empty
+chown root:root /var/empty
+chmod 711 /var/empty

@@ -1,0 +1,35 @@
+[meta]
+name = openssh
+version = 10.3p1
+description = "OpenBSD Secure Shell client/server"
+license = BSD-2-Clause AND ISC AND SSH-OpenSSH
+size = 8
+
+[source]
+url = https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-10.3p1.tar.gz
+sha256 = 56682a36bb92dcf4b4f016fd8ec8e74059b79a8de25c15d670d731e7d18e45f4
+
+[deps]
+build = gcc make zlib libressl
+runtime = zlib libressl
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc/ssh \
+    --with-privsep-path=/var/empty \
+    ${FLUX_CROSS_SYSROOT:+--with-ssl-dir=$FLUX_CROSS_SYSROOT/usr} \
+    ${FLUX_CROSS_SYSROOT:+--with-zlib=$FLUX_CROSS_SYSROOT/usr} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

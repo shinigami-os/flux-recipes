@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = raleway-fonts jetbrains-mono-nerd-font ttf-dejavu ttf-liberation noto-fonts noto-fonts-emoji
+runtime = raleway-fonts jetbrains-mono-nerd-font ttf-dejavu ttf-liberation
 
 [build]
 cflags =

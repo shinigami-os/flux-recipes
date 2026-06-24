@@ -24,3 +24,6 @@ cflags =
 install -Dm644 "$FLUX_RECIPE_DIR/files/swayFX.desktop-env" "$DESTDIR/usr/share/kira-desktop/swayFX.desktop-env"
 install -Dm755 "$FLUX_RECIPE_DIR/files/kira-start-swayFX" "$DESTDIR/usr/bin/kira-start-swayFX"
 install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/kira/wallpapers/default.png"
+install -dm755 "$DESTDIR/etc/skel/.config/kira-desktop"
+echo "swayFX" > "$DESTDIR/etc/skel/.config/kira-desktop/active-de"
+echo "kira-default" > "$DESTDIR/etc/skel/.config/kira-desktop/current-theme"

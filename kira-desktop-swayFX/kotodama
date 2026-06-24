@@ -8,7 +8,7 @@ size = 1
 [source]
 
 [deps]
-build =
+build = git
 runtime = mesa libglvnd xwayland swayfx eww fuzzel mako swaylock-effects swaybg flameshot foot yazi thunar qt6-wayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw nm-connection-editor pipewire wireplumber pavucontrol kira-desktop-fonts
 
 [build]
@@ -17,13 +17,18 @@ cflags =
 %pre-build
 
 %build
+rm -rf kira-desktop-src
+git clone --depth=1 https://github.com/shinigami-os/kira-desktop kira-desktop-src
 
 %post-build
 
 %install
 install -Dm644 "$FLUX_RECIPE_DIR/files/swayFX.desktop-env" "$DESTDIR/usr/share/kira-desktop/swayFX.desktop-env"
-install -Dm755 "$FLUX_RECIPE_DIR/files/kira-start-swayFX" "$DESTDIR/usr/bin/kira-start-swayFX"
+install -Dm755 "kira-desktop-src/scripts/kira-start-swayFX" "$DESTDIR/usr/bin/kira-start-swayFX"
 install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/kira/wallpapers/default.png"
 install -dm755 "$DESTDIR/etc/skel/.config/kira-desktop"
 echo "swayFX" > "$DESTDIR/etc/skel/.config/kira-desktop/active-de"
 echo "kira-default" > "$DESTDIR/etc/skel/.config/kira-desktop/current-theme"
+install -dm755 "$DESTDIR/etc/skel/.config" "$DESTDIR/root/.config"
+cp -a "kira-desktop-src/config/." "$DESTDIR/etc/skel/.config/"
+cp -a "kira-desktop-src/config/." "$DESTDIR/root/.config/"

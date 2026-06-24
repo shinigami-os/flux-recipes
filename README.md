@@ -43,11 +43,13 @@ make
 
 %install
 make DESTDIR=$DESTDIR install
+
+%post-install
 ```
 
 ### Sections
 - `[meta]`: name, version, description, license, size (in MB)
-- `[source]`: direct tarball URL and SHA-256 checksum
+- `[source]`: direct tarball URL and SHA-256 checksum, leave both empty for a meta-package
 - `[deps]`: space-separated build and runtime dependency lists
 - `[build]`: optional cflags and ldflags overrides
 
@@ -56,8 +58,15 @@ make DESTDIR=$DESTDIR install
 - `%build`: configure and compile
 - `%post-build`: tests, cleanup
 - `%install`: install into `$DESTDIR` (flux copies to the live system after)
+- `%post-install`: runs only on `flux install`, against the real root, never `$DESTDIR`. For things that aren't files, like creating a system user. Never runs during `flux build`.
 
 `set -e` is active in all hooks. Any failed command aborts the build.
+
+### Meta-packages
+
+Leave `[source]` empty for a recipe that's just a dependency bundle, optionally with a small `%install` (drop a few config files) or `%post-install` (create a user, a runit service). Meta-packages never touch the binary cache. Every build and install re-runs their hooks fresh, so don't put anything expensive in one.
+
+If a meta-package's `%install`/`%post-install` needs files that live in another git repo (like a desktop config repo), pull them with `git clone` or `curl` inside `%build` into the scratch build directory instead of checking a copy into `files/`. A static copy in `files/` will silently drift out of sync with its source of truth.
 
 ## Contributing
 
@@ -71,7 +80,7 @@ Key rules:
 
 ## Status
 
-Phase 1. Core recipe format stable. `flux install`, `remove`, `search`, `update`, and `info` are fully working against this repo. See the [Kira Linux specification](https://github.com/shinigami-os) and the project roadmap.
+Phase 2. Core recipe format stable, including the `%post-install` hook and meta-packages. `flux install`, `remove`, `search`, `update`, `info`, and `build` (native and `--cross`) are fully working against this repo. See the [Kira Linux specification](https://github.com/shinigami-os) and the project roadmap.
 
 ## License
 GPL-2.0

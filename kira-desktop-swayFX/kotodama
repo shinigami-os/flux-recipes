@@ -30,5 +30,8 @@ install -dm755 "$DESTDIR/etc/skel/.config/kira-desktop"
 echo "swayFX" > "$DESTDIR/etc/skel/.config/kira-desktop/active-de"
 echo "kira-default" > "$DESTDIR/etc/skel/.config/kira-desktop/current-theme"
 install -dm755 "$DESTDIR/etc/skel/.config" "$DESTDIR/root/.config"
-cp -a "kira-desktop-src/config/." "$DESTDIR/etc/skel/.config/"
-cp -a "kira-desktop-src/config/." "$DESTDIR/root/.config/"
+cp -a "kira-desktop-src/swayfx/." "$DESTDIR/etc/skel/.config/"
+cp -a "kira-desktop-src/swayfx/." "$DESTDIR/root/.config/"
+
+%post-install
+echo "[kira-desktop-swayFX] installed/updated. Reload sway (\$mod+Shift+r) or log out and back in for changes to take effect."

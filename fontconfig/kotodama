@@ -42,7 +42,7 @@ meson setup build \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Ddoc=disabled \
     -Dtests=disabled \
-    -Dtools=disabled
+    -Dtools=enabled
 ninja -C build
 
 %post-build

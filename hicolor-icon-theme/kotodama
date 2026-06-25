@@ -1,0 +1,27 @@
+[meta]
+name = hicolor-icon-theme
+version = 0.17
+description = "Fallback icon theme required by the freedesktop.org icon theme spec"
+license = GPL-2.0-or-later
+size = 1
+
+[source]
+url = https://icon-theme.freedesktop.org/releases/hicolor-icon-theme-0.17.tar.xz
+sha256 = 317484352271d18cbbcfac3868eab798d67fff1b8402e740baa6ff41d588a9d8
+
+[deps]
+build = make
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+./configure --prefix=/usr
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

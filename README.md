@@ -68,6 +68,8 @@ Leave `[source]` empty for a recipe that's just a dependency bundle, optionally 
 
 If a meta-package's `%install`/`%post-install` needs files that live in another git repo (like a desktop config repo), pull them with `git clone` or `curl` inside `%build` into the scratch build directory instead of checking a copy into `files/`. A static copy in `files/` will silently drift out of sync with its source of truth.
 
+The `kira-desktop-*` packages follow this pattern: each clones the `kira-desktop` repo and copies out of its own lowercase top-level folder (`swayfx/`, `sleex/`) plus the shared `scripts/` directory. A `kira-desktop-<de>` package should only ever read from `<de>/` and `scripts/` in that clone, never from another DE's folder.
+
 ## Contributing
 
 Read the full kotodama format documentation in the [Kira Linux specification](https://github.com/shinigami-os) before submitting a recipe. Recipes are reviewed before merge. The recipe must build cleanly and pass basic sanity checks before entering the repo.

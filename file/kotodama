@@ -23,7 +23,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 if [ -n "$FLUX_CROSS_HOST" ]; then
     rm -rf ../file-native
     cp -r . ../file-native
-    (cd ../file-native && ./configure --prefix=/usr --disable-libseccomp && make)
+    (cd ../file-native && unset CC CXX AR LD STRIP CPP CFLAGS PKG_CONFIG_PATH PKG_CONFIG_LIBDIR PKG_CONFIG_SYSROOT_DIR && ./configure --prefix=/usr --disable-libseccomp && make)
 fi
 
 ./configure --prefix=/usr --disable-libseccomp \

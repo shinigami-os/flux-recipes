@@ -1,7 +1,7 @@
 [meta]
 name = kira-desktop-fonts
 version = 1.0
-description = "Font meta-package: Raleway, JetBrains Mono Nerd, DejaVu, Liberation, Noto"
+description = "Font meta-package: Raleway, JetBrains Mono Nerd, DejaVu, Liberation, Noto, Papirus icons"
 license = MIT
 size = 1
 
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = raleway-fonts jetbrains-mono-nerd-font ttf-dejavu ttf-liberation
+runtime = raleway-fonts jetbrains-mono-nerd-font ttf-dejavu ttf-liberation papirus-icon-theme
 
 [build]
 cflags =

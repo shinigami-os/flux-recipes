@@ -19,8 +19,17 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-./configure --prefix=/usr
-make
+# cross builds need a host-native file binary to compile magic.mgc
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    rm -rf ../file-native
+    cp -r . ../file-native
+    (cd ../file-native && ./configure --prefix=/usr --disable-libseccomp && make)
+fi
+
+./configure --prefix=/usr --disable-libseccomp \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${CC:+CC=$CC}
+make ${FLUX_CROSS_HOST:+FILE_COMPILE="$(pwd)/../file-native/src/file"}
 
 %post-build
 

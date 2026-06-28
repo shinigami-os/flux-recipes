@@ -41,3 +41,7 @@ make
 %install
 cd build
 make DESTDIR="$DESTDIR" install
+# these runtime libs land glibc-linked from the cross build, same issue as gcc's target-libs
+rm -f $DESTDIR/usr/lib/libbfd*.so*
+rm -f $DESTDIR/usr/lib/libopcodes*.so*
+rm -f $DESTDIR/usr/lib/libctf*.so*

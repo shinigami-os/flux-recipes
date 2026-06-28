@@ -1,16 +1,14 @@
 [meta]
 name = raleway-fonts
-version = 5.2.8
+version = 2026.06.28
 description = "Raleway - elegant sans-serif typeface"
 license = OFL-1.1
 size = 5
 
 [source]
-url = https://registry.npmjs.org/@fontsource/raleway/-/raleway-5.2.8.tgz
-sha256 = 67851fe803e7206f388501fe2bccd9fdd4b5dc59ebdfb191e64bcc4d81b56860
 
 [deps]
-build =
+build = curl
 runtime =
 
 [build]
@@ -23,5 +21,17 @@ cflags =
 %post-build
 
 %install
+fetch_ttf() {
+    url="$1"
+    sha256="$2"
+    out="$3"
+    curl -sL -o "$out" "$url"
+    echo "$sha256  $out" | sha256sum -c - || exit 1
+}
 install -dm755 "$DESTDIR/usr/share/fonts/raleway"
-install -m644 files/raleway-latin-[0-9]*-normal.woff2 files/raleway-latin-[0-9]*-italic.woff2 "$DESTDIR/usr/share/fonts/raleway/"
+fetch_ttf "https://github.com/google/fonts/raw/main/ofl/raleway/Raleway%5Bwght%5D.ttf" \
+    8bbcc3eb8275c388f4bcd998832f8a4b943eadbaf6a595205312774b5951aefb \
+    "$DESTDIR/usr/share/fonts/raleway/Raleway[wght].ttf"
+fetch_ttf "https://github.com/google/fonts/raw/main/ofl/raleway/Raleway-Italic%5Bwght%5D.ttf" \
+    96629caf2202183fab46c70237055a7d67e6a5400b85413d45a77ed6f2a0770c \
+    "$DESTDIR/usr/share/fonts/raleway/Raleway-Italic[wght].ttf"

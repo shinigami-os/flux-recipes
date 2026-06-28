@@ -1,0 +1,26 @@
+[meta]
+name = papirus-icon-theme
+version = 20250501
+description = "Papirus - a free and open source SVG icon theme"
+license = GPL-3.0
+size = 150
+
+[source]
+url = https://github.com/PapirusDevelopmentTeam/papirus-icon-theme/archive/refs/tags/20250501.tar.gz
+sha256 = 3831a487f813479ad3224fdbfb0c7023f23056899bc78c93737f341aa655558e
+
+[deps]
+build = make
+runtime = hicolor-icon-theme
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR PREFIX=/usr install

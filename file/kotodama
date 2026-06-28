@@ -1,0 +1,28 @@
+[meta]
+name = file
+version = 5.48
+description = "Determine file type from content (libmagic)"
+license = BSD-2-Clause
+size = 5
+
+[source]
+url = https://astron.com/pub/file/file-5.48.tar.gz
+sha256 = ed14656883b23a364b4057c05595d93252da9bc473d30106519519d0da141283
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR=$DESTDIR install

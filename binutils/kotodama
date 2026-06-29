@@ -4,6 +4,7 @@ version = 2.46
 description = "GNU binary utilities: ld, as, objdump, nm, strip, and friends"
 license = GPL-3.0-or-later AND LGPL-2.1-or-later
 size = 35
+no_sysroot_stage = true
 
 [source]
 url = https://ftp.gnu.org/gnu/binutils/binutils-2.46.0.tar.xz

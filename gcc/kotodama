@@ -4,6 +4,7 @@ version = 14.2.0
 description = "The GNU Compiler Collection"
 license = GPL-3.0
 size = 100
+no_sysroot_stage = true
 
 [source]
 url = https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.xz

@@ -1,6 +1,6 @@
 [meta]
 name = gcc-libs
-version = 9.4.0
+version = 11.2.1
 description = "GCC runtime libraries (libgcc_s, libstdc++, libgomp, libatomic)"
 license = GPL-3.0-or-later WITH GCC-exception-3.1
 size = 5
@@ -21,7 +21,7 @@ if [ -d "$CROSS_LIB" ]; then
         "$CROSS_LIB/libgcc_s.so.1" \
         "$CROSS_LIB/libstdc++.so" \
         "$CROSS_LIB/libstdc++.so.6" \
-        "$CROSS_LIB/libstdc++.so.6.0.28" \
+        "$CROSS_LIB/libstdc++.so.6.0.29" \
         "$CROSS_LIB/libatomic.so" \
         "$CROSS_LIB/libatomic.so.1" \
         "$CROSS_LIB/libatomic.so.1.2.0" \

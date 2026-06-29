@@ -53,3 +53,4 @@ rm -f $DESTDIR/usr/lib/libubsan.so*
 rm -f $DESTDIR/usr/lib/libssp.so*
 rm -f $DESTDIR/usr/lib/libitm.so*
 rm -f $DESTDIR/usr/lib/libquadmath.so*
+rm -f $DESTDIR/usr/lib/libhwasan.so*

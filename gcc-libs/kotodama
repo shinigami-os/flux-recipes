@@ -13,17 +13,20 @@ sha256 =
 
 %install
 CROSS_LIB=/opt/musl-cross/x86_64-linux-musl/lib
-install -dm755 "$DESTDIR/usr/lib"
-cp -Pf \
-    "$CROSS_LIB/libgcc_s.so" \
-    "$CROSS_LIB/libgcc_s.so.1" \
-    "$CROSS_LIB/libstdc++.so" \
-    "$CROSS_LIB/libstdc++.so.6" \
-    "$CROSS_LIB/libstdc++.so.6.0.28" \
-    "$CROSS_LIB/libatomic.so" \
-    "$CROSS_LIB/libatomic.so.1" \
-    "$CROSS_LIB/libatomic.so.1.2.0" \
-    "$CROSS_LIB/libgomp.so" \
-    "$CROSS_LIB/libgomp.so.1" \
-    "$CROSS_LIB/libgomp.so.1.0.0" \
-    "$DESTDIR/usr/lib/"
+# real Kira systems already have these libs from kira-base, nothing to do there
+if [ -d "$CROSS_LIB" ]; then
+    install -dm755 "$DESTDIR/usr/lib"
+    cp -Pf \
+        "$CROSS_LIB/libgcc_s.so" \
+        "$CROSS_LIB/libgcc_s.so.1" \
+        "$CROSS_LIB/libstdc++.so" \
+        "$CROSS_LIB/libstdc++.so.6" \
+        "$CROSS_LIB/libstdc++.so.6.0.28" \
+        "$CROSS_LIB/libatomic.so" \
+        "$CROSS_LIB/libatomic.so.1" \
+        "$CROSS_LIB/libatomic.so.1.2.0" \
+        "$CROSS_LIB/libgomp.so" \
+        "$CROSS_LIB/libgomp.so.1" \
+        "$CROSS_LIB/libgomp.so.1.0.0" \
+        "$DESTDIR/usr/lib/"
+fi

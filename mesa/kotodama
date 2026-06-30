@@ -19,8 +19,12 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 cat > native-pkgconfig.sh << 'WRAPPER'
 #!/bin/sh
+# PKG_CONFIG_SYSROOT_DIR must go too: pkg-config prefixes path-like
+# .pc variables (e.g. wayland-scanner.pc's wayland_scanner=) with it,
+# which silently rewrites native tool paths into the cross sysroot.
 unset PKG_CONFIG_LIBDIR
 unset PKG_CONFIG_PATH
+unset PKG_CONFIG_SYSROOT_DIR
 exec /usr/bin/pkg-config "$@"
 WRAPPER
 chmod +x native-pkgconfig.sh

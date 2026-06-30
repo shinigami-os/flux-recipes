@@ -21,6 +21,7 @@ cat > native-pkgconfig.sh << 'WRAPPER'
 #!/bin/sh
 unset PKG_CONFIG_LIBDIR
 unset PKG_CONFIG_PATH
+unset PKG_CONFIG_SYSROOT_DIR
 exec /usr/bin/pkg-config "$@"
 WRAPPER
 SYSROOT="${FLUX_CROSS_SYSROOT:-/usr}"

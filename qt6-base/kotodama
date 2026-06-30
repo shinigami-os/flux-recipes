@@ -10,8 +10,8 @@ url = https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtbase-everywhere-s
 sha256 = 56001b905601bb9023d399f3ba780d7fa940f3e4861e496a7c490331f49e0b80
 
 [deps]
-build = gcc cmake ninja pkgconf glib dbus libglvnd mesa libdrm libxkbcommon wayland wayland-protocols zlib
-runtime = glib dbus libglvnd libdrm libxkbcommon wayland zlib
+build = gcc cmake ninja pkgconf glib dbus libglvnd mesa libdrm libxkbcommon wayland wayland-protocols zlib freetype harfbuzz
+runtime = glib dbus libglvnd libdrm libxkbcommon wayland zlib freetype harfbuzz
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

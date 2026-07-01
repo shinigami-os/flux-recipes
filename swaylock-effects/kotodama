@@ -1,17 +1,17 @@
 [meta]
 name = swaylock-effects
-version = 1.6.4
-description = "Screen locker for Wayland with blur and effects"
+version = 1.8.5
+description = "Screen locker for Wayland compositors (ext-session-lock-v1)"
 license = MIT
 size = 1
 
 [source]
-url = https://github.com/mortie/swaylock-effects/archive/refs/tags/v1.6-4.tar.gz
-sha256 = 4f82c9d875ce20f1d58227ef65db60aacccb3fb29ce67c0f744849da68e82b20
+url = https://github.com/swaywm/swaylock/archive/refs/tags/v1.8.5.tar.gz
+sha256 = a13f9de319f3a498b89a027fd46a93310505615956dfb4b40b5cfdb986fb6b58
 
 [deps]
 build = gcc meson ninja pkgconf wayland wayland-protocols libxkbcommon cairo linux-pam
-runtime = wayland libxkbcommon cairo linux-pam gcc-libs
+runtime = wayland libxkbcommon cairo linux-pam
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

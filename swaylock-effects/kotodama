@@ -11,7 +11,7 @@ sha256 = 4f82c9d875ce20f1d58227ef65db60aacccb3fb29ce67c0f744849da68e82b20
 
 [deps]
 build = gcc meson ninja pkgconf wayland wayland-protocols libxkbcommon cairo linux-pam
-runtime = wayland libxkbcommon cairo linux-pam
+runtime = wayland libxkbcommon cairo linux-pam gcc-libs
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -54,10 +54,9 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dlinux-pam=enabled \
+    -Dpam=enabled \
     -Dgdk-pixbuf=disabled \
-    -Dman-pages=disabled \
-    -Dopenmp=disabled
+    -Dman-pages=disabled
 ninja -C build
 
 %post-build

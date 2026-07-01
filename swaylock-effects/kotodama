@@ -56,7 +56,8 @@ meson setup build \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Dlinux-pam=enabled \
     -Dgdk-pixbuf=disabled \
-    -Dman-pages=disabled
+    -Dman-pages=disabled \
+    -Dopenmp=disabled
 ninja -C build
 
 %post-build

@@ -10,8 +10,8 @@ url = https://github.com/flameshot-org/flameshot/archive/refs/tags/v13.3.0.tar.g
 sha256 = bd1666313c875400e9588b47eb3fd2f4d0828460b3705a215b97746ea654c1b4
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base qt6-svg
-runtime = qt6-base qt6-svg grim
+build = gcc cmake ninja pkgconf qt6-base qt6-svg qt6-wayland
+runtime = qt6-base qt6-svg qt6-wayland grim
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

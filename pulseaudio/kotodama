@@ -10,8 +10,8 @@ url = https://freedesktop.org/software/pulseaudio/releases/pulseaudio-17.0.tar.x
 sha256 = 053794d6671a3e397d849e478a80b82a63cb9d8ca296bd35b73317bb5ceb87b5
 
 [deps]
-build = gcc meson ninja pkgconf glib dbus
-runtime = glib dbus
+build = gcc meson ninja pkgconf glib dbus libsndfile
+runtime = glib dbus libsndfile
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -71,8 +71,7 @@ meson setup build \
     -Dtests=false \
     -Dudev=disabled \
     -Dwebrtc-aec=disabled \
-    -Dx11=disabled \
-    -Dsndfile=disabled
+    -Dx11=disabled
 ninja -C build
 
 %post-build

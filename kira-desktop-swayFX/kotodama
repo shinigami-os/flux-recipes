@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build = git
-runtime = mesa libglvnd xwayland swayfx eww fuzzel pcmanfm-qt mako swaylock-effects swaybg flameshot foot yazi qt6-wayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw nm-connection-editor pipewire wireplumber pavucontrol kira-desktop-fonts
+runtime = mesa libglvnd xwayland swayfx eww fuzzel pcmanfm-qt mako swaylock-effects swaybg flameshot foot yazi qt6-wayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw nm-connection-editor pipewire wireplumber pavucontrol pamixer brightnessctl libgomp kira-desktop-fonts
 
 [build]
 cflags =

@@ -1,0 +1,36 @@
+[meta]
+name = cxxopts
+version = 3.2.0
+description = "Lightweight C++ command line option parser (header-only)"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/jarro2783/cxxopts/archive/refs/tags/v3.2.0.tar.gz
+sha256 = 9f43fa972532e5df6c5fd5ad0f5bac606cdec541ccaf1732463d8070bbb7f03b
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -Dm644 include/cxxopts.hpp "$DESTDIR/usr/include/cxxopts.hpp"
+install -dm755 "$DESTDIR/usr/share/pkgconfig"
+cat > "$DESTDIR/usr/share/pkgconfig/cxxopts.pc" << 'EOF'
+prefix=/usr
+includedir=${prefix}/include
+
+Name: cxxopts
+Description: Lightweight C++ command line option parser
+Version: 3.2.0
+Cflags: -I${includedir}
+EOF

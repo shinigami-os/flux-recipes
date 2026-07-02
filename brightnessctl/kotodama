@@ -1,0 +1,37 @@
+[meta]
+name = brightnessctl
+version = 0.5.1
+description = "Read and control device brightness"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/Hummer12007/brightnessctl/archive/refs/tags/0.5.1.tar.gz
+sha256 = a68869e23f56ac4f2e28f1783002810ddbf10f95e1af9b48b2912fb169f46994
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make \
+    CC="${CC:-gcc}" \
+    CFLAGS="$CFLAGS" \
+    INSTALL_UDEV_RULES=1 \
+    UDEVDIR=/usr/lib/udev/rules.d \
+    PREFIX=/usr
+
+%post-build
+
+%install
+make \
+    DESTDIR="$DESTDIR" \
+    INSTALL_UDEV_RULES=1 \
+    UDEVDIR=/usr/lib/udev/rules.d \
+    PREFIX=/usr \
+    install

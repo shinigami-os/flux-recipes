@@ -1,0 +1,31 @@
+[meta]
+name = libgomp
+version = 11.2.1
+description = "GCC OpenMP runtime library"
+license = GPL-3.0-or-later WITH GCC-exception-3.1
+size = 1
+
+[source]
+url = https://musl.cc/x86_64-linux-musl-cross.tgz
+sha256 = c5d410d9f82a4f24c549fe5d24f988f85b2679b452413a9f7e5f7b956f2fe7ea
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/lib"
+cp -Pf \
+    x86_64-linux-musl/lib/libgomp.so \
+    x86_64-linux-musl/lib/libgomp.so.1 \
+    x86_64-linux-musl/lib/libgomp.so.1.0.0 \
+    "$DESTDIR/usr/lib/"

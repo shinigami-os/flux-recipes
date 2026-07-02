@@ -21,7 +21,6 @@ cflags = -O2 -pipe -march=x86-64-v2
 %build
 make \
     CC="${CC:-gcc}" \
-    CFLAGS="$CFLAGS" \
     INSTALL_UDEV_RULES=1 \
     UDEVDIR=/usr/lib/udev/rules.d \
     PREFIX=/usr
@@ -30,6 +29,7 @@ make \
 
 %install
 make \
+    CC="${CC:-gcc}" \
     DESTDIR="$DESTDIR" \
     INSTALL_UDEV_RULES=1 \
     UDEVDIR=/usr/lib/udev/rules.d \

@@ -1,0 +1,42 @@
+[meta]
+name = iwlwifi-firmware
+version = 2026-07-02
+description = "Intel WiFi (iwlwifi) firmware blobs"
+license = Intel-iwlwifi-firmware
+size = 50
+
+[source]
+
+[deps]
+build = git
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+rm -rf firmware-src
+git clone --depth=1 --branch iwlwifi-fw-2026-07-02 \
+    https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/linux-firmware.git \
+    firmware-src
+ACTUAL=$(git -C firmware-src rev-parse HEAD)
+EXPECTED=2ab4ce216003ee2c2396c69e19455e4379b0e1f0
+if [ "$ACTUAL" != "$EXPECTED" ]; then
+    echo "iwlwifi-firmware: commit mismatch (got $ACTUAL, expected $EXPECTED)"
+    exit 1
+fi
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/lib/firmware"
+cp firmware-src/iwlwifi-*.ucode "$DESTDIR/lib/firmware/"
+install -dm755 "$DESTDIR/usr/share/licenses/iwlwifi-firmware"
+cp firmware-src/LICENSES/LICENCE.iwlwifi_firmware "$DESTDIR/usr/share/licenses/iwlwifi-firmware/"
+
+%post-install
+echo "[iwlwifi-firmware] Firmware installed. On a running system, reload the driver:"
+echo "  modprobe -r iwlwifi && modprobe iwlwifi"
+echo "Or reboot."

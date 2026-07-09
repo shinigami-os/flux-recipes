@@ -24,6 +24,7 @@ mkdir -p build
 cd build
 ../configure \
   --prefix=/usr \
+  --with-sysroot=/ \
   --enable-languages=c,c++ \
   --disable-multilib \
   --disable-bootstrap \

@@ -39,6 +39,7 @@ make
 
 %install
 make DESTDIR="$DESTDIR" install
+sed -i 's/^# %wheel ALL=(ALL:ALL) ALL$/%wheel ALL=(ALL:ALL) ALL/' "$DESTDIR/etc/sudoers"
 install -dm700 "$DESTDIR/etc/sudoers.d"
 printf '%%wheel ALL=(ALL:ALL) ALL\n' > "$DESTDIR/etc/sudoers.d/kira"
 chmod 440 "$DESTDIR/etc/sudoers.d/kira"

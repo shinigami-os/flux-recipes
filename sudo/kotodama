@@ -1,0 +1,51 @@
+[meta]
+name = sudo
+version = 1.9.15p5
+description = "Give certain users the ability to run commands as root"
+license = ISC
+size = 3
+
+[source]
+url = https://www.sudo.ws/dist/sudo-1.9.15p5.tar.gz
+sha256 = 558d10b9a1991fb3b9fa7fa7b07ec4405b7aefb5b3cb0b0871dbc81e3a88e558
+
+[deps]
+build = gcc make linux-pam
+runtime = linux-pam
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --with-pam \
+    --without-sendmail \
+    --with-env-editor \
+    --with-secure-path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+    --without-selinux \
+    --without-apparmor \
+    --disable-nls \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
+    ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+    ${CC:+CC=$CC}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install
+install -dm700 "$DESTDIR/etc/sudoers.d"
+printf '%%sudo ALL=(ALL:ALL) ALL\n' > "$DESTDIR/etc/sudoers.d/kira"
+chmod 440 "$DESTDIR/etc/sudoers.d/kira"
+install -dm755 "$DESTDIR/etc/pam.d"
+printf 'auth\trequired\tpam_unix.so\naccount\trequired\tpam_unix.so\nsession\trequired\tpam_unix.so\n' > "$DESTDIR/etc/pam.d/sudo"
+
+%post-install
+chmod 4755 /usr/bin/sudo
+chmod 440 /etc/sudoers
+chmod 440 /etc/sudoers.d/kira

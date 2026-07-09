@@ -1,0 +1,62 @@
+[meta]
+name = greetd
+version = 0.10.3
+description = "Flexible and agnostic login manager daemon"
+license = GPL-3.0-only
+size = 5
+
+[source]
+url = https://github.com/kennylevinsen/greetd/archive/refs/tags/0.10.3.tar.gz
+sha256 = ee5cb70e0add4ca9c9fe57e47581ab0002d44c07743fb5492469f3b570db640b
+
+[deps]
+build = gcc linux-pam
+runtime = linux-pam
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p .cargo
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > .cargo/config.toml << 'EOF'
+[target.x86_64-unknown-linux-musl]
+linker = "x86_64-linux-musl-gcc"
+EOF
+fi
+
+%build
+for _h in /home/*; do
+    [ -x "$_h/.cargo/bin/cargo" ] && REAL_HOME="$_h" && break
+done
+export PATH="$PATH:$REAL_HOME/.cargo/bin"
+export CARGO_HOME="$REAL_HOME/.cargo"
+export RUSTUP_HOME="$REAL_HOME/.rustup"
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=x86_64-linux-musl-gcc
+    export PKG_CONFIG_SYSROOT_DIR="${FLUX_CROSS_SYSROOT}"
+    export RUSTFLAGS="-C target-feature=-crt-static"
+    cargo build --release --locked --target x86_64-unknown-linux-musl
+else
+    cargo build --release --locked
+fi
+
+%post-build
+
+%install
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    BINDIR="target/x86_64-unknown-linux-musl/release"
+else
+    BINDIR="target/release"
+fi
+install -Dm755 "$BINDIR/greetd" "$DESTDIR/usr/bin/greetd"
+install -Dm755 "$BINDIR/agreety" "$DESTDIR/usr/bin/agreety"
+install -dm755 "$DESTDIR/etc/greetd"
+install -Dm644 "$FLUX_RECIPE_DIR/files/config.toml" "$DESTDIR/etc/greetd/config.toml"
+install -dm755 "$DESTDIR/etc/sv/greetd"
+install -Dm755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
+
+%post-install
+grep -q '^greetd:' /etc/group || addgroup -S greetd
+grep -q '^greetd:' /etc/passwd || adduser -S -G greetd -s /bin/false -H greetd
+[ -d /etc/sv/getty-tty1 ] && touch /etc/sv/getty-tty1/down

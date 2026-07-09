@@ -40,7 +40,7 @@ make
 %install
 make DESTDIR="$DESTDIR" install
 install -dm700 "$DESTDIR/etc/sudoers.d"
-printf '%%sudo ALL=(ALL:ALL) ALL\n' > "$DESTDIR/etc/sudoers.d/kira"
+printf '%%wheel ALL=(ALL:ALL) ALL\n' > "$DESTDIR/etc/sudoers.d/kira"
 chmod 440 "$DESTDIR/etc/sudoers.d/kira"
 install -dm755 "$DESTDIR/etc/pam.d"
 printf 'auth\trequired\tpam_unix.so\naccount\trequired\tpam_unix.so\nsession\trequired\tpam_unix.so\n' > "$DESTDIR/etc/pam.d/sudo"

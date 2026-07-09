@@ -24,7 +24,7 @@ cflags =
 
 %install
 install -dm755 "$DESTDIR/lib/firmware"
-cp iwlwifi-*.ucode "$DESTDIR/lib/firmware/"
+cp intel/iwlwifi/iwlwifi-*.ucode "$DESTDIR/lib/firmware/"
 install -dm755 "$DESTDIR/usr/share/licenses/iwlwifi-firmware"
 cp LICENSES/LICENCE.iwlwifi_firmware "$DESTDIR/usr/share/licenses/iwlwifi-firmware/"
 

@@ -1,6 +1,6 @@
 [meta]
 name = gcc
-version = 14.2.0
+version = 14.2.0.1
 description = "The GNU Compiler Collection"
 license = GPL-3.0
 size = 100
@@ -22,6 +22,12 @@ mkdir -p build
 
 %build
 cd build
+# musl never implements these glibc-only, non-POSIX pthread extensions;
+# force them off so libstdc++'s <mutex>/<condition_variable> don't call
+# functions that don't exist on the target
+export glibcxx_cv_PTHREAD_COND_CLOCKWAIT=no
+export glibcxx_cv_PTHREAD_MUTEX_CLOCKLOCK=no
+export glibcxx_cv_PTHREAD_RWLOCK_CLOCKLOCK=no
 ../configure \
   --prefix=/usr \
   --with-sysroot=/ \

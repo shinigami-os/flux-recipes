@@ -1,0 +1,45 @@
+[meta]
+name = kira-desktop-swayFX-config
+version = 26.07
+description = "Default SwayFX desktop configuration files (skel, root, launch script)"
+license = MIT
+size = 1
+
+[source]
+url = git+https://github.com/shinigami-os/kira-desktop#v26.07
+sha256 = 095a9d17a4e8a80a1d9881ae727cf9178b922af3
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/etc/skel/.config/kira-desktop"
+echo "swayFX" > "$DESTDIR/etc/skel/.config/kira-desktop/active-de"
+echo "kira-default" > "$DESTDIR/etc/skel/.config/kira-desktop/current-theme"
+cp -a "swayfx/." "$DESTDIR/etc/skel/.config/"
+cp -a "swayfx/." "$DESTDIR/root/.config/"
+install -Dm755 "scripts/kira-start-swayFX" "$DESTDIR/usr/bin/kira-start-swayFX"
+install -Dm755 "scripts/kira-run" "$DESTDIR/usr/bin/kira-run"
+install -Dm755 "scripts/kira-theme" "$DESTDIR/usr/bin/kira-theme"
+
+%post-install
+for home in /home/*; do
+    [ -d "$home" ] || continue
+    username=$(basename "$home")
+    mkdir -p "$home/.config/kira-desktop"
+    echo "swayFX" > "$home/.config/kira-desktop/active-de"
+    echo "kira-default" > "$home/.config/kira-desktop/current-theme"
+    cp -a /etc/skel/.config/. "$home/.config/"
+    chown -R "$username:$username" "$home/.config/" 2>/dev/null || true
+done
+echo "[kira-desktop-swayFX-config] Config updated to v26.07. Reload sway (mod+Shift+r) or log out and back in."

@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-swayFX
-version = 1.0
+version = 26.07
 description = "SwayFX desktop environment meta-package"
 license = MIT
 size = 1
@@ -8,8 +8,8 @@ size = 1
 [source]
 
 [deps]
-build = git
-runtime = mesa libglvnd xwayland swayfx eww fuzzel pcmanfm-qt mako swaylock-effects swaybg flameshot foot yazi qt6-wayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw nm-connection-editor pipewire wireplumber pavucontrol pamixer brightnessctl libgomp greetd kira-desktop-fonts jq
+build =
+runtime = mesa libglvnd xwayland swayfx eww fuzzel pcmanfm-qt mako swaylock-effects swaybg flameshot foot yazi qt6-wayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw nm-connection-editor pipewire wireplumber pavucontrol pamixer brightnessctl libgomp greetd kira-desktop-fonts jq kira-desktop-swayFX-config
 
 [build]
 cflags =
@@ -17,21 +17,11 @@ cflags =
 %pre-build
 
 %build
-rm -rf kira-desktop-src
-git clone --depth=1 https://github.com/shinigami-os/kira-desktop kira-desktop-src
 
 %post-build
 
 %install
 install -Dm644 "$FLUX_RECIPE_DIR/files/swayFX.desktop-env" "$DESTDIR/usr/share/kira-desktop/swayFX.desktop-env"
-install -Dm755 "kira-desktop-src/scripts/kira-start-swayFX" "$DESTDIR/usr/bin/kira-start-swayFX"
 install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/kira/wallpapers/default.png"
-install -dm755 "$DESTDIR/etc/skel/.config/kira-desktop"
-echo "swayFX" > "$DESTDIR/etc/skel/.config/kira-desktop/active-de"
-echo "kira-default" > "$DESTDIR/etc/skel/.config/kira-desktop/current-theme"
-install -dm755 "$DESTDIR/etc/skel/.config" "$DESTDIR/root/.config"
-cp -a "kira-desktop-src/swayfx/." "$DESTDIR/etc/skel/.config/"
-cp -a "kira-desktop-src/swayfx/." "$DESTDIR/root/.config/"
 
 %post-install
-echo "[kira-desktop-swayFX] installed/updated. Reload sway (\$mod+Shift+r) or log out and back in for changes to take effect."

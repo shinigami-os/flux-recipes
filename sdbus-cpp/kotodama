@@ -1,0 +1,35 @@
+[meta]
+name = sdbus-cpp
+version = 2.3.1
+description = "High-level C++ D-Bus library (sd-bus wrapper)"
+license = LGPL-2.1-or-later
+size = 3
+
+[source]
+url = git+https://github.com/Kistler-Group/sdbus-cpp#v2.3.1
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf basu
+runtime = basu
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DSDBUSCPP_SDBUS_LIB=basu \
+    -DSDBUSCPP_BUILD_CODEGEN=OFF \
+    -DSDBUSCPP_BUILD_DOCS=OFF \
+    -DSDBUSCPP_BUILD_TESTS=OFF \
+    -DBUILD_SHARED_LIBS=ON
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

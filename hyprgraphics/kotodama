@@ -1,0 +1,30 @@
+[meta]
+name = hyprgraphics
+version = 0.5.1
+description = "Hyprland graphics resources and utilities (image loading)"
+license = BSD-3-Clause
+size = 3
+
+[source]
+url = git+https://github.com/hyprwm/hyprgraphics#v0.5.1
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf hyprutils cairo pango libjpeg-turbo libwebp file
+runtime = hyprutils cairo pango libjpeg-turbo libwebp file
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

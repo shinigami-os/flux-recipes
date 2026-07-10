@@ -1,0 +1,47 @@
+[meta]
+name = kira-desktop-sleex-config
+version = 1.12
+description = "Default Sleex desktop user configuration (skel, dotfiles)"
+license = GPL-3.0-only
+size = 3
+
+[source]
+url = git+https://github.com/AxOS-project/Sleex#main
+sha256 =
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/etc/skel/.config/kira-desktop"
+echo "sleex" > "$DESTDIR/etc/skel/.config/kira-desktop/active-de"
+echo "kira-default" > "$DESTDIR/etc/skel/.config/kira-desktop/current-theme"
+install -dm755 "$DESTDIR/etc/skel/.config" "$DESTDIR/etc/skel/.local"
+cp -a sleex-user-config/src/.config/. "$DESTDIR/etc/skel/.config/"
+cp -a sleex-user-config/src/.local/. "$DESTDIR/etc/skel/.local/"
+install -dm755 "$DESTDIR/root/.config" "$DESTDIR/root/.local"
+cp -a sleex-user-config/src/.config/. "$DESTDIR/root/.config/"
+cp -a sleex-user-config/src/.local/. "$DESTDIR/root/.local/"
+
+%post-install
+for home in /home/*; do
+    [ -d "$home" ] || continue
+    username=$(basename "$home")
+    mkdir -p "$home/.config/kira-desktop"
+    echo "sleex" > "$home/.config/kira-desktop/active-de"
+    echo "kira-default" > "$home/.config/kira-desktop/current-theme"
+    cp -a /etc/skel/.config/. "$home/.config/"
+    cp -a /etc/skel/.local/. "$home/.local/"
+    chown -R "$username:$username" "$home/.config" "$home/.local" 2>/dev/null || true
+done
+echo "[kira-desktop-sleex-config] Config installed. Log out and pick Sleex, or reboot."

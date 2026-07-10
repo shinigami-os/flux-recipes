@@ -1,0 +1,30 @@
+[meta]
+name = aquamarine
+version = 0.12.1
+description = "A very light linux rendering backend library"
+license = BSD-3-Clause
+size = 4
+
+[source]
+url = git+https://github.com/hyprwm/aquamarine#v0.12.1
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf hyprutils hyprwayland-scanner wayland wayland-protocols libdrm libinput seatd pixman hwdata libdisplay-info mesa
+runtime = hyprutils wayland libdrm libinput seatd pixman libdisplay-info mesa
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

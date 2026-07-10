@@ -1,0 +1,30 @@
+[meta]
+name = hyprcursor
+version = 0.1.13
+description = "The hyprland cursor format, library and utilities"
+license = BSD-3-Clause
+size = 3
+
+[source]
+url = git+https://github.com/hyprwm/hyprcursor#v0.1.13
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf hyprlang cairo librsvg tomlplusplus zlib
+runtime = hyprlang cairo librsvg zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

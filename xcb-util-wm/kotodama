@@ -1,0 +1,28 @@
+[meta]
+name = xcb-util-wm
+version = 0.4.2
+description = "XCB ICCCM and EWMH window-manager helper libraries"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/xcb/xcb-util-wm-0.4.2.tar.xz
+sha256 = 62c34e21d06264687faea7edbf63632c9f04d55e72114aa4a57bb95e4f888a0b
+
+[deps]
+build = gcc make pkgconf util-macros xcb-proto libxcb
+runtime = libxcb
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

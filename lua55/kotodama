@@ -1,0 +1,41 @@
+[meta]
+name = lua55
+version = 5.5.0
+description = "Lua 5.5 language interpreter and library"
+license = MIT
+size = 3
+
+[source]
+url = https://www.lua.org/ftp/lua-5.5.0.tar.gz
+sha256 = 57ccc32bbbd005cab75bcc52444052535af691789dba2b9016d5c50640d68b3d
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make posix MYCFLAGS="-fPIC" MYLIBS="-Wl,-E"
+
+%post-build
+
+%install
+make install INSTALL_TOP="$DESTDIR/usr"
+install -dm755 "$DESTDIR/usr/lib/pkgconfig"
+cat > "$DESTDIR/usr/lib/pkgconfig/lua5.5.pc" << 'EOF'
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Lua
+Description: Lua language engine
+Version: 5.5.0
+Libs: -L${libdir} -llua -lm
+Cflags: -I${includedir}
+EOF
+ln -sf lua5.5.pc "$DESTDIR/usr/lib/pkgconfig/lua.pc"

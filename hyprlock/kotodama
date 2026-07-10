@@ -1,0 +1,36 @@
+[meta]
+name = hyprlock
+version = 0.9.5
+description = "Hyprland's GPU-accelerated screen locking utility"
+license = BSD-3-Clause
+size = 4
+
+[source]
+url = git+https://github.com/hyprwm/hyprlock#v0.9.5
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf hyprwayland-scanner hyprlang hyprutils hyprgraphics sdbus-cpp linux-pam cairo pango libdrm mesa libxkbcommon wayland wayland-protocols
+runtime = hyprlang hyprutils hyprgraphics sdbus-cpp linux-pam cairo pango libdrm mesa libxkbcommon wayland
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build
+
+%post-install
+install -dm755 /etc/pam.d
+if [ ! -f /etc/pam.d/hyprlock ]; then
+    printf 'auth\tinclude\tlogin\n' > /etc/pam.d/hyprlock
+fi

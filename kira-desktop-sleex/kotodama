@@ -1,0 +1,42 @@
+[meta]
+name = kira-desktop-sleex
+version = 1.0
+description = "Sleex desktop environment meta-package (Hyprland + quickshell)"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = mesa libglvnd xwayland hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk quickshell qt6-base qt6-declarative qt6-wayland qt6-svg swww matugen hyprlock hypridle wlogout wl-clipboard fuzzel foot pcmanfm-qt grim slurp playerctl brightnessctl pamixer pavucontrol pipewire wireplumber iw nm-connection-editor python3 jq greetd kira-desktop-fonts sleex kira-desktop-sleex-config
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/share/kira-desktop"
+cat > "$DESTDIR/usr/share/kira-desktop/sleex.desktop-env" << 'EOF'
+name = sleex
+package = kira-desktop-sleex
+launch = /usr/bin/kira-start-sleex
+description = Sleex desktop: Hyprland compositor with a quickshell bar and Material You theming
+EOF
+install -dm755 "$DESTDIR/usr/bin"
+cat > "$DESTDIR/usr/bin/kira-start-sleex" << 'EOF'
+#!/bin/sh
+export XDG_CURRENT_DESKTOP=Sleex
+export XDG_SESSION_TYPE=wayland
+exec /usr/bin/sleex
+EOF
+chmod 755 "$DESTDIR/usr/bin/kira-start-sleex"
+
+%post-install
+echo "[kira-desktop-sleex] Sleex installed. Set it active with:"
+echo "  echo sleex > ~/.config/kira-desktop/active-de"

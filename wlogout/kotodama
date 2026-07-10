@@ -1,0 +1,28 @@
+[meta]
+name = wlogout
+version = 1.2.2
+description = "A Wayland-based logout menu"
+license = MIT
+size = 1
+
+[source]
+url = git+https://github.com/ArtsyMacaw/wlogout#1.2.2
+sha256 =
+
+[deps]
+build = gcc meson ninja pkgconf gtk3 gtk-layer-shell scdoc
+runtime = gtk3 gtk-layer-shell
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+meson setup build --prefix=/usr --buildtype=release
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

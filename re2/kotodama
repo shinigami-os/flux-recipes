@@ -1,0 +1,33 @@
+[meta]
+name = re2
+version = 2025-11-05
+description = "Fast, safe regular expression library"
+license = BSD-3-Clause
+size = 5
+
+[source]
+url = git+https://github.com/google/re2#2025-11-05
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf abseil-cpp
+runtime = abseil-cpp
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=ON \
+    -DRE2_BUILD_TESTING=OFF \
+    -DCMAKE_CXX_STANDARD=17
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

@@ -1,0 +1,33 @@
+[meta]
+name = matugen
+version = 4.1.0
+description = "Material You color generation tool"
+license = GPL-2.0-only
+size = 20
+
+[source]
+url = git+https://github.com/InioX/matugen#v4.1.0
+sha256 =
+
+[deps]
+build = gcc pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+for _h in /home/*; do
+    [ -x "$_h/.cargo/bin/cargo" ] && REAL_HOME="$_h" && break
+done
+export PATH="$PATH:$REAL_HOME/.cargo/bin"
+export CARGO_HOME="$REAL_HOME/.cargo"
+export RUSTUP_HOME="$REAL_HOME/.rustup"
+cargo build --release --locked
+
+%post-build
+
+%install
+install -Dm755 target/release/matugen "$DESTDIR/usr/bin/matugen"

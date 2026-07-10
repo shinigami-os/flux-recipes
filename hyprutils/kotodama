@@ -1,0 +1,30 @@
+[meta]
+name = hyprutils
+version = 0.13.1
+description = "Hyprland utilities library used across the ecosystem"
+license = BSD-3-Clause
+size = 2
+
+[source]
+url = git+https://github.com/hyprwm/hyprutils#v0.13.1
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf pixman
+runtime = pixman
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

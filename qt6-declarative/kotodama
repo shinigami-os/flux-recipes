@@ -1,0 +1,32 @@
+[meta]
+name = qt6-declarative
+version = 6.8.3
+description = "Qt6 Declarative (QML and Qt Quick) framework"
+license = GPL-3.0-only OR LGPL-3.0-only
+size = 90
+
+[source]
+url = https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtdeclarative-everywhere-src-6.8.3.tar.xz
+sha256 = 1f03a2b8f5588b4face7da87926e9b2c1372b3a32157c52df07a75067a9db1af
+
+[deps]
+build = gcc cmake ninja pkgconf python3 qt6-base libglvnd mesa
+runtime = qt6-base libglvnd mesa
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DQT_BUILD_TESTS=OFF \
+    -DQT_BUILD_EXAMPLES=OFF
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

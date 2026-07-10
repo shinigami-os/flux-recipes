@@ -1,0 +1,30 @@
+[meta]
+name = hyprlang
+version = 0.6.8
+description = "Official implementation of the hypr configuration language"
+license = LGPL-3.0-only
+size = 2
+
+[source]
+url = git+https://github.com/hyprwm/hyprlang#v0.6.8
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf hyprutils
+runtime = hyprutils
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

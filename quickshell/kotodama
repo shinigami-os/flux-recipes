@@ -1,0 +1,34 @@
+[meta]
+name = quickshell
+version = 0.3.0
+description = "Flexible QtQuick-based desktop shell toolkit"
+license = LGPL-3.0-only
+size = 15
+
+[source]
+url = git+https://github.com/quickshell-mirror/quickshell#v0.3.0
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-wayland wayland wayland-protocols pipewire libdrm mesa
+runtime = qt6-base qt6-declarative qt6-wayland wayland pipewire libdrm mesa
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DDISTRIBUTOR="Kira Linux" \
+    -DUSE_JEMALLOC=OFF \
+    -DCRASH_REPORTER=OFF \
+    -DBUILD_TESTING=OFF
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

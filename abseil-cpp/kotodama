@@ -1,0 +1,34 @@
+[meta]
+name = abseil-cpp
+version = 20260526.0
+description = "Abseil C++ common libraries"
+license = Apache-2.0
+size = 15
+
+[source]
+url = git+https://github.com/abseil/abseil-cpp#20260526.0
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=ON \
+    -DABSL_PROPAGATE_CXX_STD=ON \
+    -DABSL_ENABLE_INSTALL=ON \
+    -DCMAKE_CXX_STANDARD=17
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

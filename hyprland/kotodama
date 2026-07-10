@@ -1,0 +1,32 @@
+[meta]
+name = hyprland
+version = 0.55.4
+description = "A dynamic tiling Wayland compositor that does not sacrifice on its looks"
+license = BSD-3-Clause
+size = 120
+
+[source]
+url = git+https://github.com/hyprwm/Hyprland#v0.55.4
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf hyprwayland-scanner aquamarine hyprlang hyprutils hyprcursor hyprgraphics hyprland-protocols wayland wayland-protocols libxkbcommon libdrm pixman cairo pango libinput mesa libglvnd glib re2 muparser lcms2 libXcursor util-linux lua55 glslang libxcb xcb-util-wm xcb-util-errors
+runtime = aquamarine hyprlang hyprutils hyprcursor hyprgraphics wayland libxkbcommon libdrm pixman cairo pango libinput mesa libglvnd glib re2 muparser lcms2 libXcursor util-linux lua55 glslang libxcb xcb-util-wm xcb-util-errors
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake --no-warn-unused-cli \
+    -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DNO_SYSTEMD=ON
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

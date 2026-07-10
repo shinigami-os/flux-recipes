@@ -1,0 +1,33 @@
+[meta]
+name = librsvg
+version = 2.40.21
+description = "SVG rendering library (last C-only release, no Rust)"
+license = LGPL-2.1-or-later
+size = 8
+
+[source]
+url = https://download.gnome.org/sources/librsvg/2.40/librsvg-2.40.21.tar.xz
+sha256 = f7628905f1cada84e87e2b14883ed57d8094dca3281d5bcb24ece4279e9a92ba
+
+[deps]
+build = gcc make pkgconf glib libxml2 cairo pango gdk-pixbuf libcroco
+runtime = glib libxml2 cairo pango gdk-pixbuf libcroco
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr \
+    --disable-static \
+    --disable-introspection \
+    --disable-vala \
+    --disable-tools \
+    --disable-pixbuf-loader
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

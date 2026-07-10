@@ -1,0 +1,28 @@
+[meta]
+name = xcb-util-errors
+version = 1.0.1
+description = "XCB library for printing readable error/event/request names"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/releases/individual/xcb/xcb-util-errors-1.0.1.tar.xz
+sha256 = 5628c87b984259ad927bacd8a42958319c36bdf4b065887803c9d820fb80f357
+
+[deps]
+build = gcc make pkgconf util-macros xcb-proto libxcb python3
+runtime = libxcb
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

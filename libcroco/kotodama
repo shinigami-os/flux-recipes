@@ -1,0 +1,28 @@
+[meta]
+name = libcroco
+version = 0.6.13
+description = "CSS parsing and manipulation library (legacy, for librsvg 2.40)"
+license = LGPL-2.0-or-later
+size = 2
+
+[source]
+url = https://download.gnome.org/sources/libcroco/0.6/libcroco-0.6.13.tar.xz
+sha256 = 767ec234ae7aa684695b3a735548224888132e063f92db585759b422570621d4
+
+[deps]
+build = gcc make pkgconf glib libxml2
+runtime = glib libxml2
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./configure --prefix=/usr --disable-static
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

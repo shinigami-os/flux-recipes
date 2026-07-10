@@ -1,0 +1,40 @@
+[meta]
+name = libwebp
+version = 1.5.0
+description = "WebP image format library and tools"
+license = BSD-3-Clause
+size = 3
+
+[source]
+url = git+https://github.com/webmproject/libwebp#v1.5.0
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf libpng libjpeg-turbo
+runtime = libpng libjpeg-turbo
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=ON \
+    -DWEBP_BUILD_CWEBP=OFF \
+    -DWEBP_BUILD_DWEBP=OFF \
+    -DWEBP_BUILD_GIF2WEBP=OFF \
+    -DWEBP_BUILD_IMG2WEBP=OFF \
+    -DWEBP_BUILD_VWEBP=OFF \
+    -DWEBP_BUILD_WEBPINFO=OFF \
+    -DWEBP_BUILD_WEBPMUX=OFF \
+    -DWEBP_BUILD_ANIM_UTILS=OFF \
+    -DWEBP_BUILD_EXTRAS=OFF
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

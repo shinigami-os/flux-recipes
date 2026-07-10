@@ -1,0 +1,33 @@
+[meta]
+name = muparser
+version = 2.3.5
+description = "Fast math expression parser library"
+license = BSD-2-Clause
+size = 1
+
+[source]
+url = git+https://github.com/beltoforion/muparser#v2.3.5
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=ON \
+    -DENABLE_SAMPLES=OFF \
+    -DENABLE_OPENMP=OFF
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

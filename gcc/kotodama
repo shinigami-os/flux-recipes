@@ -1,6 +1,6 @@
 [meta]
 name = gcc
-version = 14.2.0.1
+version = 14.2.0.2
 description = "The GNU Compiler Collection"
 license = GPL-3.0
 size = 100
@@ -49,16 +49,21 @@ make
 %install
 cd build
 make DESTDIR=$DESTDIR install
-# target-libs from the cross build land glibc-linked; kira-base's core image already has musl-correct ones
-rm -f $DESTDIR/usr/lib/libgcc_s.so*
-rm -f $DESTDIR/usr/lib/libstdc++.so*
-rm -f $DESTDIR/usr/lib/libgomp.so*
-rm -f $DESTDIR/usr/lib/libatomic.so*
-rm -f $DESTDIR/usr/lib/libasan.so*
-rm -f $DESTDIR/usr/lib/liblsan.so*
-rm -f $DESTDIR/usr/lib/libtsan.so*
-rm -f $DESTDIR/usr/lib/libubsan.so*
-rm -f $DESTDIR/usr/lib/libssp.so*
-rm -f $DESTDIR/usr/lib/libitm.so*
-rm -f $DESTDIR/usr/lib/libquadmath.so*
-rm -f $DESTDIR/usr/lib/libhwasan.so*
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    # cross-built target-libs land glibc-linked (built on the glibc dev machine);
+    # kira-base's core image ships musl-correct ones instead
+    rm -f $DESTDIR/usr/lib/libgcc_s.so*
+    rm -f $DESTDIR/usr/lib/libstdc++.so*
+    rm -f $DESTDIR/usr/lib/libgomp.so*
+    rm -f $DESTDIR/usr/lib/libatomic.so*
+    rm -f $DESTDIR/usr/lib/libasan.so*
+    rm -f $DESTDIR/usr/lib/liblsan.so*
+    rm -f $DESTDIR/usr/lib/libtsan.so*
+    rm -f $DESTDIR/usr/lib/libubsan.so*
+    rm -f $DESTDIR/usr/lib/libssp.so*
+    rm -f $DESTDIR/usr/lib/libitm.so*
+    rm -f $DESTDIR/usr/lib/libquadmath.so*
+    rm -f $DESTDIR/usr/lib/libhwasan.so*
+fi
+# native build: these libs were just built on musl Kira by musl Kira's own gcc,
+# they are correctly musl-linked and replace kira-base's older bundled copies

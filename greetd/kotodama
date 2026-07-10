@@ -55,10 +55,16 @@ install -dm755 "$DESTDIR/etc/greetd"
 install -Dm644 "$FLUX_RECIPE_DIR/files/config.toml" "$DESTDIR/etc/greetd/config.toml"
 install -dm755 "$DESTDIR/etc/sv/greetd"
 install -Dm755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
+install -dm755 "$DESTDIR/etc/pam.d"
+printf 'auth\trequired\tpam_unix.so\naccount\trequired\tpam_unix.so\nsession\trequired\tpam_unix.so\n' \
+    > "$DESTDIR/etc/pam.d/greetd"
 
 %post-install
 grep -q '^greetd:' /etc/group || addgroup -S greetd
 grep -q '^greetd:' /etc/passwd || adduser -S -G greetd -s /bin/false -H greetd
+mkdir -p /home/greetd
+chown greetd:greetd /home/greetd
+chmod 755 /home/greetd
 if [ -d /etc/sv/getty-tty1 ]; then
     touch /etc/sv/getty-tty1/down
     sv down /etc/sv/getty-tty1 2>/dev/null || true

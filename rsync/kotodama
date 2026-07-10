@@ -10,7 +10,7 @@ url = https://download.samba.org/pub/rsync/src/rsync-3.4.2.tar.gz
 sha256 = ff10aa2c151cd4b2dbbe6135126dbc854046113d2dfb49572a348233267eb315
 
 [deps]
-build = gcc make zlib openssl
+build = gcc make gawk zlib openssl
 runtime = zlib openssl
 
 [build]

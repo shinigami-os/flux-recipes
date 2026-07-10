@@ -1,6 +1,6 @@
 [meta]
 name = gcc
-version = 14.2.0.3
+version = 14.2.0.4
 description = "The GNU Compiler Collection"
 license = GPL-3.0
 size = 100
@@ -45,6 +45,12 @@ export glibcxx_cv_PTHREAD_RWLOCK_CLOCKLOCK=no
 make
 
 %post-build
+echo "=== DIAGNOSTIC: libstdc++ shared library detection ==="
+find . -path '*libstdc++*/config.log' | while read -r f; do
+    echo "--- $f ---"
+    grep -B2 -A2 "checking whether to build shared libraries\|can_build_shared\|enable_shared" "$f"
+done
+echo "=== END DIAGNOSTIC ==="
 
 %install
 cd build

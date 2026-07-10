@@ -1,6 +1,6 @@
 [meta]
 name = gcc
-version = 14.2.0.7
+version = 14.2.0.8
 description = "The GNU Compiler Collection"
 license = GPL-3.0
 size = 100
@@ -39,6 +39,7 @@ export glibcxx_cv_PTHREAD_RWLOCK_CLOCKLOCK=no
   --enable-languages=c,c++ \
   --disable-multilib \
   --disable-bootstrap \
+  --disable-libstdcxx-dual-abi \
   --with-gmp="${FLUX_CROSS_SYSROOT:-}/usr" \
   --with-mpfr="${FLUX_CROSS_SYSROOT:-}/usr" \
   --with-mpc="${FLUX_CROSS_SYSROOT:-}/usr" \

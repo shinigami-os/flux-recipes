@@ -1,6 +1,6 @@
 [meta]
 name = abseil-cpp
-version = 20260526.0
+version = 20260526.0.1
 description = "Abseil C++ common libraries"
 license = Apache-2.0
 size = 15
@@ -22,6 +22,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 cmake -S . -B build -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib \
     -DBUILD_SHARED_LIBS=ON \
     -DABSL_PROPAGATE_CXX_STD=ON \
     -DABSL_ENABLE_INSTALL=ON \

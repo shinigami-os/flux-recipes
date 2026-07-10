@@ -23,6 +23,7 @@ cmake --no-warn-unused-cli \
     -S . -B build -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib \
     -DNO_SYSTEMD=ON
 cmake --build build
 

@@ -1,6 +1,6 @@
 [meta]
 name = glslang
-version = 16.3.0
+version = 16.3.0.1
 description = "Khronos reference GLSL/HLSL to SPIR-V compiler and validator"
 license = BSD-3-Clause
 size = 20
@@ -22,6 +22,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 cmake -S . -B build -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib \
     -DBUILD_SHARED_LIBS=ON \
     -DENABLE_OPT=0 \
     -DGLSLANG_TESTS=OFF \

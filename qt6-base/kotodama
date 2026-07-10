@@ -1,6 +1,6 @@
 [meta]
 name = qt6-base
-version = 6.8.3
+version = 6.8.3.1
 description = "Qt6 base framework"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 120
@@ -38,6 +38,7 @@ cmake -S . -B build \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib \
     ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=toolchain.cmake} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH=/usr} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH_CMAKE_DIR=/usr/lib/x86_64-linux-gnu/cmake} \

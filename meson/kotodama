@@ -23,4 +23,8 @@ cflags =
 %post-build
 
 %install
-python3 setup.py install --prefix=/usr --root="$DESTDIR" --optimize=1
+SITE_PACKAGES=$(python3 -c "import sysconfig; print(sysconfig.get_path('purelib'))")
+install -dm755 "$DESTDIR$SITE_PACKAGES"
+cp -a mesonbuild "$DESTDIR$SITE_PACKAGES/"
+install -Dm755 meson.py "$DESTDIR/usr/bin/meson"
+install -Dm644 man/meson.1 "$DESTDIR/usr/share/man/man1/meson.1"

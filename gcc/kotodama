@@ -1,6 +1,6 @@
 [meta]
 name = gcc
-version = 14.2.0.6
+version = 14.2.0.7
 description = "The GNU Compiler Collection"
 license = GPL-3.0
 size = 100
@@ -19,6 +19,11 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 mkdir -p build
+# Kira's musl 1.2.6 doesn't export __libc_single_threaded even though this
+# __has_include check finds a sys/single_threaded.h somewhere in the build's
+# include path; force the always-correct __gthread_active_p() fallback instead
+find . -name atomicity.h -path "*ext*" -exec \
+    sed -i 's/__has_include(<sys\/single_threaded\.h>)/0/' {} \;
 
 %build
 cd build

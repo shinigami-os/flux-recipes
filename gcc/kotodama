@@ -1,6 +1,6 @@
 [meta]
 name = gcc
-version = 14.2.0.2
+version = 14.2.0.3
 description = "The GNU Compiler Collection"
 license = GPL-3.0
 size = 100
@@ -37,10 +37,10 @@ export glibcxx_cv_PTHREAD_RWLOCK_CLOCKLOCK=no
   --with-gmp="${FLUX_CROSS_SYSROOT:-}/usr" \
   --with-mpfr="${FLUX_CROSS_SYSROOT:-}/usr" \
   --with-mpc="${FLUX_CROSS_SYSROOT:-}/usr" \
-  ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+  --build=$(gcc -dumpmachine) \
+  --host=${FLUX_CROSS_HOST:-$(gcc -dumpmachine)} \
   ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
   ${FLUX_CROSS_HOST:+CXX_FOR_BUILD=g++} \
-  ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST} \
   ${CC:+CC=$CC}
 make
 

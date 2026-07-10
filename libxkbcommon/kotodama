@@ -6,8 +6,8 @@ license = MIT
 size = 1
 
 [source]
-url = https://xkbcommon.org/download/libxkbcommon-1.13.2.tar.xz
-sha256 = b620507312c5e97566a3c6cfaf99144fefc18a0da7d941401dfa0f5f58fb0368
+url = https://github.com/xkbcommon/libxkbcommon/archive/refs/tags/xkbcommon-1.13.2.tar.gz
+sha256 = acc4d5f7c3cbba5f9f8d08d8bdbeede84ecede46792f47929aa9321873385528
 
 [deps]
 build = gcc meson ninja pkgconf wayland wayland-protocols xkeyboard-config

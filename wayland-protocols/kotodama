@@ -1,13 +1,13 @@
 [meta]
 name = wayland-protocols
-version = 1.44
+version = 1.49
 description = "Wayland protocol extensions"
 license = MIT
 size = 1
 
 [source]
-url = https://gitlab.freedesktop.org/wayland/wayland-protocols/-/releases/1.44/downloads/wayland-protocols-1.44.tar.xz
-sha256 = 3df1107ecf8bfd6ee878aeca5d3b7afd81248a48031e14caf6ae01f14eebb50e
+url = https://gitlab.freedesktop.org/wayland/wayland-protocols/-/releases/1.49/downloads/wayland-protocols-1.49.tar.xz
+sha256 = ec4c8f74942d6dff7ace8b4ce4764f0ef9ff618a935d974ea77edee2ad240b14
 
 [deps]
 build = gcc meson ninja pkgconf wayland

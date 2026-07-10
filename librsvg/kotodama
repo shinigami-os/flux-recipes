@@ -14,12 +14,13 @@ build = gcc make pkgconf glib libxml2 cairo pango gdk-pixbuf libcroco
 runtime = glib libxml2 cairo pango gdk-pixbuf libcroco
 
 [build]
-cflags = -O2 -pipe -march=x86-64-v2
+cflags = -O2 -pipe -march=x86-64-v2 -Wno-incompatible-pointer-types
 
 %pre-build
 
 %build
 ./configure --prefix=/usr \
+    CFLAGS="-O2 -pipe -march=x86-64-v2 -Wno-incompatible-pointer-types" \
     --disable-static \
     --disable-introspection \
     --disable-vala \

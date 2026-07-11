@@ -29,12 +29,6 @@ launch = /usr/bin/kira-start-sleex
 description = Sleex desktop: Hyprland compositor with a quickshell bar and Material You theming
 EOF
 install -dm755 "$DESTDIR/usr/bin"
-cat > "$DESTDIR/usr/bin/kira-start-sleex" << 'EOF'
-#!/bin/sh
-export XDG_CURRENT_DESKTOP=Sleex
-export XDG_SESSION_TYPE=wayland
-exec /usr/bin/sleex
-EOF
 chmod 755 "$DESTDIR/usr/bin/kira-start-sleex"
 
 %post-install

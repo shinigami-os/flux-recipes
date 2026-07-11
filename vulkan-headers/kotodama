@@ -1,0 +1,31 @@
+[meta]
+name = vulkan-headers
+version = 1.4.356
+description = "Vulkan API headers (no driver/runtime, headers only)"
+license = Apache-2.0
+size = 2
+
+[source]
+url = git+https://github.com/KhronosGroup/Vulkan-Headers#v1.4.356
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

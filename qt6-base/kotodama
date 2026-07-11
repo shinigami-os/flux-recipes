@@ -17,6 +17,19 @@ runtime = glib dbus libglvnd libdrm libxkbcommon wayland zlib zstd freetype harf
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# __cxa_call_terminate is missing from Kira's libstdc++ across every gcc
+# build so far (confirmed present in gcc's own eh_call.cc source with no
+# platform guard - the gap is elsewhere in the build system, not worth
+# another gcc rebuild for a code path this rare: it only runs when a
+# noexcept destructor itself throws while unwinding). Provide a minimal
+# stub that does exactly what the real implementation falls back to anyway.
+cat > cxa_call_terminate_shim.cpp << 'EOF'
+#include <exception>
+extern "C" void __cxa_call_terminate(void*) noexcept {
+    std::terminate();
+}
+EOF
+g++ -c -O2 -o cxa_call_terminate_shim.o cxa_call_terminate_shim.cpp
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)
@@ -40,6 +53,8 @@ cmake -S . -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DCMAKE_CXX_FLAGS=-U_GLIBCXX_ASSERTIONS \
+    -DCMAKE_SHARED_LINKER_FLAGS="$(pwd)/cxa_call_terminate_shim.o" \
+    -DCMAKE_EXE_LINKER_FLAGS="$(pwd)/cxa_call_terminate_shim.o" \
     ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=toolchain.cmake} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH=/usr} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH_CMAKE_DIR=/usr/lib/x86_64-linux-gnu/cmake} \

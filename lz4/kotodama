@@ -1,6 +1,6 @@
 [meta]
 name = lz4
-version = 1.10.0
+version = 1.10.0.1
 description = "Extremely fast compression algorithm"
 license = BSD-2-Clause
 size = 3
@@ -19,7 +19,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-make -C lib
+# lz4's Makefile doesn't add -fPIC on its own; without it the static
+# liblz4.a can't be linked into a musl static-pie rust binary (relocation
+# R_X86_64_32S needs PIE-safe code)
+make -C lib CFLAGS="-O2 -pipe -march=x86-64-v2 -fPIC"
 
 %post-build
 

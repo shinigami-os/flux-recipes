@@ -1,6 +1,6 @@
 [meta]
 name = xdg-user-dirs
-version = 0.18
+version = 0.18.1
 description = "Manage well-known user directories (Desktop, Downloads, etc)"
 license = GPL-2.0-only
 size = 1
@@ -19,7 +19,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-./configure --prefix=/usr --sysconfdir=/etc
+./configure --prefix=/usr --sysconfdir=/etc --disable-documentation
 make
 
 %post-build

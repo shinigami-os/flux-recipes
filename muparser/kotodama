@@ -1,6 +1,6 @@
 [meta]
 name = muparser
-version = 2.3.5.1
+version = 2.3.5.2
 description = "Fast math expression parser library"
 license = BSD-2-Clause
 size = 1

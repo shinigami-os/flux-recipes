@@ -1,6 +1,6 @@
 [meta]
 name = lua55
-version = 5.5.0
+version = 5.5.0.1
 description = "Lua 5.5 language interpreter and library"
 license = MIT
 size = 3
@@ -20,11 +20,18 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %build
 make posix MYCFLAGS="-fPIC" MYLIBS="-Wl,-E"
+# stock Lua only ever builds liblua.a; hyprland links -llua dynamically
+# via pkg-config, so build a real shared object from the same objects
+cc -shared -Wl,-soname,liblua.so.5.5 -o src/liblua.so.5.5.0 \
+    $(ls src/*.o | grep -v -e '/lua\.o$' -e '/luac\.o$') -lm
 
 %post-build
 
 %install
 make install INSTALL_TOP="$DESTDIR/usr"
+install -m755 src/liblua.so.5.5.0 "$DESTDIR/usr/lib/liblua.so.5.5.0"
+ln -sf liblua.so.5.5.0 "$DESTDIR/usr/lib/liblua.so.5.5"
+ln -sf liblua.so.5.5.0 "$DESTDIR/usr/lib/liblua.so"
 install -dm755 "$DESTDIR/usr/lib/pkgconfig"
 cat > "$DESTDIR/usr/lib/pkgconfig/lua5.5.pc" << 'EOF'
 prefix=/usr

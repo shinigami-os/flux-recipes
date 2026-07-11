@@ -1,6 +1,6 @@
 [meta]
 name = hyprgraphics
-version = 0.5.1
+version = 0.5.1.1
 description = "Hyprland graphics resources and utilities (image loading)"
 license = BSD-3-Clause
 size = 3

@@ -46,7 +46,8 @@ meson setup build \
     -Dintrospection=disabled \
     -Dvala=disabled \
     -Ddocs=disabled \
-    -Dpixbuf-loader=disabled
+    -Dpixbuf-loader=disabled \
+    -Drsvg-convert=disabled
 ninja -C build
 
 %post-build

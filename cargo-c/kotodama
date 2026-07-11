@@ -25,6 +25,7 @@ done
 export PATH="$PATH:$REAL_HOME/.cargo/bin"
 export CARGO_HOME="$REAL_HOME/.cargo"
 export RUSTUP_HOME="$REAL_HOME/.rustup"
+export PERL=/usr/bin/perl
 cargo build --release --features vendored-openssl
 
 %post-build

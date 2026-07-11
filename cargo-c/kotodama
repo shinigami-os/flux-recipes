@@ -1,0 +1,36 @@
+[meta]
+name = cargo-c
+version = 0.10.23
+description = "Cargo subcommands (cbuild/cinstall) for building Rust crates as C-ABI libraries"
+license = MIT
+size = 15
+
+[source]
+url = git+https://github.com/lu-zero/cargo-c#v0.10.23
+sha256 =
+
+[deps]
+build = gcc make cmake perl pkgconf zlib
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+for _h in /home/*; do
+    [ -x "$_h/.cargo/bin/cargo" ] && REAL_HOME="$_h" && break
+done
+export PATH="$PATH:$REAL_HOME/.cargo/bin"
+export CARGO_HOME="$REAL_HOME/.cargo"
+export RUSTUP_HOME="$REAL_HOME/.rustup"
+cargo build --release --locked --features vendored-openssl
+
+%post-build
+
+%install
+install -Dm755 target/release/cargo-capi "$DESTDIR/usr/bin/cargo-capi"
+install -Dm755 target/release/cargo-cbuild "$DESTDIR/usr/bin/cargo-cbuild"
+install -Dm755 target/release/cargo-cinstall "$DESTDIR/usr/bin/cargo-cinstall"
+install -Dm755 target/release/cargo-ctest "$DESTDIR/usr/bin/cargo-ctest"

@@ -25,7 +25,7 @@ done
 export PATH="$PATH:$REAL_HOME/.cargo/bin"
 export CARGO_HOME="$REAL_HOME/.cargo"
 export RUSTUP_HOME="$REAL_HOME/.rustup"
-cargo build --release --locked --features vendored-openssl
+cargo build --release --features vendored-openssl
 
 %post-build
 

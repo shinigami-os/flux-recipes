@@ -1,0 +1,29 @@
+[meta]
+name = ttf-material-symbols-variable
+version = 1.0
+description = "Material Symbols variable icon font (Rounded) by Google"
+license = Apache-2.0
+size = 1
+
+[source]
+url = https://github.com/google/material-design-icons/raw/refs/heads/master/variablefont/MaterialSymbolsRounded%5BFILL,GRAD,opsz,wght%5D.ttf
+sha256 = 82df1d78ab3e447c7e22957747d91784b675f7a85926016215b1ee7bffc05a5b
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# flux does no URL-decoding, so the fetched file keeps the literal
+# percent-encoded name from the source URL (%5B / %5D for [ / ])
+install -Dm644 "MaterialSymbolsRounded%5BFILL,GRAD,opsz,wght%5D.ttf" \
+    "$DESTDIR/usr/share/fonts/material-symbols/MaterialSymbolsRounded[FILL,GRAD,opsz,wght].ttf"

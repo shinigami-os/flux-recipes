@@ -1,0 +1,27 @@
+[meta]
+name = ttf-rubik-vf
+version = 1.0
+description = "Rubik variable sans-serif font"
+license = OFL-1.1
+size = 1
+
+[source]
+url = https://raw.githubusercontent.com/googlefonts/rubik/9167c98fa8699d75ee51769eba20d81beb16bcb5/fonts/variable/Rubik%5Bwght%5D.ttf
+sha256 = b1f22c248529b21010aec8c76ab84d61780a5c2722acb2313ecee67df9d3a0c0
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -Dm644 "Rubik%5Bwght%5D.ttf" \
+    "$DESTDIR/usr/share/fonts/rubik/Rubik[wght].ttf"

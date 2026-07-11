@@ -1,0 +1,27 @@
+[meta]
+name = ttf-readex-pro
+version = 1.0
+description = "Readex Pro variable sans-serif font"
+license = OFL-1.1
+size = 1
+
+[source]
+url = https://raw.githubusercontent.com/ThomasJockin/readexpro/563dfbb36ae45e52ec50829b016ce724ac2fca70/fonts/variable/Readexpro%5BHEXP,wght%5D.ttf
+sha256 = 268bba7e1e8f3b14d798b3fb0e40ebaa3fc39308c9ac0020e2faf6df181cc30e
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -Dm644 "Readexpro%5BHEXP,wght%5D.ttf" \
+    "$DESTDIR/usr/share/fonts/readex-pro/Readexpro[HEXP,wght].ttf"

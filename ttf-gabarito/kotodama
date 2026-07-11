@@ -1,0 +1,27 @@
+[meta]
+name = ttf-gabarito
+version = 1.0
+description = "Gabarito display sans-serif variable font"
+license = OFL-1.1
+size = 1
+
+[source]
+url = https://raw.githubusercontent.com/naipefoundry/gabarito/1f3fb39d6449eefa880543f109f33ede0cd4064f/fonts/variable/Gabarito%5Bwght%5D.ttf
+sha256 = 8650e2bd7747f7d74619fd7aecbcb0309e6f37b7964024f3fb15ae4833b67ca5
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -Dm644 "Gabarito%5Bwght%5D.ttf" \
+    "$DESTDIR/usr/share/fonts/gabarito/Gabarito[wght].ttf"

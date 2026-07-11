@@ -10,14 +10,20 @@ url = git+https://github.com/AxOS-project/Sleex#main
 sha256 =
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity quickshell rsync
-runtime = hyprland quickshell qt6-base qt6-declarative qt6-wayland qt6-connectivity
+build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity qt6-5compat qt6-multimedia quickshell rsync
+runtime = hyprland quickshell qt6-base qt6-declarative qt6-wayland qt6-connectivity qt6-5compat qt6-multimedia
 optional = matugen swww hyprlock hypridle wl-clipboard fuzzel foot
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# Sleex's plugin hard-requires Qt 6.9 via qt_standard_project_setup(REQUIRES),
+# but doesn't use any 6.9-only API (no versioned QML imports anywhere in the
+# tree) - it's just a stricter floor than what upstream actually needs, so
+# lower it to match Kira's Qt 6.8.3 build instead of bumping the whole Qt6 stack
+sed -i 's/qt_standard_project_setup(REQUIRES 6\.9)/qt_standard_project_setup(REQUIRES 6.8)/' \
+    src/share/sleex/plugins/src/Sleex/CMakeLists.txt
 
 %build
 cd src/share/sleex

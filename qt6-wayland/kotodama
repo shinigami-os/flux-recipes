@@ -1,6 +1,6 @@
 [meta]
 name = qt6-wayland
-version = 6.8.3.1
+version = 6.8.3.2
 description = "Qt6 Wayland client and compositor modules"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 10

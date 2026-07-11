@@ -1,6 +1,6 @@
 [meta]
 name = qt6-svg
-version = 6.8.3
+version = 6.8.3.1
 description = "Qt6 SVG support"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 5

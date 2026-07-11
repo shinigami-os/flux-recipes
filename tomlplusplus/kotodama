@@ -1,6 +1,6 @@
 [meta]
 name = tomlplusplus
-version = 3.4.0.1
+version = 3.4.0.2
 description = "Header-only TOML config file parser and serializer for C++"
 license = MIT
 size = 1
@@ -29,3 +29,16 @@ cmake --build build
 
 %install
 DESTDIR="$DESTDIR" cmake --install build
+# tomlplusplus's own CMake build only installs CMake package-config files,
+# never a pkg-config .pc - consumers that use pkg_check_modules() (like
+# hyprcursor) need one, so provide it ourselves
+install -dm755 "$DESTDIR/usr/lib/pkgconfig"
+cat > "$DESTDIR/usr/lib/pkgconfig/tomlplusplus.pc" << 'EOF'
+prefix=/usr
+includedir=${prefix}/include
+
+Name: tomlplusplus
+Description: Header-only TOML config file parser and serializer for C++17
+Version: 3.4.0
+Cflags: -I${includedir}
+EOF

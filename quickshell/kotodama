@@ -10,7 +10,7 @@ url = git+https://github.com/quickshell-mirror/quickshell#v0.3.0
 sha256 =
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-wayland wayland wayland-protocols pipewire libdrm mesa
+build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-wayland cli11 wayland wayland-protocols pipewire libdrm mesa
 runtime = qt6-base qt6-declarative qt6-wayland wayland pipewire libdrm mesa
 
 [build]

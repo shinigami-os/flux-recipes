@@ -10,8 +10,8 @@ url = git+https://github.com/LGFae/swww#v0.11.2
 sha256 =
 
 [deps]
-build = gcc pkgconf wayland wayland-protocols libxkbcommon
-runtime = wayland libxkbcommon
+build = gcc pkgconf wayland wayland-protocols libxkbcommon lz4
+runtime = wayland libxkbcommon lz4
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

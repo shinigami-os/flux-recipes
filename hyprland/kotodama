@@ -17,6 +17,10 @@ runtime = aquamarine hyprlang hyprutils hyprcursor hyprgraphics hyprwire wayland
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# std::string + std::string_view concatenation is a C++26 libstdc++ addition
+# not yet in GCC 14.2.0; force the string_view operands to std::string first
+sed -i 's|getRuntimeDir() + "/" + instanceSignature + "/" + filename|getRuntimeDir() + "/" + std::string(instanceSignature) + "/" + std::string(filename)|' \
+    hyprctl/src/main.cpp
 
 %build
 cmake --no-warn-unused-cli \

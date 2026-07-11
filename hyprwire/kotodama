@@ -17,6 +17,10 @@ runtime = hyprutils libffi
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# vector::append_range is C++23 but only landed in libstdc++ with GCC 15;
+# Kira is on GCC 14.2.0, so rewrite it as the equivalent insert() form
+find . -name "*.cpp" -exec grep -l "append_range" {} \; | xargs -r sed -i -E \
+    's/([a-zA-Z_][a-zA-Z0-9_.]*)\.append_range\((.*)\);/\1.insert(\1.end(), (\2).begin(), (\2).end());/'
 
 %build
 cmake -S . -B build -G Ninja \

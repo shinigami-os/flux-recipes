@@ -1,0 +1,34 @@
+[meta]
+name = cli11
+version = 2.6.2
+description = "Header-only C++ command-line parsing library"
+license = BSD-3-Clause
+size = 1
+
+[source]
+url = git+https://github.com/CLIUtils/CLI11#v2.6.2
+sha256 =
+
+[deps]
+build = gcc cmake ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCLI11_BUILD_TESTS=OFF \
+    -DCLI11_BUILD_EXAMPLES=OFF \
+    -DCLI11_BUILD_DOCS=OFF
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

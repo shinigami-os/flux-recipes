@@ -25,7 +25,7 @@ cmake -S . -B build -G Ninja \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DDISTRIBUTOR="Kira Linux" \
     -DUSE_JEMALLOC=OFF \
-    -DCRASH_REPORTER=OFF \
+    -DCRASH_HANDLER=OFF \
     -DBUILD_TESTING=OFF
 cmake --build build
 

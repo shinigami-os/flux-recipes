@@ -21,6 +21,15 @@ cflags = -O2 -pipe -march=x86-64-v2
 # not yet in GCC 14.2.0; force the string_view operands to std::string first
 sed -i 's|getRuntimeDir() + "/" + instanceSignature + "/" + filename|getRuntimeDir() + "/" + std::string(instanceSignature) + "/" + std::string(filename)|' \
     hyprctl/src/main.cpp
+# #embed is a C23/C++26 directive GCC 14.2.0 doesn't support; it's only used
+# here to inject a comma-separated byte list into an array initializer, so
+# generate that same byte list ourselves and #include it instead
+python3 -c "
+data = open('example/hyprland.lua', 'rb').read()
+open('src/config/lua/hyprland.lua.inc', 'w').write(','.join(str(b) for b in data))
+"
+sed -i 's|#embed "\.\./\.\./\.\./example/hyprland\.lua"|#include "hyprland.lua.inc"|' \
+    src/config/lua/DefaultConfig.hpp
 
 %build
 cmake --no-warn-unused-cli \

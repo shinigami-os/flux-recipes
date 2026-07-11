@@ -30,6 +30,11 @@ open('src/config/lua/hyprland.lua.inc', 'w').write(','.join(str(b) for b in data
 "
 sed -i 's|#embed "\.\./\.\./\.\./example/hyprland\.lua"|#include "hyprland.lua.inc"|' \
     src/config/lua/DefaultConfig.hpp
+# GCC 14.2.0's -std=gnu++26 fails to resolve the ternary's common type when
+# one branch needs a user-defined conversion operator and the other is
+# nullptr; make the conversion explicit instead of relying on it implicitly
+sed -i 's|return m_connection ? \*m_connection : nullptr;|return m_connection ? static_cast<xcb_connection_t*>(*m_connection) : nullptr;|' \
+    src/xwayland/XWM.hpp
 
 %build
 cmake --no-warn-unused-cli \

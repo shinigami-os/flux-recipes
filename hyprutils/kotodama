@@ -1,6 +1,6 @@
 [meta]
 name = hyprutils
-version = 0.13.1.1
+version = 0.13.1.2
 description = "Hyprland utilities library used across the ecosystem"
 license = BSD-3-Clause
 size = 2

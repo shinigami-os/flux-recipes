@@ -24,7 +24,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 # noexcept destructor itself throws while unwinding). Provide a minimal
 # stub that does exactly what the real implementation falls back to anyway.
 cat > cxa_call_terminate_shim.cpp << 'EOF'
-#include <exception>
+namespace std { [[noreturn]] void terminate() noexcept; }
 extern "C" void __cxa_call_terminate(void*) noexcept {
     std::terminate();
 }

@@ -23,6 +23,7 @@ cmake -S . -B build -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_CXX_FLAGS=-U_GLIBCXX_ASSERTIONS \
     -DQT_BUILD_TESTS=OFF \
     -DQT_BUILD_EXAMPLES=OFF
 cmake --build build

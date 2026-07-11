@@ -10,8 +10,8 @@ url = git+https://github.com/hyprwm/hyprcursor#v0.1.13
 sha256 =
 
 [deps]
-build = gcc cmake ninja pkgconf hyprlang cairo librsvg tomlplusplus zlib
-runtime = hyprlang cairo librsvg zlib
+build = gcc cmake ninja pkgconf hyprlang cairo librsvg tomlplusplus libzip zlib
+runtime = hyprlang cairo librsvg libzip zlib
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

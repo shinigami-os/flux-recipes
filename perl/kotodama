@@ -1,6 +1,6 @@
 [meta]
 name = perl
-version = 5.42.2
+version = 5.42.2.1
 description = "Practical Extraction and Report Language interpreter"
 license = GPL-1.0-or-later OR Artistic-1.0-Perl
 size = 20

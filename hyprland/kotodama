@@ -37,6 +37,10 @@ sed -i 's|return m_connection ? \*m_connection : nullptr;|return m_connection ? 
     src/xwayland/XWM.hpp
 sed -i 's|strToNumber<uint64_t>(std::string{"0x"} + value)|strToNumber<uint64_t>(std::string{"0x"} + std::string(value))|' \
     src/config/shared/parserUtils/ParserUtils.cpp
+# insert_range is C++23 but, like append_range, only landed in libstdc++
+# with GCC 15; rewrite with insert() + reverse iterators instead
+sed -i 's|requestedModes\.insert_range(requestedModes\.end(), sortedModes \| std::views::reverse);|requestedModes.insert(requestedModes.end(), sortedModes.rbegin(), sortedModes.rend());|' \
+    src/helpers/Monitor.cpp
 
 %build
 cmake --no-warn-unused-cli \

@@ -23,9 +23,14 @@ cmake -S . -B build -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib
-cmake --build build
+cmake --build build --target hyprcursor
 
 %post-build
 
 %install
-DESTDIR="$DESTDIR" cmake --install build
+install -dm755 "$DESTDIR/usr/lib"
+cp -a build/libhyprcursor.so* "$DESTDIR/usr/lib/"
+install -dm755 "$DESTDIR/usr/include/hyprcursor"
+cp -a include/hyprcursor/. "$DESTDIR/usr/include/hyprcursor/"
+install -dm755 "$DESTDIR/usr/lib/pkgconfig"
+cp -a build/hyprcursor.pc "$DESTDIR/usr/lib/pkgconfig/hyprcursor.pc"

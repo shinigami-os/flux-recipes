@@ -1,34 +1,54 @@
 [meta]
 name = librsvg
-version = 2.40.21
-description = "SVG rendering library (last C-only release, no Rust)"
+version = 2.62.3
+description = "SVG rendering library"
 license = LGPL-2.1-or-later
-size = 8
+size = 40
 
 [source]
-url = https://download.gnome.org/sources/librsvg/2.40/librsvg-2.40.21.tar.xz
-sha256 = f7628905f1cada84e87e2b14883ed57d8094dca3281d5bcb24ece4279e9a92ba
+url = git+https://gitlab.gnome.org/GNOME/librsvg#2.62.3
+sha256 =
 
 [deps]
-build = gcc make pkgconf glib libxml2 cairo pango gdk-pixbuf libcroco
-runtime = glib libxml2 cairo pango gdk-pixbuf libcroco
+build = gcc meson ninja pkgconf cargo-c dav1d cairo pango gdk-pixbuf glib libxml2 freetype harfbuzz
+runtime = cairo pango gdk-pixbuf glib libxml2 freetype harfbuzz dav1d
 
 [build]
-cflags = -O2 -pipe -march=x86-64-v2 -Wno-incompatible-pointer-types
+cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+cat > native-pkgconfig.sh << 'WRAPPER'
+#!/bin/sh
+unset PKG_CONFIG_LIBDIR
+unset PKG_CONFIG_PATH
+unset PKG_CONFIG_SYSROOT_DIR
+exec /usr/bin/pkg-config "$@"
+WRAPPER
+cat > native-file.ini << EOF
+[binaries]
+pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
+EOF
 
 %build
-./configure --prefix=/usr \
-    CFLAGS="-O2 -pipe -march=x86-64-v2 -Wno-incompatible-pointer-types" \
-    --disable-static \
-    --disable-introspection \
-    --disable-vala \
-    --disable-tools \
-    --disable-pixbuf-loader
-make
+for _h in /home/*; do
+    [ -x "$_h/.cargo/bin/cargo" ] && REAL_HOME="$_h" && break
+done
+export PATH="$PATH:$REAL_HOME/.cargo/bin"
+export CARGO_HOME="$REAL_HOME/.cargo"
+export RUSTUP_HOME="$REAL_HOME/.rustup"
+rm -rf build
+meson setup build \
+    --native-file=native-file.ini \
+    --prefix=/usr \
+    --buildtype=release \
+    -Dtests=false \
+    -Dintrospection=disabled \
+    -Dvala=disabled \
+    -Ddocs=disabled \
+    -Dpixbuf-loader=disabled
+ninja -C build
 
 %post-build
 
 %install
-make DESTDIR="$DESTDIR" install
+DESTDIR="$DESTDIR" ninja -C build install

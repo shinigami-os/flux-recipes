@@ -1,6 +1,6 @@
 [meta]
 name = hyprlang
-version = 0.6.8
+version = 0.6.8.1
 description = "Official implementation of the hypr configuration language"
 license = LGPL-3.0-only
 size = 2

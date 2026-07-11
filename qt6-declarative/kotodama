@@ -17,6 +17,22 @@ runtime = qt6-base libglvnd mesa
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# ios_base_library_init is only ever emitted as a linker alias for
+# std::ios_base::Init::Init() when libstdc++ detects GNU symbol versioning
+# at its own build time; Qt's <iostream> usage references the alias name
+# directly, but Kira's libstdc++ never created it. Provide it ourselves -
+# only needs to reach shared libs (that's where the undefined ref lives),
+# not executables, so this stays out of CMAKE_EXE_LINKER_FLAGS entirely to
+# avoid breaking CMake's own C-only compiler sanity check.
+cat > ios_base_library_init_shim.cpp << 'EOF'
+#include <ios>
+namespace std {
+void ios_base_library_init() {
+    static ios_base::Init init;
+}
+}
+EOF
+g++ -c -O2 -o ios_base_library_init_shim.o ios_base_library_init_shim.cpp
 
 %build
 cmake -S . -B build -G Ninja \
@@ -24,6 +40,7 @@ cmake -S . -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DCMAKE_CXX_FLAGS=-U_GLIBCXX_ASSERTIONS \
+    -DCMAKE_SHARED_LINKER_FLAGS="$(pwd)/ios_base_library_init_shim.o" \
     -DQT_BUILD_TESTS=OFF \
     -DQT_BUILD_EXAMPLES=OFF
 cmake --build build

@@ -26,6 +26,7 @@ cmake -S . -B build -G Ninja \
     -DDISTRIBUTOR="Kira Linux" \
     -DUSE_JEMALLOC=OFF \
     -DCRASH_HANDLER=OFF \
+    -DX11=OFF \
     -DBUILD_TESTING=OFF
 cmake --build build
 

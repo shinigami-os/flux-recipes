@@ -23,13 +23,14 @@ cflags = -O2 -pipe -march=x86-64-v2
 # another gcc rebuild for a code path this rare: it only runs when a
 # noexcept destructor itself throws while unwinding). Provide a minimal
 # stub that does exactly what the real implementation falls back to anyway.
-cat > cxa_call_terminate_shim.cpp << 'EOF'
-namespace std { [[noreturn]] void terminate() noexcept; }
-extern "C" void __cxa_call_terminate(void*) noexcept {
-    std::terminate();
+cat > cxa_call_terminate_shim.c << 'EOF'
+extern void abort(void);
+void __cxa_call_terminate(void* p) {
+    (void)p;
+    abort();
 }
 EOF
-g++ -c -O2 -o cxa_call_terminate_shim.o cxa_call_terminate_shim.cpp
+gcc -c -O2 -o cxa_call_terminate_shim.o cxa_call_terminate_shim.c
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)

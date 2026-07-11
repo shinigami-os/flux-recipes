@@ -10,8 +10,8 @@ url = git+https://github.com/AxOS-project/Sleex#main
 sha256 =
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base qt6-declarative quickshell rsync
-runtime = hyprland quickshell qt6-base qt6-declarative qt6-wayland
+build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity quickshell rsync
+runtime = hyprland quickshell qt6-base qt6-declarative qt6-wayland qt6-connectivity
 optional = matugen swww hyprlock hypridle wl-clipboard fuzzel foot
 
 [build]

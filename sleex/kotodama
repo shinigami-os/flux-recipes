@@ -12,7 +12,7 @@ sha256 =
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity qt6-5compat qt6-multimedia quickshell rsync
 runtime = hyprland quickshell qt6-base qt6-declarative qt6-wayland qt6-connectivity qt6-5compat qt6-multimedia
-optional = matugen swww hyprlock hypridle wl-clipboard fuzzel foot
+optional = matugen hyprlock hypridle wl-clipboard fuzzel foot
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

@@ -1,6 +1,6 @@
 [meta]
 name = qt6-base
-version = 6.8.3.2
+version = 6.8.3.3
 description = "Qt6 base framework"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 120
@@ -10,7 +10,7 @@ url = https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtbase-everywhere-s
 sha256 = 56001b905601bb9023d399f3ba780d7fa940f3e4861e496a7c490331f49e0b80
 
 [deps]
-build = gcc cmake ninja pkgconf glib dbus libglvnd mesa libdrm libxkbcommon wayland wayland-protocols zlib zstd freetype harfbuzz
+build = gcc cmake ninja pkgconf glib dbus libglvnd mesa libdrm libxkbcommon wayland wayland-protocols vulkan-headers zlib zstd freetype harfbuzz
 runtime = glib dbus libglvnd libdrm libxkbcommon wayland zlib zstd freetype harfbuzz
 
 [build]

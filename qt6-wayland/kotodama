@@ -39,6 +39,7 @@ cmake -S . -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_CXX_FLAGS=-U_GLIBCXX_ASSERTIONS \
     ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=toolchain.cmake} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH=/usr} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH_CMAKE_DIR=/usr/lib/x86_64-linux-gnu/cmake} \

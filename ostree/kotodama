@@ -1,6 +1,6 @@
 [meta]
 name = ostree
-version = 2026.2
+version = 2026.2.1
 description = "Content-addressed filesystem for OS/container binary deployment, used by Flatpak"
 license = LGPL-2.0-or-later
 size = 10

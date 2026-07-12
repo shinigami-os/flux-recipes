@@ -1,6 +1,6 @@
 [meta]
 name = openssl
-version = 3.3.2
+version = 3.3.2.1
 description = "TLS/SSL and crypto library"
 license = Apache-2.0
 size = 30
@@ -33,3 +33,13 @@ make
 
 %install
 make DESTDIR="$DESTDIR" install_sw install_ssldirs
+
+%post-install
+# OpenSSL's own default cert-file lookup (X509_get_default_cert_file)
+# expects /etc/ssl/cert.pem; Kira's actual CA bundle lives at
+# /etc/ssl/certs/ca-certificates.crt (from kira-base), so anything using
+# SSL_CTX_set_default_verify_paths() instead of an explicit CAfile silently
+# rejects every certificate without this symlink
+if [ -f /etc/ssl/certs/ca-certificates.crt ] && [ ! -e /etc/ssl/cert.pem ]; then
+    ln -sf /etc/ssl/certs/ca-certificates.crt /etc/ssl/cert.pem
+fi

@@ -1,6 +1,6 @@
 [meta]
 name = layer-shell-qt
-version = 6.3.4
+version = 6.3.4.1
 description = "Qt component to allow applications to make use of the Wayland wlr-layer-shell protocol"
 license = LGPL-2.1-or-later
 size = 1
@@ -17,7 +17,11 @@ runtime = qt6-base qt6-wayland wayland
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-sed -i 's/REQUIRED COMPONENTS WaylandClient Qml/REQUIRED COMPONENTS WaylandClient/' CMakeLists.txt
+# src/CMakeLists.txt links Qt::WaylandClientPrivate directly, but upstream's
+# own find_package call never requests that component - it apparently relied
+# on some now-changed Qt 6.8 behavior that auto-exposed it. Request it
+# explicitly so the target actually gets defined.
+sed -i 's/REQUIRED COMPONENTS WaylandClient Qml/REQUIRED COMPONENTS WaylandClient WaylandClientPrivate/' CMakeLists.txt
 sed -i 's/add_subdirectory(declarative)/if(TARGET Qt6::Qml)\nadd_subdirectory(declarative)\nendif()/' src/CMakeLists.txt
 sed -i '/add_subdirectory(tests)/d' CMakeLists.txt
 if [ -n "$FLUX_CROSS_HOST" ]; then

@@ -1,6 +1,6 @@
 [meta]
 name = quickshell
-version = 0.3.0
+version = 0.3.0.1
 description = "Flexible QtQuick-based desktop shell toolkit"
 license = LGPL-3.0-only
 size = 15

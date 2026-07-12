@@ -1,6 +1,6 @@
 [meta]
 name = bubblewrap
-version = 0.11.2
+version = 0.11.2.1
 description = "Unprivileged sandboxing tool, used by Flatpak"
 license = LGPL-2.0-or-later
 size = 1
@@ -20,10 +20,16 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %build
 export CFLAGS="-O2 -pipe -march=x86-64-v2"
-meson setup build --prefix=/usr --buildtype=release
+# require_userns stays false: bwrap still tries unprivileged user namespaces
+# first, only falling back to the setuid path if that's unavailable
+meson setup build --prefix=/usr --buildtype=release -Dsupport_setuid=true
 ninja -C build
 
 %post-build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+
+%post-install
+chown root:root /usr/bin/bwrap
+chmod u+s /usr/bin/bwrap

@@ -1,0 +1,27 @@
+[meta]
+name = bibata-cursor-theme
+version = 2.0.7
+description = "Bibata Modern Classic XCursor theme"
+license = GPL-3.0-only
+size = 5
+
+[source]
+url = https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.7/Bibata-Modern-Classic.tar.xz
+sha256 = 7d3495864e5bbef02f5e77de760b2905903b63c71495a78ef6306d19a3b556d8
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/share/icons"
+cp -a Bibata-Modern-Classic "$DESTDIR/usr/share/icons/"

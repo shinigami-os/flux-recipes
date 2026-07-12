@@ -1,6 +1,6 @@
 [meta]
 name = flatpak
-version = 1.18.0
+version = 1.18.0.1
 description = "Application deployment framework for desktop apps"
 license = LGPL-2.1-or-later
 size = 10
@@ -10,13 +10,17 @@ url = https://github.com/flatpak/flatpak/releases/download/1.18.0/flatpak-1.18.0
 sha256 = a5857a66c4039dda05d92bdcb2b033d788cd2589610167f0ec5f0ec8d4fac6f2
 
 [deps]
-build = gcc meson ninja pkgconf bison libcap libarchive glib curl libxml2 fuse3 ostree json-glib appstream gdk-pixbuf gpgme libxau polkit bubblewrap xdg-dbus-proxy
+build = gcc meson ninja pkgconf bison libcap libarchive glib curl libxml2 fuse3 ostree json-glib appstream gdk-pixbuf gpgme libxau polkit bubblewrap xdg-dbus-proxy python3
 runtime = libcap libarchive glib curl libxml2 fuse3 ostree json-glib appstream gdk-pixbuf gpgme libxau polkit bubblewrap xdg-dbus-proxy
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# needed by meson.build for code generation, not available as a system
+# package here - bootstrap pip (bundled offline in cpython) then install it
+python3 -m ensurepip --default-pip >/dev/null 2>&1 || true
+python3 -m pip install --quiet pyparsing
 
 %build
 export CFLAGS="-O2 -pipe -march=x86-64-v2"

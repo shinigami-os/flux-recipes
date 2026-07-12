@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-sleex
-version = 1.0
+version = 1.0.1
 description = "Sleex desktop environment meta-package (Hyprland + quickshell)"
 license = MIT
 size = 1
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = mesa libglvnd xwayland hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk quickshell qt6-base qt6-declarative qt6-wayland qt6-svg matugen hyprlock hypridle wlogout wl-clipboard fuzzel foot pcmanfm-qt grim slurp playerctl brightnessctl pamixer pavucontrol pipewire wireplumber iw nm-connection-editor python3 jq greetd xdg-user-dirs bibata-cursor-theme featherpad flatpak kira-desktop-fonts sleex kira-desktop-sleex-config
+runtime = mesa libglvnd xwayland hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk quickshell qt6-base qt6-declarative qt6-wayland qt6-svg matugen hyprlock hypridle wlogout wl-clipboard fuzzel foot pcmanfm-qt grim slurp playerctl brightnessctl pamixer pavucontrol pipewire wireplumber iw nm-connection-editor python3 jq greetd xdg-user-dirs bibata-cursor-theme featherpad flatpak dbus kira-desktop-fonts sleex kira-desktop-sleex-config
 
 [build]
 cflags =
@@ -28,14 +28,7 @@ package = kira-desktop-sleex
 launch = /usr/bin/kira-start-sleex
 description = Sleex desktop: Hyprland compositor with a quickshell bar and Material You theming
 EOF
-install -dm755 "$DESTDIR/usr/bin"
-cat > "$DESTDIR/usr/bin/kira-start-sleex" << 'EOF'
-#!/bin/sh
-export XDG_CURRENT_DESKTOP=Sleex
-export XDG_SESSION_TYPE=wayland
-exec /usr/bin/sleex
-EOF
-chmod 755 "$DESTDIR/usr/bin/kira-start-sleex"
+install -Dm755 "$FLUX_RECIPE_DIR/files/kira-start-sleex" "$DESTDIR/usr/bin/kira-start-sleex"
 
 # Sleex hardcodes this wallpaper path; ship Kira's default there so matugen themes from it
 install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/backgrounds/sleex/SleexOne.png"

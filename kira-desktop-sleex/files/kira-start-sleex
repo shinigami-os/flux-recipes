@@ -1,0 +1,31 @@
+#!/bin/sh
+set -e
+
+export XDG_CURRENT_DESKTOP=Hyprland:sleex
+export XDG_SESSION_TYPE=wayland
+export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+export MOZ_ENABLE_WAYLAND=1
+export SDL_VIDEODRIVER=wayland
+export _JAVA_AWT_WM_NONREPARENTING=1
+export WLR_DRM_NO_ATOMIC=1
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+
+mkdir -p "$XDG_RUNTIME_DIR" || { echo "kira-start-sleex: failed to create XDG_RUNTIME_DIR" >&2; exit 1; }
+chmod 700 "$XDG_RUNTIME_DIR" || { echo "kira-start-sleex: failed to chmod XDG_RUNTIME_DIR" >&2; exit 1; }
+
+rm -f "$XDG_RUNTIME_DIR/pipewire-0.lock" \
+      "$XDG_RUNTIME_DIR/pipewire-0-manager.lock" \
+      "$XDG_RUNTIME_DIR/pulse/native" 2>/dev/null
+
+i=0
+while [ ! -S /var/run/dbus/system_bus_socket ] && [ $i -lt 15 ]; do
+    sleep 1
+    i=$((i + 1))
+done
+
+if [ ! -S /var/run/dbus/system_bus_socket ]; then
+    echo "kira-start-sleex: system dbus socket never appeared after 15s, continuing anyway" >&2
+fi
+
+exec dbus-run-session -- /usr/bin/sleex

@@ -1,6 +1,6 @@
 [meta]
 name = gsettings-desktop-schemas
-version = 48.0
+version = 48.0.1
 description = "GNOME desktop GSettings schemas"
 license = LGPL-2.1-or-later
 size = 2
@@ -64,3 +64,8 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+
+%post-install
+# recompile the schema cache GIO actually reads at runtime; nothing else
+# on Kira was doing this, so GSettings never worked for anyone until now
+glib-compile-schemas /usr/share/glib-2.0/schemas/ 2>/dev/null || true

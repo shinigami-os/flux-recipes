@@ -1,6 +1,6 @@
 [meta]
 name = flatpak
-version = 1.18.0.2
+version = 1.18.0.3
 description = "Application deployment framework for desktop apps"
 license = LGPL-2.1-or-later
 size = 10

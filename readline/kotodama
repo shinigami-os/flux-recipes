@@ -1,0 +1,29 @@
+[meta]
+name = readline
+version = 8.3
+description = "GNU library for interactive command-line editing"
+license = GPL-3.0-only
+size = 3
+
+[source]
+url = https://ftp.gnu.org/gnu/readline/readline-8.3.tar.gz
+sha256 = fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
+
+[deps]
+build = gcc make ncurses
+runtime = ncurses
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr --disable-static
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

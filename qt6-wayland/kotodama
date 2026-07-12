@@ -10,8 +10,8 @@ url = https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtwayland-everywh
 sha256 = 95788aa502f75441d4edf65932b235f76523084e13dbbb7b9ee2d207b32bd9b3
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base wayland wayland-protocols
-runtime = qt6-base wayland
+build = gcc cmake ninja pkgconf qt6-base qt6-svg wayland wayland-protocols
+runtime = qt6-base qt6-svg wayland
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

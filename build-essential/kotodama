@@ -11,7 +11,7 @@ sha256 =
 
 [deps]
 build =
-runtime = gcc binutils make pkgconf flex bison patch
+runtime = gcc binutils make pkgconf flex bison patch gdb unzip
 
 [build]
 cflags =

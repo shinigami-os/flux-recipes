@@ -20,7 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %build
 export CFLAGS="-O2 -pipe -march=x86-64-v2"
-./configure --prefix=/usr --disable-static --disable-gpg-test
+./configure --prefix=/usr --disable-static --disable-gpg-test --disable-linux-getdents
 make
 
 %post-build

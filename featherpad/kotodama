@@ -1,0 +1,33 @@
+[meta]
+name = featherpad
+version = 1.6.4
+description = "Lightweight Qt6 plain-text editor"
+license = GPL-3.0-only
+size = 3
+
+[source]
+url = https://github.com/tsujan/FeatherPad/releases/download/V1.6.4/FeatherPad-1.6.4.tar.xz
+sha256 = 369c39059ff8978e8ce3b8575601e8ac805595cbabf1704601e829b3a745ca8a
+
+[deps]
+build = gcc cmake ninja pkgconf qt6-base qt6-svg hunspell
+runtime = qt6-base qt6-svg hunspell
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+export CXXFLAGS="-O2 -pipe -march=x86-64-v2"
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DWITHOUT_X11=ON
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

@@ -1,0 +1,30 @@
+[meta]
+name = hunspell
+version = 1.7.3
+description = "Spell checking library"
+license = "LGPL-2.1-or-later OR GPL-2.0-or-later OR MPL-1.1"
+size = 3
+
+[source]
+url = https://github.com/hunspell/hunspell/releases/download/v1.7.3/hunspell-1.7.3.tar.gz
+sha256 = 433274dac0619cb00c2e18b43a3dd3a9d50da5b5613fa9b5c21781e35dd76bc1
+
+[deps]
+build = gcc make gettext
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+export CXXFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr --disable-static
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

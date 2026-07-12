@@ -1,12 +1,12 @@
 [meta]
 name = kira-desktop-swayFX-config
-version = 26.07
+version = 26.07-1
 description = "Default SwayFX desktop configuration files (skel, root, launch script)"
 license = MIT
 size = 1
 
 [source]
-url = git+https://github.com/shinigami-os/kira-desktop#v26.07
+url = git+https://github.com/shinigami-os/kira-desktop#v26.07-1
 sha256 = 095a9d17a4e8a80a1d9881ae727cf9178b922af3
 
 [deps]

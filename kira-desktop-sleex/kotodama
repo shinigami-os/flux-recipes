@@ -31,6 +31,9 @@ EOF
 install -dm755 "$DESTDIR/usr/bin"
 chmod 755 "$DESTDIR/usr/bin/kira-start-sleex"
 
+# Sleex hardcodes this wallpaper path; ship Kira's default there so matugen themes from it
+install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/backgrounds/sleex/SleexOne.png"
+
 %post-install
 echo "[kira-desktop-sleex] Sleex installed. Set it active with:"
 echo "  echo sleex > ~/.config/kira-desktop/active-de"

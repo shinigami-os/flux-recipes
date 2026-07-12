@@ -23,7 +23,8 @@ cflags = -O2 -pipe -march=x86-64-v2
 cd src/share/sleex
 cmake -S . -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
-    -DDISTRIBUTOR="Kira Linux"
+    -DDISTRIBUTOR="Kira Linux" \
+    -DINSTALL_QMLDIR=usr/qml
 cmake --build build
 
 %post-build

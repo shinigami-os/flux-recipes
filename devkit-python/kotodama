@@ -1,0 +1,25 @@
+[meta]
+name = devkit-python
+version = 1.0
+description = "Python development kit"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = python3
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

@@ -1,0 +1,25 @@
+[meta]
+name = devkit-kotlin
+version = 1.0
+description = "Kotlin development kit (includes OpenJDK, required by kotlinc)"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = kotlin
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

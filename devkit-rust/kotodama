@@ -1,0 +1,25 @@
+[meta]
+name = devkit-rust
+version = 1.0
+description = "Rust development kit: rustc, cargo, clippy, rustfmt, and cargo-c"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = rust cargo-c
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

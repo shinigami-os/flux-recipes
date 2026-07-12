@@ -1,0 +1,28 @@
+[meta]
+name = rust
+version = 1.97.0
+description = "Rust programming language toolchain (rustc, cargo, clippy, rustfmt)"
+license = "MIT OR Apache-2.0"
+size = 900
+
+[source]
+url = https://static.rust-lang.org/dist/2026-07-09/rust-1.97.0-x86_64-unknown-linux-musl.tar.gz
+sha256 = 675bb2d574efc64da0563a9cb70cc017560394c5938e04c92987cad383299e8d
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# a missing/failing ldconfig here is a non-fatal warning in install.sh itself
+# (musl/Kira has no ldconfig cache the same way glibc does), safe to ignore
+./install.sh --destdir="$DESTDIR" --prefix=/usr

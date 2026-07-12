@@ -1,0 +1,25 @@
+[meta]
+name = devkit-c
+version = 1.0
+description = "C/C++ development kit: compiler, debugger, build systems, and tracing tools"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = gcc gdb make cmake ninja meson pkgconf binutils strace valgrind
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

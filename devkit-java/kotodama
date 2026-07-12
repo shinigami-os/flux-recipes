@@ -1,0 +1,25 @@
+[meta]
+name = devkit-java
+version = 1.0
+description = "Java development kit (OpenJDK/Temurin)"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = openjdk
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

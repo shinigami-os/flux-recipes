@@ -1,0 +1,25 @@
+[meta]
+name = devkit-web
+version = 1.0
+description = "Web development kit: Node.js and npm"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = nodejs
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

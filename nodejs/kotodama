@@ -1,0 +1,29 @@
+[meta]
+name = nodejs
+version = 24.18.0
+description = "Node.js JavaScript runtime (includes npm)"
+license = MIT
+size = 90
+
+[source]
+url = https://unofficial-builds.nodejs.org/download/release/v24.18.0/node-v24.18.0-linux-x64-musl.tar.gz
+sha256 = ea58409911e141ec6b19d9178efa2d9185a13295005b1cbf5521b3157eed1d95
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# nodejs.org's own releases are glibc-only; unofficial-builds.nodejs.org
+# publishes the musl-linked equivalent used by Alpine and other musl distros
+install -dm755 "$DESTDIR/usr"
+cp -a bin include lib share "$DESTDIR/usr/"

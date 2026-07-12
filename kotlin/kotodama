@@ -1,0 +1,33 @@
+[meta]
+name = kotlin
+version = 2.4.0
+description = "Kotlin programming language compiler"
+license = Apache-2.0
+size = 150
+
+[source]
+url = https://github.com/JetBrains/kotlin/releases/download/v2.4.0/kotlin-compiler-2.4.0.zip
+sha256 = ba1b9e6eb6ddc3275079224f2e9ea4a2b02eef7d59ce2d38404f04b22613c20a
+
+[deps]
+build = unzip
+runtime = openjdk
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# kotlinc is pure JVM bytecode; its launcher falls back to plain "java" from
+# PATH when JAVA_HOME is unset, so it just needs openjdk's /usr/bin/java
+install -dm755 "$DESTDIR/usr/lib/kotlinc"
+cp -a . "$DESTDIR/usr/lib/kotlinc/"
+install -dm755 "$DESTDIR/usr/bin"
+for bin in kotlin kotlinc kotlinc-js kotlinc-jvm kapt; do
+    ln -sf "/usr/lib/kotlinc/bin/$bin" "$DESTDIR/usr/bin/$bin"
+done

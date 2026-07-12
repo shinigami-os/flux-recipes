@@ -1,0 +1,33 @@
+[meta]
+name = openjdk
+version = 25.0.3
+description = "OpenJDK (Eclipse Temurin) Java Development Kit"
+license = GPL-2.0-with-classpath-exception
+size = 300
+
+[source]
+url = https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3%2B9/OpenJDK25U-jdk_x64_alpine-linux_hotspot_25.0.3_9.tar.gz
+sha256 = 51c2415b370aac7c3796b0c4663c8fcf91bc22d76f03df95b25fa5667cb5fdd8
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# adoptium's "alpine-linux" target is their musl-linked build, matching Kira's
+# libc (glibc-linked jdk builds fail outright on a musl system)
+install -dm755 "$DESTDIR/usr/lib/jvm/java-25-openjdk"
+cp -a . "$DESTDIR/usr/lib/jvm/java-25-openjdk/"
+install -dm755 "$DESTDIR/usr/bin"
+for bin in "$DESTDIR/usr/lib/jvm/java-25-openjdk/bin/"*; do
+    ln -sf "/usr/lib/jvm/java-25-openjdk/bin/$(basename "$bin")" "$DESTDIR/usr/bin/$(basename "$bin")"
+done

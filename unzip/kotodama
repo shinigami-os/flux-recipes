@@ -1,0 +1,30 @@
+[meta]
+name = unzip
+version = 6.0
+description = "Info-ZIP unzip - extract .zip archives"
+license = "Info-ZIP"
+size = 2
+
+[source]
+url = https://downloads.sourceforge.net/infozip/unzip60.tar.gz
+sha256 = 036d96991646d0449ed0aa952e4fbe21b476ce994abc276e49d30e686708bd37
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make -f unix/Makefile linux
+
+%post-build
+
+%install
+make -f unix/Makefile install \
+    prefix="$DESTDIR/usr" \
+    BINDIR="$DESTDIR/usr/bin" \
+    MANDIR="$DESTDIR/usr/share/man/man1"

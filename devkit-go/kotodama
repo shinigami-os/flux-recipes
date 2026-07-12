@@ -1,0 +1,25 @@
+[meta]
+name = devkit-go
+version = 1.0
+description = "Go development kit"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = go
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

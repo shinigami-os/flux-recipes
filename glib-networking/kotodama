@@ -1,0 +1,30 @@
+[meta]
+name = glib-networking
+version = 2.80.1
+description = "Network-related GIO modules (TLS support via OpenSSL)"
+license = LGPL-2.1-or-later
+size = 2
+
+[source]
+url = https://download.gnome.org/sources/glib-networking/2.80/glib-networking-2.80.1.tar.xz
+sha256 = b80e2874157cd55071f1b6710fa0b911d5ac5de106a9ee2a4c9c7bee61782f8e
+
+[deps]
+build = gcc meson ninja pkgconf glib openssl gsettings-desktop-schemas
+runtime = glib openssl gsettings-desktop-schemas
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+meson setup build --prefix=/usr --buildtype=release \
+    -Dgnutls=disabled -Dopenssl=enabled -Dlibproxy=disabled -Dinstalled_tests=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

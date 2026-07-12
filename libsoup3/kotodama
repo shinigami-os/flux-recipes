@@ -10,8 +10,8 @@ url = https://download.gnome.org/sources/libsoup/3.6/libsoup-3.6.5.tar.xz
 sha256 = 6891765aac3e949017945c3eaebd8cc8216df772456dc9f460976fbdb7ada234
 
 [deps]
-build = gcc meson ninja pkgconf glib libxml2 sqlite nghttp2 libpsl zlib
-runtime = glib libxml2 sqlite nghttp2 libpsl zlib
+build = gcc meson ninja pkgconf glib libxml2 sqlite nghttp2 libpsl zlib glib-networking
+runtime = glib libxml2 sqlite nghttp2 libpsl zlib glib-networking
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

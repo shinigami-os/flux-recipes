@@ -1,6 +1,6 @@
 [meta]
 name = readline
-version = 8.3
+version = 8.3.1
 description = "GNU library for interactive command-line editing"
 license = GPL-3.0-only
 size = 3
@@ -20,7 +20,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %build
 export CFLAGS="-O2 -pipe -march=x86-64-v2"
-./configure --prefix=/usr --disable-static
+# libreadline.so defaults to not linking ncurses into itself, leaving every
+# consumer to add -lncurses manually (bluez's build doesn't); link it in
+# directly instead, matching how most distros package readline
+./configure --prefix=/usr --disable-static --with-curses --with-shared-termcap-library
 make
 
 %post-build

@@ -18,12 +18,6 @@ optional = matugen hyprlock hypridle wl-clipboard fuzzel foot
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# Sleex's plugin hard-requires Qt 6.9 via qt_standard_project_setup(REQUIRES),
-# but doesn't use any 6.9-only API (no versioned QML imports anywhere in the
-# tree) - it's just a stricter floor than what upstream actually needs, so
-# lower it to match Kira's Qt 6.8.3 build instead of bumping the whole Qt6 stack
-sed -i 's/qt_standard_project_setup(REQUIRES 6\.9)/qt_standard_project_setup(REQUIRES 6.8)/' \
-    src/share/sleex/plugins/src/Sleex/CMakeLists.txt
 
 %build
 cd src/share/sleex

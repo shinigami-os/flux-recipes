@@ -1,13 +1,13 @@
 [meta]
 name = qt6-declarative
-version = 6.8.3.1
+version = 6.11.1
 description = "Qt6 Declarative (QML and Qt Quick) framework"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 90
 
 [source]
-url = https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtdeclarative-everywhere-src-6.8.3.tar.xz
-sha256 = 1f03a2b8f5588b4face7da87926e9b2c1372b3a32157c52df07a75067a9db1af
+url = https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtdeclarative-everywhere-src-6.11.1.tar.xz
+sha256 = 52e670f670b0304f534b24f98c47ceb8a41bb710464414ebc9527ec71cc86aa4
 
 [deps]
 build = gcc cmake ninja pkgconf python3 qt6-base qt6-shadertools libglvnd mesa

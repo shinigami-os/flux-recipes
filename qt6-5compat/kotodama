@@ -1,13 +1,13 @@
 [meta]
 name = qt6-5compat
-version = 6.8.3
+version = 6.11.1
 description = "Qt5 compatibility QML modules (GraphicalEffects etc) for Qt6"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 15
 
 [source]
-url = https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qt5compat-everywhere-src-6.8.3.tar.xz
-sha256 = 54b9c84bff34b423dd8c472862ce1009753ff505e418b4ef33907416da16b82e
+url = https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qt5compat-everywhere-src-6.11.1.tar.xz
+sha256 = cfcb9fdaa051aad54b0e61b24ac5693b4887a86e07609f665fea67328a6f161b
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-shadertools

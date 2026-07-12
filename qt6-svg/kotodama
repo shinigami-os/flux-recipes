@@ -1,13 +1,13 @@
 [meta]
 name = qt6-svg
-version = 6.8.3.1
+version = 6.11.1
 description = "Qt6 SVG support"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 5
 
 [source]
-url = https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtsvg-everywhere-src-6.8.3.tar.xz
-sha256 = 35eb516460f00f264eb504baa253432384351cf23fb9980a5857190e8deef438
+url = https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtsvg-everywhere-src-6.11.1.tar.xz
+sha256 = 7f3cf02f4824bf03c2c5859ea6db173bf1482a1daf24e6cdf7bc78cfa26a8a94
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base

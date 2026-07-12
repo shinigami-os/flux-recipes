@@ -1,13 +1,13 @@
 [meta]
 name = qt6-connectivity
-version = 6.8.3
+version = 6.11.1
 description = "Qt6 Bluetooth and NFC support"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 6
 
 [source]
-url = https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtconnectivity-everywhere-src-6.8.3.tar.xz
-sha256 = 477176383308ce77f974a16f118027e833061caed57aeb30eeb4306a583c9b39
+url = https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtconnectivity-everywhere-src-6.11.1.tar.xz
+sha256 = 2105289ea414b46ed5fa53ba8782230045b9e47cc8156b5940c9e31e3980e591
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base

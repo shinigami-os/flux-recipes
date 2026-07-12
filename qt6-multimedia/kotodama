@@ -1,13 +1,13 @@
 [meta]
 name = qt6-multimedia
-version = 6.8.3
+version = 6.11.1
 description = "Qt6 multimedia (audio/video/camera) QML modules"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 10
 
 [source]
-url = https://download.qt.io/archive/qt/6.8/6.8.3/submodules/qtmultimedia-everywhere-src-6.8.3.tar.xz
-sha256 = 32e82307d783172a3b984cc3c47c5e4e8b819cee3cbfc702c7012c47f15f6b01
+url = https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtmultimedia-everywhere-src-6.11.1.tar.xz
+sha256 = 390f8e52ddee3aca5c4de7eead900c84c4fa61ff6d1f0ebea9c7543365c09b0a
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-shadertools

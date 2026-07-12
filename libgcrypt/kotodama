@@ -1,0 +1,29 @@
+[meta]
+name = libgcrypt
+version = 1.12.2
+description = "General purpose cryptographic library based on GnuPG"
+license = LGPL-2.1-or-later
+size = 5
+
+[source]
+url = https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.12.2.tar.bz2
+sha256 = 7ce33c2492221a0436f96a8500215e9f3e3dcb5fd26a757cd415e7a843babd5e
+
+[deps]
+build = gcc make pkgconf libgpg-error
+runtime = libgpg-error
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr --disable-static
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

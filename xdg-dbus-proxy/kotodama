@@ -1,0 +1,29 @@
+[meta]
+name = xdg-dbus-proxy
+version = 0.1.7
+description = "Filtering proxy for D-Bus connections, used by Flatpak"
+license = LGPL-2.1-or-later
+size = 1
+
+[source]
+url = https://github.com/flatpak/xdg-dbus-proxy/releases/download/0.1.7/xdg-dbus-proxy-0.1.7.tar.xz
+sha256 = 3ad3d27ba574e178acb5e4d438ba36ace25e3564f899c36f31c56f82c7adbbe7
+
+[deps]
+build = gcc meson ninja pkgconf glib dbus
+runtime = glib dbus
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+meson setup build --prefix=/usr --buildtype=release
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

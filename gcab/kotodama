@@ -1,0 +1,29 @@
+[meta]
+name = gcab
+version = 1.6
+description = "Microsoft Cabinet file manipulation library"
+license = LGPL-2.1-or-later
+size = 1
+
+[source]
+url = https://download.gnome.org/sources/gcab/1.6/gcab-1.6.tar.xz
+sha256 = 2f0c9615577c4126909e251f9de0626c3ee7a152376c15b5544df10fc87e560b
+
+[deps]
+build = gcc meson ninja pkgconf glib zlib
+runtime = glib zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+meson setup build --prefix=/usr --buildtype=release -Dintrospection=false -Dvapi=false -Ddocs=false -Dtests=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

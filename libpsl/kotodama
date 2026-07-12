@@ -1,0 +1,29 @@
+[meta]
+name = libpsl
+version = 0.23.0
+description = "Public Suffix List library"
+license = MIT
+size = 1
+
+[source]
+url = https://github.com/rockdaboot/libpsl/releases/download/0.23.0/libpsl-0.23.0.tar.gz
+sha256 = f39b9631b3d369a21259ea4654f8875c0ec6995ce9551c0eb5d423e4c011f911
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr --disable-static
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

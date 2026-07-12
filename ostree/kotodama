@@ -1,0 +1,41 @@
+[meta]
+name = ostree
+version = 2026.2
+description = "Content-addressed filesystem for OS/container binary deployment, used by Flatpak"
+license = LGPL-2.0-or-later
+size = 10
+
+[source]
+url = https://github.com/ostreedev/ostree/releases/download/v2026.2/libostree-2026.2.tar.xz
+sha256 = a281f2db631f3721ecd4b9e2779a1eaf56e2d03f2cc47629a9f0117f12016a83
+
+[deps]
+build = gcc make pkgconf bison curl libarchive gpgme libsoup3 fuse3 e2fsprogs xz zlib
+runtime = curl libarchive gpgme libsoup3 fuse3 e2fsprogs xz zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --with-soup3 \
+    --with-gpgme \
+    --with-openssl \
+    --without-composefs \
+    --without-selinux \
+    --without-avahi \
+    --without-libmount \
+    --without-libsystemd \
+    --enable-introspection=no \
+    --enable-man=no
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

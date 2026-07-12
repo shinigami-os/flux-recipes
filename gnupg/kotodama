@@ -1,0 +1,38 @@
+[meta]
+name = gnupg
+version = 2.5.21
+description = "GNU Privacy Guard, used by Flatpak/OSTree to verify remote signatures"
+license = GPL-3.0-or-later
+size = 10
+
+[source]
+url = https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-2.5.21.tar.bz2
+sha256 = e3af2c8caa46a66a9329fa7c6880af260451914d819595beabc2c26597b31352
+
+[deps]
+build = gcc make pkgconf libgpg-error libgcrypt libassuan libksba npth sqlite zlib
+runtime = libgpg-error libgcrypt libassuan libksba npth sqlite zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --disable-gpgsm \
+    --disable-scdaemon \
+    --disable-dirmngr \
+    --disable-keyboxd \
+    --disable-tpm2d \
+    --disable-doc \
+    --disable-wks-tools
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

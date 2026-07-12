@@ -1,0 +1,29 @@
+[meta]
+name = bubblewrap
+version = 0.11.2
+description = "Unprivileged sandboxing tool, used by Flatpak"
+license = LGPL-2.0-or-later
+size = 1
+
+[source]
+url = https://github.com/containers/bubblewrap/releases/download/v0.11.2/bubblewrap-0.11.2.tar.xz
+sha256 = 69abc30005d2186baf7737feacd8da35633b93cf5af38838ecff17c5f8e924f6
+
+[deps]
+build = gcc meson ninja pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+meson setup build --prefix=/usr --buildtype=release
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

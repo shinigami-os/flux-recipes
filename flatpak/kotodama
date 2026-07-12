@@ -1,0 +1,36 @@
+[meta]
+name = flatpak
+version = 1.18.0
+description = "Application deployment framework for desktop apps"
+license = LGPL-2.1-or-later
+size = 10
+
+[source]
+url = https://github.com/flatpak/flatpak/releases/download/1.18.0/flatpak-1.18.0.tar.xz
+sha256 = a5857a66c4039dda05d92bdcb2b033d788cd2589610167f0ec5f0ec8d4fac6f2
+
+[deps]
+build = gcc meson ninja pkgconf bison libcap libarchive glib curl libxml2 fuse3 ostree json-glib appstream gdk-pixbuf gpgme libxau polkit bubblewrap xdg-dbus-proxy
+runtime = libcap libarchive glib curl libxml2 fuse3 ostree json-glib appstream gdk-pixbuf gpgme libxau polkit bubblewrap xdg-dbus-proxy
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+meson setup build --prefix=/usr --buildtype=release --sysconfdir=/etc \
+    -Dsystemd=disabled \
+    -Dtests=false \
+    -Dinstalled_tests=false \
+    -Dinternal_tests=false \
+    -Ddocbook_docs=disabled \
+    -Dgtkdoc=disabled \
+    -Dman=disabled
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

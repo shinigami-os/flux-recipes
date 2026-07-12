@@ -1,0 +1,29 @@
+[meta]
+name = libassuan
+version = 3.0.2
+description = "IPC library used by GnuPG components"
+license = LGPL-2.1-or-later
+size = 1
+
+[source]
+url = https://www.gnupg.org/ftp/gcrypt/libassuan/libassuan-3.0.2.tar.bz2
+sha256 = d2931cdad266e633510f9970e1a2f346055e351bb19f9b78912475b8074c36f6
+
+[deps]
+build = gcc make pkgconf libgpg-error
+runtime = libgpg-error
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr --disable-static
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

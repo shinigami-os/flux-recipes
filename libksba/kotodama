@@ -1,0 +1,29 @@
+[meta]
+name = libksba
+version = 1.8.0
+description = "X.509 and CMS library, used by GnuPG"
+license = LGPL-3.0-or-later
+size = 1
+
+[source]
+url = https://www.gnupg.org/ftp/gcrypt/libksba/libksba-1.8.0.tar.bz2
+sha256 = 296b9db9095749f2aa104202d7ab7fd09ad10710e00780a709c9754b1a1d9292
+
+[deps]
+build = gcc make pkgconf libgpg-error
+runtime = libgpg-error
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr --disable-static
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

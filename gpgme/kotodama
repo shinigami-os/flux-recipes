@@ -1,0 +1,29 @@
+[meta]
+name = gpgme
+version = 2.1.2
+description = "Library providing a C API for GnuPG"
+license = LGPL-2.1-or-later
+size = 3
+
+[source]
+url = https://www.gnupg.org/ftp/gcrypt/gpgme/gpgme-2.1.2.tar.bz2
+sha256 = 0687a95b299871c4141f507c0f740de6b429c9ac067d0fa4e062e3264df5fb77
+
+[deps]
+build = gcc make pkgconf libgpg-error libassuan
+runtime = libgpg-error libassuan gnupg
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr --disable-static --disable-gpg-test
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

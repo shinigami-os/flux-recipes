@@ -1,0 +1,29 @@
+[meta]
+name = nghttp2
+version = 1.69.0
+description = "HTTP/2 C library"
+license = MIT
+size = 3
+
+[source]
+url = https://github.com/nghttp2/nghttp2/releases/download/v1.69.0/nghttp2-1.69.0.tar.xz
+sha256 = 1fb324b6ec2c56f6bde0658f4139ffd8209fa9e77ce98fd7a5f63af8d0e508ad
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr --enable-lib-only
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

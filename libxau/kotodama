@@ -1,0 +1,29 @@
+[meta]
+name = libxau
+version = 1.0.12
+description = "X11 authorisation library"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/archive/individual/lib/libXau-1.0.12.tar.xz
+sha256 = 74d0e4dfa3d39ad8939e99bda37f5967aba528211076828464d2777d477fc0fb
+
+[deps]
+build = gcc make pkgconf xorgproto util-macros
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

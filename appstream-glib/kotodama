@@ -1,0 +1,30 @@
+[meta]
+name = appstream-glib
+version = 0.8.3
+description = "GLib helper library for reading and writing AppStream metadata"
+license = LGPL-2.1-or-later
+size = 3
+
+[source]
+url = https://github.com/hughsie/appstream-glib/archive/refs/tags/appstream_glib_0_8_3.tar.gz
+sha256 = 15ad7690b0132d883bd066699a7b55f6cef4c0f266d18d781ce5d8112fb4ee63
+
+[deps]
+build = gcc meson ninja pkgconf glib libarchive curl json-glib gdk-pixbuf util-linux freetype fontconfig
+runtime = glib libarchive curl json-glib gdk-pixbuf util-linux freetype fontconfig
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+meson setup build --prefix=/usr --buildtype=release \
+    -Dbuilder=false -Drpm=false -Dalpm=false -Dman=false -Dgtk-doc=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -1,0 +1,29 @@
+[meta]
+name = shared-mime-info
+version = 2.5.1
+description = "Freedesktop.org shared MIME info database"
+license = GPL-2.0-or-later
+size = 2
+
+[source]
+url = https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/2.5.1/shared-mime-info-2.5.1.tar.gz
+sha256 = ea248ea157b7fa0165f4fe282c84919fa84c3f175553642f229c8f1ab7539128
+
+[deps]
+build = gcc meson ninja pkgconf glib libxml2
+runtime = glib libxml2
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+meson setup build --prefix=/usr --buildtype=release -Dbuild-tests=false -Dbuild-spec=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

@@ -1,0 +1,29 @@
+[meta]
+name = libxslt
+version = 1.1.45
+description = "XSLT library"
+license = MIT
+size = 3
+
+[source]
+url = https://download.gnome.org/sources/libxslt/1.1/libxslt-1.1.45.tar.xz
+sha256 = 9acfe68419c4d06a45c550321b3212762d92f41465062ca4ea19e632ee5d216e
+
+[deps]
+build = gcc make pkgconf libxml2
+runtime = libxml2
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr --without-python --without-crypto
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

@@ -1,6 +1,6 @@
 [meta]
 name = fuse3
-version = 3.17.2
+version = 3.17.2.1
 description = "Filesystem in Userspace (FUSE) v3"
 license = GPL-2.0-or-later
 size = 2
@@ -41,10 +41,10 @@ meson setup build \
     --prefix=/usr \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Dutils=false \
+    -Dutils=true \
     -Dexamples=false \
     -Dtests=false \
-    -Duseroot=false
+    -Duseroot=true
 ninja -C build
 
 %post-build

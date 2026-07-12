@@ -1,6 +1,6 @@
 [meta]
 name = bluez
-version = 5.87.1
+version = 5.87.2
 description = "Linux Bluetooth protocol stack (bluetoothd, bluetoothctl, hciconfig)"
 license = GPL-2.0-or-later
 size = 10
@@ -26,6 +26,7 @@ export CFLAGS="-O2 -pipe -march=x86-64-v2"
     --localstatedir=/var \
     --disable-systemd \
     --disable-obex \
+    --disable-manpages \
     --enable-deprecated
 make
 

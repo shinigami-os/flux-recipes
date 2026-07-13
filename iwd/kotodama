@@ -1,0 +1,36 @@
+[meta]
+name = iwd
+version = 3.12
+description = "Wireless daemon for Linux (iNet wireless daemon), with ell bundled internally"
+license = GPL-2.0-or-later AND LGPL-2.1-or-later
+size = 4
+
+[source]
+url = https://mirrors.edge.kernel.org/pub/linux/network/wireless/iwd-3.12.tar.xz
+sha256 = d89a5e45c7180170e19be828f9e944a768c593758094fc57a358d0e7c4cb1a49
+
+[deps]
+build = gcc make pkgconf dbus readline
+runtime = dbus readline
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+# no --enable-external-ell: ell isn't stable enough as a system-wide lib yet,
+# so it stays bundled and statically linked into iwd/iwctl/iwmon instead
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --disable-systemd-service \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

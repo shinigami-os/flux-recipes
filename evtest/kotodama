@@ -10,24 +10,19 @@ url = https://gitlab.freedesktop.org/libevdev/evtest/-/archive/evtest-1.36/evtes
 sha256 = 3b9a66c92e48b0cd13b689530b5729c031bc1bcbfe9d19c258f9245e2f8d2a0f
 
 [deps]
-build = gcc make autoconf automake pkgconf
+build = gcc make
 runtime =
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-autoreconf -fiv
 
 %build
-export CFLAGS="-O2 -pipe -march=x86-64-v2"
-./configure \
-    --prefix=/usr \
-    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
-    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
-make
+${CC:-cc} -O2 -pipe -march=x86-64-v2 -DPACKAGE_VERSION='"1.36"' \
+    -o evtest evtest.c
 
 %post-build
 
 %install
-make DESTDIR="$DESTDIR" install
+install -Dm755 evtest "$DESTDIR/usr/bin/evtest"

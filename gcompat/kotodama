@@ -1,0 +1,48 @@
+[meta]
+name = gcompat
+version = 1.1.0
+description = "glibc compatibility layer, lets some prebuilt glibc binaries run on musl"
+license = NCSA
+size = 1
+
+[source]
+url = https://git.adelielinux.org/adelie/gcompat/-/archive/1.1.0/gcompat-1.1.0.tar.gz
+sha256 = 82e56d2ecda3f11a93efe61001394a6e5db39c91127d0812d7ad5b0bda558010
+
+[deps]
+build = gcc make pkgconf libucontext musl-obstack
+runtime = libucontext musl-obstack
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+make \
+    WITH_LIBUCONTEXT=1 \
+    WITH_OBSTACK=musl-obstack \
+    LINKER_PATH="/lib/ld-musl-x86_64.so.1" \
+    LOADER_NAME="ld-linux-x86-64.so.2"
+
+%post-build
+
+%install
+make \
+    WITH_LIBUCONTEXT=1 \
+    WITH_OBSTACK=musl-obstack \
+    LINKER_PATH="/lib/ld-musl-x86_64.so.1" \
+    LOADER_NAME="ld-linux-x86-64.so.2" \
+    DESTDIR="$DESTDIR" install
+
+# glibc-linked binaries look for their loader at /lib64/ld-linux-x86-64.so.2;
+# point it at the musl-compatible loader gcompat just installed
+install -dm755 "$DESTDIR/lib64"
+ln -sf ../lib/ld-linux-x86-64.so.2 "$DESTDIR/lib64/ld-linux-x86-64.so.2"
+
+# glibc binaries dlopen()/link against these names directly; gcompat's
+# shim library answers for all of them
+for i in libc.so.6 libcrypt.so.1 libm.so.6 libpthread.so.0 libresolv.so.2 librt.so.1 libutil.so.1; do
+    ln -sf libgcompat.so.0 "$DESTDIR/lib/$i"
+done

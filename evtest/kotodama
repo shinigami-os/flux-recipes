@@ -1,0 +1,33 @@
+[meta]
+name = evtest
+version = 1.36
+description = "Input device event monitor and query tool"
+license = GPL-2.0-or-later
+size = 1
+
+[source]
+url = https://gitlab.freedesktop.org/libevdev/evtest/-/archive/evtest-1.36/evtest-evtest-1.36.tar.gz
+sha256 = 3b9a66c92e48b0cd13b689530b5729c031bc1bcbfe9d19c258f9245e2f8d2a0f
+
+[deps]
+build = gcc make autoconf automake pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+autoreconf -fiv
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure \
+    --prefix=/usr \
+    ${FLUX_CROSS_HOST:+--build=$(gcc -dumpmachine)} \
+    ${FLUX_CROSS_HOST:+--host=$FLUX_CROSS_HOST}
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

@@ -41,3 +41,9 @@ cmake --build build
 
 %install
 DESTDIR="$DESTDIR" cmake --install build
+
+%post-install
+# apps (dbus itself, flatpak sandboxes, etc.) need a stable machine-id to open a bus connection
+dbus-uuidgen --ensure=/etc/machine-id
+install -dm755 /var/lib/dbus
+ln -sf /etc/machine-id /var/lib/dbus/machine-id

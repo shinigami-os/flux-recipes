@@ -1,7 +1,7 @@
 [meta]
 name = kira-net
 version = 1.0
-description = "Networking stack: NetworkManager, dhcpcd, wpa_supplicant, libnl plus their runit services"
+description = "Networking stack: NetworkManager, dhcpcd, iwd, libnl plus their runit services"
 license = MIT
 size = 1
 
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = networkmanager dhcpcd wpa_supplicant libnl openssh
+runtime = networkmanager dhcpcd iwd libnl openssh
 
 [build]
 cflags =
@@ -25,6 +25,7 @@ install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/dhcpcd" "$DESTD
 install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
 install -m755 "$FLUX_RECIPE_DIR/files/dhcpcd/run" "$DESTDIR/etc/sv/dhcpcd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/run" "$DESTDIR/etc/sv/sshd/run"
+install -m755 "$FLUX_RECIPE_DIR/files/iwd/run" "$DESTDIR/etc/sv/iwd/run"
 
 %post-install
 grep -q "^dhcpcd:" /etc/passwd || \

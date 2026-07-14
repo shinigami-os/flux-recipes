@@ -1,6 +1,6 @@
 [meta]
 name = linux-pam
-version = 1.7.0.1
+version = 1.7.0
 description = "Linux Pluggable Authentication Modules"
 license = BSD-3-Clause AND GPL-2.0-or-later
 size = 3
@@ -41,7 +41,6 @@ meson setup build \
     --prefix=/usr \
     --sysconfdir=/etc \
     --buildtype=release \
-    --default-library=both \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
     -Ddocs=disabled \
     -Dexamples=false \

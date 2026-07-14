@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3.2
+version = 0.10.3.3
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5
@@ -11,7 +11,7 @@ sha256 = ee5cb70e0add4ca9c9fe57e47581ab0002d44c07743fb5492469f3b570db640b
 
 [deps]
 build = gcc linux-pam
-runtime = linux-pam
+runtime = linux-pam elogind
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -68,7 +68,10 @@ for vt in 2 3 4 5 6; do
     install -Dm755 "$FLUX_RECIPE_DIR/files/greetd-tty$vt/run" "$DESTDIR/etc/sv/greetd-tty$vt/run"
 done
 install -dm755 "$DESTDIR/etc/pam.d"
-printf 'auth\trequired\tpam_unix.so\naccount\trequired\tpam_unix.so\nsession\trequired\tpam_unix.so\n' \
+# session must register with elogind, or polkit never sees this session as
+# active and denies every action gated on allow_active (network control,
+# bluetooth, etc.) even though the defaults say to allow it
+printf 'auth\trequired\tpam_unix.so\naccount\trequired\tpam_unix.so\nsession\trequired\tpam_unix.so\nsession\toptional\tpam_elogind.so\n' \
     > "$DESTDIR/etc/pam.d/greetd"
 
 %post-install

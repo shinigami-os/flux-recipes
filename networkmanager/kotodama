@@ -1,6 +1,6 @@
 [meta]
 name = networkmanager
-version = 1.50.0
+version = 1.50.0.1
 description = "Network connection manager"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 20
@@ -10,8 +10,8 @@ url = https://download.gnome.org/sources/NetworkManager/1.50/NetworkManager-1.50
 sha256 = fc03e7388a656cebc454c5d89481626122b1975d7c26babc64dc7e488faa66e3
 
 [deps]
-build = gcc meson ninja pkgconf glib dbus libnl libndp
-runtime = glib dbus libnl
+build = gcc meson ninja pkgconf glib dbus libnl libndp bluez polkit
+runtime = glib dbus libnl iwd bluez polkit
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -58,11 +58,13 @@ meson setup build \
     -Dlibaudit=no \
     -Dppp=false \
     -Dlibpsl=false \
-    -Dpolkit=false \
+    -Dpolkit=true \
     -Ddhcpcd=no \
     -Ddhcpcanon=no \
     -Dwifi=true \
-    -Diwd=false \
+    -Diwd=true \
+    -Dconfig_wifi_backend_default=iwd \
+    -Dbluez5_dun=true \
     -Dteamdctl=false \
     -Dmodem_manager=false \
     -Dovs=false \
@@ -85,3 +87,9 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+install -Dm644 "$FLUX_RECIPE_DIR/files/NetworkManager.conf" "$DESTDIR/etc/NetworkManager/NetworkManager.conf"
+install -dm755 "$DESTDIR/etc/sv/networkmanager"
+install -Dm755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
+
+%post-install
+sv up /etc/sv/networkmanager 2>/dev/null || true

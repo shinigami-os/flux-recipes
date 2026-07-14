@@ -1,0 +1,8 @@
+#!/bin/sh
+export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
+i=0
+while [ ! -S /var/run/dbus/system_bus_socket ] && [ $i -lt 15 ]; do
+    sleep 1
+    i=$((i + 1))
+done
+exec /usr/libexec/bluetooth/bluetoothd

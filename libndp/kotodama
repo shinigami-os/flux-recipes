@@ -1,6 +1,6 @@
 [meta]
 name = libndp
-version = 1.9
+version = 1.9.1
 description = "Library for IPv6 Neighbor Discovery Protocol"
 license = LGPL-2.1-or-later
 size = 1

@@ -1,6 +1,6 @@
 [meta]
 name = networkmanager
-version = 1.50.0.1
+version = 1.50.0.2
 description = "Network connection manager"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 20
@@ -17,6 +17,8 @@ runtime = glib dbus libnl iwd bluez polkit
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# bash lives at /usr/bin/bash here, not /bin/bash (no usrmerge)
+grep -rl '^#!/bin/bash' tools/ | while read -r f; do sed -i '1s|^#!/bin/bash|#!/usr/bin/bash|' "$f"; done
 sed -i "s/xsltproc = find_program('xsltproc')/xsltproc = find_program('xsltproc', required: false)/" meson.build
 sed -i "s/value: 'nss', description: 'Cryptography/value: 'null', description: 'Cryptography/" meson_options.txt
 sed -i '1s|^|#ifndef NETLINK_GET_STRICT_CHK\n#define NETLINK_GET_STRICT_CHK 12\n#endif\n|' src/libnm-platform/nm-netlink.c

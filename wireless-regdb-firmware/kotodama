@@ -1,0 +1,31 @@
+[meta]
+name = wireless-regdb-firmware
+version = master-2026-05-30
+description = "Linux wireless regulatory database (regulatory.db), signed by upstream"
+license = ISC
+size = 1
+
+[source]
+url = https://git.kernel.org/pub/scm/linux/kernel/git/wens/wireless-regdb.git/snapshot/wireless-regdb-master-2026-05-30.tar.gz
+sha256 = 6786ad0870628ef2d6c23d40dc674dde8e42ed92c92eec86f2fbea4b9a07b31b
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# regulatory.db/.p7s ship pre-built and pre-signed by upstream's own key,
+# the one CONFIG_CFG80211_USE_KERNEL_REGDB_KEYS already trusts - regenerating
+# either file here would produce a self-signed pair that fails verification
+install -dm755 "$DESTDIR/lib/firmware"
+install -Dm644 regulatory.db "$DESTDIR/lib/firmware/regulatory.db"
+install -Dm644 regulatory.db.p7s "$DESTDIR/lib/firmware/regulatory.db.p7s"

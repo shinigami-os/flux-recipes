@@ -1,4 +1,9 @@
 #!/bin/sh
+# debug: trace every step to a fixed, always-writable location - do not
+# rely on XDG_RUNTIME_DIR for this log since a failure to set that dir up
+# is one of the things we're trying to catch
+exec > "/tmp/kira-start-sleex-debug-$(id -u).log" 2>&1
+set -x
 set -e
 
 export XDG_CURRENT_DESKTOP=Hyprland:sleex
@@ -36,4 +41,4 @@ if [ ! -S /var/run/dbus/system_bus_socket ]; then
     echo "kira-start-sleex: system dbus socket never appeared after 15s, continuing anyway" >&2
 fi
 
-exec dbus-run-session -- /usr/bin/sleex > "$XDG_RUNTIME_DIR/sleex-session.log" 2>&1
+exec dbus-run-session -- /usr/bin/sleex

@@ -1,6 +1,6 @@
 [meta]
 name = eudev
-version = 3.2.14.2
+version = 3.2.14.3
 description = "Standalone dynamic device management daemon (udev fork)"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 2
@@ -24,6 +24,11 @@ export ac_cv_func_realloc_0_nonnull=yes
 fi
 
 %build
+# eudev's configure only ever auto-detects $PKG_CONFIG inside blkid's own
+# feature block; since --disable-blkid skips that block entirely, every
+# later pkg-config-gated check (kmod included) silently stays disabled
+# unless PKG_CONFIG is exported explicitly up front
+export PKG_CONFIG="${PKG_CONFIG:-pkg-config}"
 ./configure \
     --host="${FLUX_CROSS_HOST:-}" \
     --prefix=/usr \

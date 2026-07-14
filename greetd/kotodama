@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3.1
+version = 0.10.3.2
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5
@@ -86,4 +86,12 @@ if [ -d /etc/sv/getty-tty1 ]; then
 fi
 for vt in 2 3 4 5 6; do
     sv up /etc/sv/greetd-tty$vt 2>/dev/null || true
+done
+# greetd re-execs its own binary via /proc/self/exe for each login attempt;
+# an already-running instance left over from before this (re)install still
+# points at the old, now-deleted inode, so every login would panic with
+# "unable to exec ENOENT" until it's kicked to pick up the fresh one
+sv kill /etc/sv/greetd 2>/dev/null || true
+for vt in 2 3 4 5 6; do
+    sv kill /etc/sv/greetd-tty$vt 2>/dev/null || true
 done

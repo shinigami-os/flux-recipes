@@ -16,6 +16,9 @@ export XDG_RUNTIME_DIR=/run/user/$(id -u)
 export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 export PATH="/var/lib/flatpak/exports/bin:$PATH"
 
+# glib 2.82+ defaults to /run/dbus/... but the real socket is /var/run/dbus/...
+export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
+
 mkdir -p "$XDG_RUNTIME_DIR" || { echo "kira-start-sleex: failed to create XDG_RUNTIME_DIR" >&2; exit 1; }
 chmod 700 "$XDG_RUNTIME_DIR" || { echo "kira-start-sleex: failed to chmod XDG_RUNTIME_DIR" >&2; exit 1; }
 

@@ -1,0 +1,53 @@
+[meta]
+name = libgudev
+version = 238
+description = "GObject bindings for libudev, required by upower's Linux backend"
+license = LGPL-2.1-or-later
+size = 1
+
+[source]
+url = https://gitlab.gnome.org/GNOME/libgudev/-/archive/238/libgudev-238.tar.gz
+sha256 = 443c702c6339775f413f45d13309b2c641a94530bb27981142a2605eedb0aafd
+
+[deps]
+build = gcc meson ninja pkgconf glib eudev
+runtime = glib eudev
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkg-config']
+EOF
+fi
+
+%build
+export PKG_CONFIG=pkg-config
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dtests=disabled \
+    -Dintrospection=disabled \
+    -Dvapi=disabled \
+    -Dgtk_doc=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install

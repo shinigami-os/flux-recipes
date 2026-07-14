@@ -1,0 +1,65 @@
+[meta]
+name = upower
+version = 1.91.3
+description = "Battery and power device monitoring D-Bus service, used by Sleex for battery status"
+license = GPL-2.0-or-later AND LGPL-2.1-or-later
+size = 2
+
+[source]
+url = https://gitlab.freedesktop.org/upower/upower/-/archive/v1.91.3/upower-v1.91.3.tar.gz
+sha256 = 6cef641ce39f13efc09e12afbb889128d4e9b3596a1faeaaa1b619fdf72403a9
+
+[deps]
+build = gcc meson ninja pkgconf glib dbus libgudev polkit
+runtime = glib dbus libgudev polkit
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkg-config']
+EOF
+fi
+
+%build
+export PKG_CONFIG=pkg-config
+meson setup build \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dos_backend=linux \
+    -Dman=false \
+    -Dgtk-doc=false \
+    -Dintrospection=disabled \
+    -Didevice=disabled \
+    -Dpolkit=enabled \
+    -Dsystemdsystemunitdir=no \
+    -Dinstalled_tests=false \
+    -Dzshcompletiondir=no
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install
+install -dm755 "$DESTDIR/etc/sv/upowerd"
+install -Dm755 "$FLUX_RECIPE_DIR/files/upowerd/run" "$DESTDIR/etc/sv/upowerd/run"
+
+%post-install
+sv up /etc/sv/upowerd 2>/dev/null || true

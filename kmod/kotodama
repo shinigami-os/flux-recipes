@@ -1,0 +1,37 @@
+[meta]
+name = kmod
+version = 34.2
+description = "libkmod, the kernel module library used by eudev's builtin module loader"
+license = LGPL-2.1-or-later
+size = 2
+
+[source]
+url = https://mirrors.edge.kernel.org/pub/linux/utils/kernel/kmod/kmod-34.2.tar.xz
+sha256 = 5a5d5073070cc7e0c7a7a3c6ec2a0e1780850c8b47b3e3892226b93ffcb9cb54
+
+[deps]
+build = gcc make pkgconf
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+# busybox already provides insmod/modprobe/rmmod/lsmod/depmod on Kira; this
+# package exists purely to give eudev's builtin loader a real libkmod to
+# link against, so skip kmod's own CLI tools to avoid colliding with those
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --disable-tools \
+    --disable-manpages
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-sleex
-version = 1.0.3
+version = 1.0.4
 description = "Sleex desktop environment meta-package (Hyprland + quickshell)"
 license = MIT
 size = 1

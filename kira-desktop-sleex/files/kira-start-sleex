@@ -36,4 +36,4 @@ if [ ! -S /var/run/dbus/system_bus_socket ]; then
     echo "kira-start-sleex: system dbus socket never appeared after 15s, continuing anyway" >&2
 fi
 
-exec dbus-run-session -- /usr/bin/sleex
+exec dbus-run-session -- /usr/bin/sleex > "$XDG_RUNTIME_DIR/sleex-session.log" 2>&1

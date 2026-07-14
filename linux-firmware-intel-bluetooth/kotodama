@@ -1,0 +1,38 @@
+[meta]
+name = linux-firmware-intel-bluetooth
+version = 2026-07-02
+description = "Intel Bluetooth (ibt) firmware blobs"
+license = Intel-ibt-firmware
+size = 5
+
+[source]
+url = git+https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/linux-firmware.git#iwlwifi-fw-2026-07-02
+sha256 = 2ab4ce216003ee2c2396c69e19455e4379b0e1f0
+
+[deps]
+build = git
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/lib/firmware/intel"
+cp intel/ibt-*.sfi intel/ibt-*.ddc "$DESTDIR/lib/firmware/intel/"
+install -dm755 "$DESTDIR/usr/share/licenses/linux-firmware-intel-bluetooth"
+cp LICENSES/LICENCE.ibt_firmware "$DESTDIR/usr/share/licenses/linux-firmware-intel-bluetooth/"
+
+%post-install
+echo "[linux-firmware-intel-bluetooth] Firmware installed. On a running system, reload the driver:"
+echo "  modprobe -r btintel && modprobe btintel"
+echo "Or reboot."
+echo ""
+echo "Note: this ships every Intel BT firmware variant currently published"
+echo "upstream. As of this build, intel/ibt-0040-4150.sfi is NOT among them -"
+echo "that specific chip revision's firmware hasn't been released publicly."

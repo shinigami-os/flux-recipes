@@ -1,0 +1,8 @@
+#!/bin/sh
+sleep 3
+# /var/run isn't wiped at boot like /run is (until kira-base symlinks the
+# two), so a stale socket from a previous boot can sit here and make early
+# clients get "Connection refused" for the few seconds before dbus-daemon
+# would otherwise get around to replacing it
+rm -f /run/dbus/system_bus_socket /var/run/dbus/system_bus_socket
+exec dbus-daemon --system --nofork --nopidfile

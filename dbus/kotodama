@@ -1,6 +1,6 @@
 [meta]
 name = dbus
-version = 1.16.0
+version = 1.16.0.1
 description = "D-Bus message bus system"
 license = GPL-2.0-or-later AND AFL-2.1
 size = 3
@@ -41,9 +41,12 @@ cmake --build build
 
 %install
 DESTDIR="$DESTDIR" cmake --install build
+install -dm755 "$DESTDIR/etc/sv/dbus"
+install -Dm755 "$FLUX_RECIPE_DIR/files/dbus/run" "$DESTDIR/etc/sv/dbus/run"
 
 %post-install
 # apps (dbus itself, flatpak sandboxes, etc.) need a stable machine-id to open a bus connection
 dbus-uuidgen --ensure=/etc/machine-id
 install -dm755 /var/lib/dbus
 ln -sf /etc/machine-id /var/lib/dbus/machine-id
+sv up /etc/sv/dbus 2>/dev/null || true

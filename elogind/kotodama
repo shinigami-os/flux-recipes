@@ -1,6 +1,6 @@
 [meta]
 name = elogind
-version = 252.39
+version = 252.39.1
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -94,3 +94,8 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+install -dm755 "$DESTDIR/etc/sv/elogind"
+install -Dm755 "$FLUX_RECIPE_DIR/files/elogind/run" "$DESTDIR/etc/sv/elogind/run"
+
+%post-install
+sv up /etc/sv/elogind 2>/dev/null || true

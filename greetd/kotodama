@@ -38,6 +38,11 @@ if [ -n "$FLUX_CROSS_HOST" ]; then
     export RUSTFLAGS="-C target-feature=-crt-static"
     cargo build --release --locked --target x86_64-unknown-linux-musl
 else
+    # musl targets default to fully static linking, but pam-sys just does a
+    # plain "cargo:rustc-link-lib=pam" with no dylib hint, and upstream PAM
+    # only ships shared libs (no libpam.a) - disable crt-static so it links
+    # against the .so instead of demanding a static lib that doesn't exist
+    export RUSTFLAGS="-C target-feature=-crt-static"
     cargo build --release --locked
 fi
 

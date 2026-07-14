@@ -1,6 +1,6 @@
 [meta]
 name = polkit
-version = 127.1
+version = 127.2
 description = "Framework for controlling system-wide privileges"
 license = LGPL-2.0-or-later
 size = 2

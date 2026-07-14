@@ -1,4 +1,8 @@
 #!/bin/sh
+# glib 2.82+ defaults to /run/dbus/... with no fallback, but dbus's own
+# system.conf still binds the real socket at /var/run/dbus/... - set this
+# explicitly until kira-base symlinks /var/run -> /run (next reboot)
+export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
 i=0
 while [ ! -S /var/run/dbus/system_bus_socket ] && [ $i -lt 15 ]; do
     sleep 1

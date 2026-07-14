@@ -1,6 +1,6 @@
 [meta]
 name = elogind
-version = 252.39.4
+version = 252.39.5
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3

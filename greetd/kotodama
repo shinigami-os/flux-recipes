@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3
+version = 0.10.3.1
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5
@@ -55,6 +55,13 @@ install -dm755 "$DESTDIR/etc/greetd"
 install -Dm644 "$FLUX_RECIPE_DIR/files/config.toml" "$DESTDIR/etc/greetd/config.toml"
 install -dm755 "$DESTDIR/etc/sv/greetd"
 install -Dm755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
+# tty1 runs the DE (above); tty2-6 are plain authenticated shells, each its
+# own greetd instance (own config, own control socket) so none of them ever
+# fight over a shared vt or shared state
+for vt in 2 3 4 5 6; do
+    install -Dm644 "$FLUX_RECIPE_DIR/files/config-tty$vt.toml" "$DESTDIR/etc/greetd/config-tty$vt.toml"
+    install -Dm755 "$FLUX_RECIPE_DIR/files/greetd-tty$vt/run" "$DESTDIR/etc/sv/greetd-tty$vt/run"
+done
 install -dm755 "$DESTDIR/etc/pam.d"
 printf 'auth\trequired\tpam_unix.so\naccount\trequired\tpam_unix.so\nsession\trequired\tpam_unix.so\n' \
     > "$DESTDIR/etc/pam.d/greetd"
@@ -65,7 +72,13 @@ grep -q '^greetd:' /etc/passwd || adduser -S -G greetd -s /bin/false -H greetd
 mkdir -p /home/greetd
 chown greetd:greetd /home/greetd
 chmod 755 /home/greetd
+# getty-tty1 would otherwise fight greetd for tty1 (same vt, same keyboard
+# input) - keep it disabled every time greetd is (re)installed, since a
+# manual "rescue shell" edit to that service can silently re-enable it
 if [ -d /etc/sv/getty-tty1 ]; then
     touch /etc/sv/getty-tty1/down
     sv down /etc/sv/getty-tty1 2>/dev/null || true
 fi
+for vt in 2 3 4 5 6; do
+    sv up /etc/sv/greetd-tty$vt 2>/dev/null || true
+done

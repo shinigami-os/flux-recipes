@@ -1,6 +1,6 @@
 [meta]
 name = elogind
-version = 252.39.3
+version = 252.39.4
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -17,6 +17,10 @@ runtime = glib linux-pam eudev libcap dbus
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# needed by meson.build for code generation, not available as a system
+# package here - bootstrap pip (bundled offline in cpython) then install it
+python3 -m ensurepip --default-pip >/dev/null 2>&1 || true
+python3 -m pip install --quiet jinja2
 # busybox's realpath has no --relative-to (a GNU coreutils extension);
 # meson.build only uses this to embed a cosmetic path string, so swap the
 # whole call (fixed at lines 35-38 of this pinned tarball) for a portable

@@ -1,6 +1,6 @@
 [meta]
 name = eudev
-version = 3.2.14.1
+version = 3.2.14.2
 description = "Standalone dynamic device management daemon (udev fork)"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 2

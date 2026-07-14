@@ -1,6 +1,6 @@
 [meta]
 name = libndp
-version = 1.9.1
+version = 1.9.2
 description = "Library for IPv6 Neighbor Discovery Protocol"
 license = LGPL-2.1-or-later
 size = 1
@@ -17,20 +17,33 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-autoreconf -fiv
 
 %build
-ac_cv_func_malloc_0_nonnull=yes \
-ac_cv_func_realloc_0_nonnull=yes \
-./configure \
-    --host="${FLUX_CROSS_HOST:-}" \
-    --prefix=/usr \
-    --disable-static \
-    --disable-man-pages
-make -C libndp
+# no configure script ships in this tarball (a raw git snapshot) and
+# autoconf/automake aren't packaged here, so build the one source file
+# directly instead of bootstrapping autotools for it - libtool version-info
+# 3:0:3 in configure.ac means SONAME libndp.so.0, full version 0.3.0
+export CC="${CC:-gcc}"
+$CC -O2 -pipe -march=x86-64-v2 -fPIC -D_GNU_SOURCE -Iinclude -c libndp/libndp.c -o libndp.o
+$CC -shared -Wl,-soname,libndp.so.0 -o libndp.so.0.3.0 libndp.o
 
 %post-build
 
 %install
-make DESTDIR="$DESTDIR" install-libLTLIBRARIES install-pkgconfigDATA
-find . -name "ndp.h" -exec install -Dm644 {} "$DESTDIR/usr/include/ndp.h" \;
+install -Dm755 libndp.so.0.3.0 "$DESTDIR/usr/lib/libndp.so.0.3.0"
+ln -sf libndp.so.0.3.0 "$DESTDIR/usr/lib/libndp.so.0"
+ln -sf libndp.so.0.3.0 "$DESTDIR/usr/lib/libndp.so"
+install -Dm644 include/ndp.h "$DESTDIR/usr/include/ndp.h"
+install -dm755 "$DESTDIR/usr/lib/pkgconfig"
+cat > "$DESTDIR/usr/lib/pkgconfig/libndp.pc" << EOF
+prefix=/usr
+exec_prefix=\${prefix}
+libdir=\${exec_prefix}/lib
+includedir=\${prefix}/include
+
+Name: libndp
+Description: Neighbour discovery library.
+Version: 1.9
+Libs: -L\${libdir} -lndp
+Cflags: -I\${includedir}
+EOF

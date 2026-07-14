@@ -1,6 +1,6 @@
 [meta]
 name = elogind
-version = 252.39.2
+version = 252.39.3
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -18,24 +18,13 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 # busybox's realpath has no --relative-to (a GNU coreutils extension);
-# meson.build only uses this to embed a cosmetic path string, so swap it
-# for a portable python3 equivalent (already a build dep)
-python3 -c "
-with open('meson.build') as f:
-    content = f.read()
-old = '''relative_source_path = run_command('realpath',
-                                   '--relative-to=@0@'.format(project_build_root),
-                                   project_source_root,
-                                   check : true).stdout().strip()'''
-new = '''relative_source_path = run_command('python3', '-c',
-                                   'import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))',
-                                   project_source_root, project_build_root,
-                                   check : true).stdout().strip()'''
-assert old in content
-content = content.replace(old, new)
-with open('meson.build', 'w') as f:
-    f.write(content)
-"
+# meson.build only uses this to embed a cosmetic path string, so swap the
+# whole call (fixed at lines 35-38 of this pinned tarball) for a portable
+# python3 equivalent (already a build dep) via a line-range sed replace,
+# since kotodama hook bodies strip leading whitespace and break indented
+# multi-line python pasted directly into a %pre-build block
+grep -q "run_command('realpath'," meson.build
+sed -i "35,38c relative_source_path = run_command('python3', '-c', 'import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))', project_source_root, project_build_root, check : true).stdout().strip()" meson.build
 # musl does not provide transitive includes that glibc does
 grep -rl 'sigfillset\|pthread_sigmask\|SIG_BLOCK\|SIG_SETMASK\|sigprocmask\|sigaction\|sigemptyset' src/ | grep '\.c$\|\.h$' | while read f; do
     grep -q '#include <signal.h>' "$f" || sed -i '1s|^|#include <signal.h>\n|' "$f"

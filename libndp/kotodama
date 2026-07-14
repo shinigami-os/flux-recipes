@@ -1,6 +1,6 @@
 [meta]
 name = libndp
-version = 1.9.2
+version = 1.9.3
 description = "Library for IPv6 Neighbor Discovery Protocol"
 license = LGPL-2.1-or-later
 size = 1
@@ -17,6 +17,9 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# gcc 14 errors (not just warns) on passing sockaddr_in6* where sendto()
+# expects const struct sockaddr* - add the explicit cast upstream never did
+sed -i 's/sendto(sockfd, buf, buflen, flags, &sin6, sizeof(sin6))/sendto(sockfd, buf, buflen, flags, (struct sockaddr *)\&sin6, sizeof(sin6))/' libndp/libndp.c
 
 %build
 # no configure script ships in this tarball (a raw git snapshot) and

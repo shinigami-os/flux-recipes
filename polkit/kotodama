@@ -1,6 +1,6 @@
 [meta]
 name = polkit
-version = 127
+version = 127.1
 description = "Framework for controlling system-wide privileges"
 license = LGPL-2.0-or-later
 size = 2
@@ -52,3 +52,8 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+install -dm755 "$DESTDIR/etc/sv/polkitd"
+install -Dm755 "$FLUX_RECIPE_DIR/files/polkitd/run" "$DESTDIR/etc/sv/polkitd/run"
+
+%post-install
+sv up /etc/sv/polkitd 2>/dev/null || true

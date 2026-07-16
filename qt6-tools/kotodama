@@ -1,16 +1,16 @@
 [meta]
-name = lxqt-sudo
-version = 2.1.0.2
-description = "LXQt graphical interface for sudo/su"
-license = LGPL-2.1-or-later
-size = 1
+name = qt6-tools
+version = 6.11.1
+description = "Qt6 developer tools (lupdate, lrelease, Qt6LinguistTools cmake package)"
+license = GPL-3.0-only OR LGPL-3.0-only
+size = 30
 
 [source]
-url = https://github.com/lxqt/lxqt-sudo/releases/download/2.1.0/lxqt-sudo-2.1.0.tar.xz
-sha256 = 7a3abcf4153b699c4990b1ac89d2bc122fcebf6d5ae061e0c129a4bad922739d
+url = https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qttools-everywhere-src-6.11.1.tar.xz
+sha256 = 8e61835a679c93fa9c6065b142353c2071ba68e297898937c32a03777fcaf50d
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base qt6-tools
+build = gcc cmake ninja pkgconf qt6-base qt6-declarative
 runtime = qt6-base
 
 [build]
@@ -35,13 +35,20 @@ fi
 %build
 rm -rf build
 cmake -S . -B build -G Ninja \
-    -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_CXX_FLAGS=-U_GLIBCXX_ASSERTIONS \
     ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=toolchain.cmake} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH=/usr} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH_CMAKE_DIR=/usr/lib/x86_64-linux-gnu/cmake} \
-    -DQT_NO_PACKAGE_VERSION_CHECK=TRUE
+    ${FLUX_CROSS_HOST:+-DQT_NO_PACKAGE_VERSION_CHECK=TRUE} \
+    -DFEATURE_assistant=OFF \
+    -DFEATURE_designer=OFF \
+    -DFEATURE_pixeltool=OFF \
+    -DFEATURE_distancefieldgenerator=OFF \
+    -DQT_BUILD_TESTS=OFF \
+    -DQT_BUILD_EXAMPLES=OFF
 cmake --build build
 
 %post-build

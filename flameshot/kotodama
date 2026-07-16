@@ -1,6 +1,6 @@
 [meta]
 name = flameshot
-version = 13.3.0.1
+version = 13.3.0.2
 description = "Powerful screenshot tool with annotation support"
 license = GPL-3.0-or-later
 size = 5
@@ -10,7 +10,7 @@ url = https://github.com/flameshot-org/flameshot/archive/refs/tags/v13.3.0.tar.g
 sha256 = bd1666313c875400e9588b47eb3fd2f4d0828460b3705a215b97746ea654c1b4
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base qt6-svg qt6-wayland
+build = gcc cmake ninja pkgconf qt6-base qt6-tools qt6-svg qt6-wayland
 runtime = qt6-base qt6-svg qt6-wayland grim
 
 [build]

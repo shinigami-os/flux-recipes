@@ -1,6 +1,6 @@
 [meta]
 name = libfm-qt
-version = 2.1.0.1
+version = 2.1.0.2
 description = "Qt port of libfm file management library"
 license = LGPL-2.1-or-later
 size = 3
@@ -10,7 +10,7 @@ url = https://github.com/lxqt/libfm-qt/releases/download/2.1.0/libfm-qt-2.1.0.ta
 sha256 = bfa03ee1d8ae9e50f33b31d50a5cb0ffbca5e6d6f5dd3a0df04c8300fc1a29d7
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base glib libexif libmenu-cache lxqt2-build-tools lxqt-menu-data
+build = gcc cmake ninja pkgconf qt6-base qt6-tools glib libexif libmenu-cache lxqt2-build-tools lxqt-menu-data
 runtime = qt6-base glib libexif libmenu-cache
 
 [build]

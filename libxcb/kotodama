@@ -10,8 +10,8 @@ url = https://xorg.freedesktop.org/releases/individual/xcb/libxcb-1.17.0.tar.xz
 sha256 = 599ebf9996710fea71622e6e184f3a8ad5b43d0e5fa8c4e407123c88a59a6d55
 
 [deps]
-build = gcc make pkgconf util-macros python3 xcb-proto libXau
-runtime = libXau
+build = gcc make pkgconf util-macros python3 xcb-proto libxau
+runtime = libxau
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

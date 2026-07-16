@@ -1,0 +1,27 @@
+[meta]
+name = libxtst
+version = 1.2.5
+description = "X11 Test extension client library (XTest, used for synthetic input injection)"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/archive/individual/lib/libXtst-1.2.5.tar.gz
+sha256 = 244ba6e1c5ffa44f1ba251affdfa984d55d99c94bb925a342657e5e7aaf6d39c
+
+[deps]
+build = gcc make pkgconf xorgproto libx11 libxext libxi
+runtime = libx11 libxext libxi
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --disable-static
+make
+
+%install
+make DESTDIR="$DESTDIR" install

@@ -1,0 +1,43 @@
+[meta]
+name = keepassxc
+version = 2.7.12
+description = "Community fork of KeePass, cross-platform password manager"
+license = GPL-2.0-only OR GPL-3.0-only
+size = 20
+
+[source]
+url = https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/keepassxc-2.7.12-src.tar.xz
+sha256 = be34eeb297881adea4f894c7c6e4a1835bd7927f8043ddea495040df4792a7de
+
+[deps]
+build = gcc cmake ninja pkgconf qt6-base libgcrypt zlib libsodium libxtst
+runtime = qt6-base libgcrypt zlib libsodium libxtst
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+export CXXFLAGS="-O2 -pipe -march=x86-64-v2"
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DWITH_TESTS=OFF \
+    -DWITH_XC_UPDATECHECK=OFF \
+    -DWITH_XC_AUTOTYPE=ON \
+    -DWITH_XC_YUBIKEY=OFF \
+    -DWITH_XC_KEESHARE=OFF \
+    -DWITH_XC_BROWSER=ON \
+    -DWITH_XC_BROWSER_PASSKEYS=ON \
+    -DWITH_XC_SSHAGENT=ON \
+    -DWITH_XC_FDOSECRETS=ON
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build
+
+%post-install

@@ -1,0 +1,28 @@
+[meta]
+name = libxi
+version = 1.8.3
+description = "X11 Input extension client library (XInput2)"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/archive/individual/lib/libXi-1.8.3.tar.gz
+sha256 = 6648c44127e4585f4e7842c0802d265008fa6f9741df0ea6ee7934a5267adf63
+
+[deps]
+build = gcc make pkgconf xorgproto libx11 libxext libxfixes
+runtime = libx11 libxext
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --disable-static \
+    --enable-malloc0returnsnull=no
+make
+
+%install
+make DESTDIR="$DESTDIR" install

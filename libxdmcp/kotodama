@@ -1,0 +1,27 @@
+[meta]
+name = libxdmcp
+version = 1.1.5
+description = "X Display Manager Control Protocol library"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/archive/individual/lib/libXdmcp-1.1.5.tar.gz
+sha256 = 31a7abc4f129dcf6f27ae912c3eedcb94d25ad2e8f317f69df6eda0bc4e4f2f3
+
+[deps]
+build = gcc make pkgconf xorgproto
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --disable-static
+make
+
+%install
+make DESTDIR="$DESTDIR" install

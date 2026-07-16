@@ -1,0 +1,27 @@
+[meta]
+name = libxfixes
+version = 6.0.2
+description = "X11 Fixes extension client library"
+license = MIT
+size = 1
+
+[source]
+url = https://xorg.freedesktop.org/archive/individual/lib/libXfixes-6.0.2.tar.gz
+sha256 = 041331b8e6e36038b3bf836785b6b175ec8515f964c9e4e3316b3bfed0f53ac7
+
+[deps]
+build = gcc make pkgconf xorgproto libx11
+runtime = libx11
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%build
+./configure \
+    --host="${FLUX_CROSS_HOST:-}" \
+    --prefix=/usr \
+    --disable-static
+make
+
+%install
+make DESTDIR="$DESTDIR" install

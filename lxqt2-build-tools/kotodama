@@ -1,6 +1,6 @@
 [meta]
 name = lxqt2-build-tools
-version = 2.1.0
+version = 2.1.0.1
 description = "LXQt CMake build tools and modules"
 license = BSD-2-Clause
 size = 1
@@ -20,7 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %build
 rm -rf build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \

@@ -1,6 +1,6 @@
 [meta]
 name = libfm-qt
-version = 2.1.0
+version = 2.1.0.1
 description = "Qt port of libfm file management library"
 license = LGPL-2.1-or-later
 size = 3
@@ -53,7 +53,7 @@ fi
 
 %build
 rm -rf build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \

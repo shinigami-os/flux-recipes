@@ -1,6 +1,6 @@
 [meta]
 name = pcmanfm-qt
-version = 2.1.0
+version = 2.1.0.1
 description = "Qt port of PCManFM file manager"
 license = GPL-2.0-or-later
 size = 2
@@ -47,7 +47,7 @@ fi
 
 %build
 rm -rf build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \

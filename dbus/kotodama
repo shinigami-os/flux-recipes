@@ -1,6 +1,6 @@
 [meta]
 name = dbus
-version = 1.16.0.2
+version = 1.16.0.3
 description = "D-Bus message bus system"
 license = GPL-2.0-or-later AND AFL-2.1
 size = 3
@@ -19,7 +19,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DCMAKE_BUILD_TYPE=Release \

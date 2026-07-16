@@ -1,6 +1,6 @@
 [meta]
 name = layer-shell-qt
-version = 6.3.4.1
+version = 6.3.4.2
 description = "Qt component to allow applications to make use of the Wayland wlr-layer-shell protocol"
 license = LGPL-2.1-or-later
 size = 1
@@ -41,7 +41,7 @@ fi
 
 %build
 rm -rf build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \

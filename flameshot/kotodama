@@ -1,6 +1,6 @@
 [meta]
 name = flameshot
-version = 13.3.0
+version = 13.3.0.1
 description = "Powerful screenshot tool with annotation support"
 license = GPL-3.0-or-later
 size = 5
@@ -19,7 +19,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DUSE_WAYLAND_CLIPBOARD=false \

@@ -1,6 +1,6 @@
 [meta]
 name = ecm
-version = 6.26.0
+version = 6.26.0.1
 description = "KDE Extra CMake Modules"
 license = BSD-2-Clause
 size = 2
@@ -20,7 +20,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %build
 rm -rf build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \

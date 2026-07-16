@@ -1,6 +1,6 @@
 [meta]
 name = json-c
-version = 0.17
+version = 0.17.1
 description = "JSON implementation in C"
 license = MIT
 size = 1
@@ -19,7 +19,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=ON \

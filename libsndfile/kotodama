@@ -1,6 +1,6 @@
 [meta]
 name = libsndfile
-version = 1.2.2
+version = 1.2.2.1
 description = "Library for reading/writing audio files"
 license = LGPL-2.1-or-later
 size = 2
@@ -34,7 +34,7 @@ fi
 
 %build
 rm -rf build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \

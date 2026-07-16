@@ -1,6 +1,6 @@
 [meta]
 name = qt6-base
-version = 6.11.1
+version = 6.11.1.1
 description = "Qt6 base framework"
 license = GPL-3.0-only OR LGPL-3.0-only
 size = 120
@@ -48,7 +48,7 @@ fi
 
 %build
 rm -rf build
-cmake -S . -B build \
+cmake -S . -B build -G Ninja \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \

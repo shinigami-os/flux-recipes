@@ -1,6 +1,6 @@
 [meta]
 name = upower
-version = 1.91.3.1
+version = 1.91.3.2
 description = "Battery and power device monitoring D-Bus service, used by Sleex for battery status"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 2
@@ -60,6 +60,7 @@ ninja -C build
 DESTDIR="$DESTDIR" ninja -C build install
 install -dm755 "$DESTDIR/etc/sv/upowerd"
 install -Dm755 "$FLUX_RECIPE_DIR/files/upowerd/run" "$DESTDIR/etc/sv/upowerd/run"
+install -Dm755 "$FLUX_RECIPE_DIR/files/upowerd/log/run" "$DESTDIR/etc/sv/upowerd/log/run"
 
 %post-install
 sv up /etc/sv/upowerd 2>/dev/null || true

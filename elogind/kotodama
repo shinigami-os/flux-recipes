@@ -1,6 +1,6 @@
 [meta]
 name = elogind
-version = 252.39.5
+version = 252.39.6
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -108,6 +108,10 @@ ninja -C build
 DESTDIR="$DESTDIR" ninja -C build install
 install -dm755 "$DESTDIR/etc/sv/elogind"
 install -Dm755 "$FLUX_RECIPE_DIR/files/elogind/run" "$DESTDIR/etc/sv/elogind/run"
+# without this, elogind's own startup banner (device/seat enumeration)
+# inherits whatever console fd runsvdir started with and prints straight
+# to the physical screen, regardless of which VT is actually focused
+install -Dm755 "$FLUX_RECIPE_DIR/files/elogind/log/run" "$DESTDIR/etc/sv/elogind/log/run"
 
 %post-install
 sv up /etc/sv/elogind 2>/dev/null || true

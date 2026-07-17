@@ -1,0 +1,3 @@
+#!/bin/sh
+mkdir -p /var/log/greetd-tty2
+exec svlogd -tt /var/log/greetd-tty2

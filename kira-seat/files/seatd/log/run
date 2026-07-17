@@ -1,0 +1,3 @@
+#!/bin/sh
+mkdir -p /var/log/seatd
+exec svlogd -tt /var/log/seatd

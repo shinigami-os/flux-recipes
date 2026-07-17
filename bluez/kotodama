@@ -1,6 +1,6 @@
 [meta]
 name = bluez
-version = 5.87.3
+version = 5.87.4
 description = "Linux Bluetooth protocol stack (bluetoothd, bluetoothctl, hciconfig)"
 license = GPL-2.0-or-later
 size = 10
@@ -37,6 +37,7 @@ make
 make DESTDIR="$DESTDIR" install
 install -dm755 "$DESTDIR/etc/sv/bluetoothd"
 install -Dm755 "$FLUX_RECIPE_DIR/files/bluetoothd/run" "$DESTDIR/etc/sv/bluetoothd/run"
+install -Dm755 "$FLUX_RECIPE_DIR/files/bluetoothd/log/run" "$DESTDIR/etc/sv/bluetoothd/log/run"
 
 %post-install
 sv up /etc/sv/bluetoothd 2>/dev/null || true

@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3.7
+version = 0.10.3.8
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5
@@ -67,6 +67,10 @@ install -Dm755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
 for vt in 2 3 4 5 6; do
     install -Dm644 "$FLUX_RECIPE_DIR/files/config-tty$vt.toml" "$DESTDIR/etc/greetd/config-tty$vt.toml"
     install -Dm755 "$FLUX_RECIPE_DIR/files/greetd-tty$vt/run" "$DESTDIR/etc/sv/greetd-tty$vt/run"
+    # switch=false means these never activate their own VT, but their stdout
+    # still inherits whatever console fd runsvdir started with - without a
+    # log/ companion they can still print straight over tty1 at any time
+    install -Dm755 "$FLUX_RECIPE_DIR/files/greetd-tty$vt/log/run" "$DESTDIR/etc/sv/greetd-tty$vt/log/run"
 done
 install -dm755 "$DESTDIR/etc/pam.d"
 # session must register with elogind, or polkit never sees this session as

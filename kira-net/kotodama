@@ -1,6 +1,6 @@
 [meta]
 name = kira-net
-version = 1.0
+version = 1.1
 description = "Networking stack: NetworkManager, dhcpcd, iwd, libnl plus their runit services"
 license = MIT
 size = 1
@@ -21,11 +21,16 @@ cflags =
 %post-build
 
 %install
-install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/dhcpcd" "$DESTDIR/etc/sv/sshd"
+install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/dhcpcd" "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/iwd"
 install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
 install -m755 "$FLUX_RECIPE_DIR/files/dhcpcd/run" "$DESTDIR/etc/sv/dhcpcd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/run" "$DESTDIR/etc/sv/sshd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/iwd/run" "$DESTDIR/etc/sv/iwd/run"
+install -dm755 "$DESTDIR/etc/sv/networkmanager/log" "$DESTDIR/etc/sv/dhcpcd/log" "$DESTDIR/etc/sv/sshd/log" "$DESTDIR/etc/sv/iwd/log"
+install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/log/run" "$DESTDIR/etc/sv/networkmanager/log/run"
+install -m755 "$FLUX_RECIPE_DIR/files/dhcpcd/log/run" "$DESTDIR/etc/sv/dhcpcd/log/run"
+install -m755 "$FLUX_RECIPE_DIR/files/sshd/log/run" "$DESTDIR/etc/sv/sshd/log/run"
+install -m755 "$FLUX_RECIPE_DIR/files/iwd/log/run" "$DESTDIR/etc/sv/iwd/log/run"
 
 %post-install
 grep -q "^dhcpcd:" /etc/passwd || \

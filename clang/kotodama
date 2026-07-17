@@ -1,6 +1,6 @@
 [meta]
 name = clang
-version = 19.1.7
+version = 19.1.7.1
 description = "C, C++, and Objective-C compiler (LLVM based)"
 license = Apache-2.0
 size = 140
@@ -24,10 +24,14 @@ cmake -S llvm -B ../clang-build -G Ninja \
   -DCMAKE_BUILD_TYPE=Release \
   -DLLVM_ENABLE_PROJECTS="clang;lld" \
   -DCMAKE_INSTALL_PREFIX=/usr \
-  -DLLVM_TARGETS_TO_BUILD=X86 \
-  -DLLVM_BUILD_LLVM_DYLIB=ON \
-  -DLLVM_LINK_LLVM_DYLIB=ON
-ninja -C ../clang-build
+  -DLLVM_TARGETS_TO_BUILD=X86
+# LLVM_BUILD_LLVM_DYLIB's monolithic libLLVM.so link step needs several GB
+# in one process - on a no-swap machine that's an OOM SIGKILL waiting to
+# happen, and it leaves a truncated .o silently archived into a .a, which
+# only surfaces later as a baffling "member ... is not an object" link
+# error. Not needed just to get a working clang/clang++/lld for the kernel
+# build. -j4 caps peak parallel memory use for the same no-swap reason.
+ninja -C ../clang-build -j4
 
 %post-build
 

@@ -1,5 +1,6 @@
 [terminal]
 vt = 3
+switch = false
 
 [default_session]
 command = "agreety --cmd /usr/bin/zsh"

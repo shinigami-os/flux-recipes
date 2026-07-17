@@ -1,7 +1,7 @@
 [meta]
 name = kira-net
-version = 1.1
-description = "Networking stack: NetworkManager, dhcpcd, iwd, libnl plus their runit services"
+version = 1.2
+description = "Networking stack: NetworkManager (internal DHCP, manages wifi+ethernet), iwd, libnl plus their runit services"
 license = MIT
 size = 1
 
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = networkmanager dhcpcd iwd libnl openssh
+runtime = networkmanager iwd libnl openssh
 
 [build]
 cflags =
@@ -21,23 +21,23 @@ cflags =
 %post-build
 
 %install
-install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/dhcpcd" "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/iwd"
+install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/iwd"
 install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
-install -m755 "$FLUX_RECIPE_DIR/files/dhcpcd/run" "$DESTDIR/etc/sv/dhcpcd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/run" "$DESTDIR/etc/sv/sshd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/iwd/run" "$DESTDIR/etc/sv/iwd/run"
-install -dm755 "$DESTDIR/etc/sv/networkmanager/log" "$DESTDIR/etc/sv/dhcpcd/log" "$DESTDIR/etc/sv/sshd/log" "$DESTDIR/etc/sv/iwd/log"
+install -dm755 "$DESTDIR/etc/sv/networkmanager/log" "$DESTDIR/etc/sv/sshd/log" "$DESTDIR/etc/sv/iwd/log"
 install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/log/run" "$DESTDIR/etc/sv/networkmanager/log/run"
-install -m755 "$FLUX_RECIPE_DIR/files/dhcpcd/log/run" "$DESTDIR/etc/sv/dhcpcd/log/run"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/log/run" "$DESTDIR/etc/sv/sshd/log/run"
 install -m755 "$FLUX_RECIPE_DIR/files/iwd/log/run" "$DESTDIR/etc/sv/iwd/log/run"
 
 %post-install
-grep -q "^dhcpcd:" /etc/passwd || \
-    echo "dhcpcd:x:83:83:dhcpcd:/var/lib/dhcpcd:/sbin/nologin" >> /etc/passwd
-grep -q "^dhcpcd:" /etc/group || \
-    echo "dhcpcd:x:83:" >> /etc/group
-mkdir -p /var/lib/dhcpcd
+# NetworkManager now manages ethernet directly with its own internal DHCP
+# client - a leftover dhcpcd service from before would fight it for the
+# same interface
+if [ -d /etc/sv/dhcpcd ]; then
+    sv down /etc/sv/dhcpcd 2>/dev/null || true
+    rm -rf /etc/sv/dhcpcd
+fi
 
 grep -q "^sshd:" /etc/passwd || \
     echo "sshd:x:84:84:sshd privilege separation:/var/empty:/sbin/nologin" >> /etc/passwd

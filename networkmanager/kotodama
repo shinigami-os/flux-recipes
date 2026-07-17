@@ -1,6 +1,6 @@
 [meta]
 name = networkmanager
-version = 1.50.0.2
+version = 1.50.0.3
 description = "Network connection manager"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 20
@@ -10,8 +10,8 @@ url = https://download.gnome.org/sources/NetworkManager/1.50/NetworkManager-1.50
 sha256 = fc03e7388a656cebc454c5d89481626122b1975d7c26babc64dc7e488faa66e3
 
 [deps]
-build = gcc meson ninja pkgconf glib dbus libnl libndp bluez polkit
-runtime = glib dbus libnl iwd bluez polkit
+build = gcc meson ninja pkgconf glib dbus libnl libndp bluez polkit readline
+runtime = glib dbus libnl iwd bluez polkit readline
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -81,8 +81,8 @@ meson setup build \
     -Dld_gc=false \
     -Dsession_tracking_consolekit=false \
     -Dwext=false \
-    -Dnmcli=false \
-    -Dreadline=none
+    -Dnmcli=true \
+    -Dreadline=libreadline
 ninja -C build
 
 %post-build

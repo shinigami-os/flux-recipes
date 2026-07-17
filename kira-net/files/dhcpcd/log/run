@@ -1,3 +1,0 @@
-#!/bin/sh
-mkdir -p /var/log/dhcpcd
-exec svlogd -tt /var/log/dhcpcd

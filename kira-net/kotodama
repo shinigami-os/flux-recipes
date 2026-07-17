@@ -1,6 +1,6 @@
 [meta]
 name = kira-net
-version = 1.2
+version = 1.3
 description = "Networking stack: NetworkManager (internal DHCP, manages wifi+ethernet), iwd, libnl plus their runit services"
 license = MIT
 size = 1
@@ -35,7 +35,10 @@ install -m755 "$FLUX_RECIPE_DIR/files/iwd/log/run" "$DESTDIR/etc/sv/iwd/log/run"
 # client - a leftover dhcpcd service from before would fight it for the
 # same interface
 if [ -d /etc/sv/dhcpcd ]; then
-    sv down /etc/sv/dhcpcd 2>/dev/null || true
+    # sv down alone only stops the supervised process - runsv itself keeps
+    # the supervise/ control fifos open and races rm -rf out from under it
+    sv exit /etc/sv/dhcpcd 2>/dev/null || true
+    sleep 2
     rm -rf /etc/sv/dhcpcd
 fi
 

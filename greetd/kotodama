@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3.5
+version = 0.10.3.6
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5
@@ -58,6 +58,7 @@ install -Dm755 "$BINDIR/greetd" "$DESTDIR/usr/bin/greetd"
 install -Dm755 "$BINDIR/agreety" "$DESTDIR/usr/bin/agreety"
 install -dm755 "$DESTDIR/etc/greetd"
 install -Dm644 "$FLUX_RECIPE_DIR/files/config.toml" "$DESTDIR/etc/greetd/config.toml"
+install -Dm755 "$FLUX_RECIPE_DIR/files/kira-greet-session" "$DESTDIR/usr/bin/kira-greet-session"
 install -dm755 "$DESTDIR/etc/sv/greetd"
 install -Dm755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
 # tty1 runs the DE (above); tty2-6 are plain authenticated shells, each its

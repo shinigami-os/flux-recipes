@@ -1,0 +1,13 @@
+#!/bin/sh
+# greetd execs this as the authenticated user (HOME already set correctly
+# by then) once login succeeds - dispatch to whichever DE they actually
+# picked instead of hardcoding one, same active-de convention zsh-login
+# used before greetd replaced it.
+active_de=$(cat "$HOME/.config/kira-desktop/active-de" 2>/dev/null)
+launcher="/usr/bin/kira-start-${active_de}"
+
+if [ -n "$active_de" ] && [ -x "$launcher" ]; then
+    exec "$launcher"
+fi
+
+exec /usr/bin/zsh

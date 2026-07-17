@@ -2,5 +2,5 @@
 vt = 1
 
 [default_session]
-command = "agreety --cmd /usr/bin/kira-start-sleex"
+command = "agreety --cmd /usr/bin/kira-greet-session"
 user = "greetd"

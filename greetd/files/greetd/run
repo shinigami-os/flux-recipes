@@ -1,2 +1,11 @@
 #!/bin/sh
+# greetd calls VT_ACTIVATE for its configured vt on startup, so whichever
+# instance (tty1-6) starts last wins the visible console. This one must
+# always be the winner - give tty2-6 a head start so their VT-stealing
+# race resolves before this one activates tty1 for good.
+sleep 2
+# stop late kernel messages (wifi scans, USB events, etc.) from printing
+# over the greeter once it's up - kernel cmdline has console=tty1, so this
+# is the console kernel output actually lands on
+dmesg -D
 exec greetd

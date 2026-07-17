@@ -1,7 +1,2 @@
 #!/bin/sh
-# staggered so 6 greetd instances don't all call pam_open_session for the
-# "greetd" user at the same instant - elogind's session-id allocation isn't
-# safe against that many concurrent opens and starts throwing hash-map
-# collisions ("File exists")
-sleep 1
 exec greetd -c /etc/greetd/config-tty2.toml -s /run/greetd-tty2.sock

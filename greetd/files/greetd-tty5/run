@@ -1,3 +1,2 @@
 #!/bin/sh
-sleep 4
 exec greetd -c /etc/greetd/config-tty5.toml -s /run/greetd-tty5.sock

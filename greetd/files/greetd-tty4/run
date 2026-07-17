@@ -1,3 +1,2 @@
 #!/bin/sh
-sleep 3
 exec greetd -c /etc/greetd/config-tty4.toml -s /run/greetd-tty4.sock

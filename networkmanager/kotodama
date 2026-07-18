@@ -1,6 +1,6 @@
 [meta]
 name = networkmanager
-version = 1.50.0.3
+version = 1.50.0.4
 description = "Network connection manager"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 20
@@ -94,4 +94,8 @@ install -dm755 "$DESTDIR/etc/sv/networkmanager"
 install -Dm755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
 
 %post-install
+# sv up only overrides runsv for the current session - it does not delete
+# a down file, so a stray one (however it got there) would silently put
+# the service back to "normally down" on every future boot
+rm -f /etc/sv/networkmanager/down
 sv up /etc/sv/networkmanager 2>/dev/null || true

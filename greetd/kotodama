@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3.9
+version = 0.10.3.10
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5
@@ -61,6 +61,7 @@ install -Dm644 "$FLUX_RECIPE_DIR/files/config.toml" "$DESTDIR/etc/greetd/config.
 install -Dm755 "$FLUX_RECIPE_DIR/files/kira-greet-session" "$DESTDIR/usr/bin/kira-greet-session"
 install -dm755 "$DESTDIR/etc/sv/greetd"
 install -Dm755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
+install -Dm755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/log/run"
 # tty1 runs the DE (above); tty2-6 are plain authenticated shells, each its
 # own greetd instance (own config, own control socket) so none of them ever
 # fight over a shared vt or shared state

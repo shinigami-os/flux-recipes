@@ -1,0 +1,9 @@
+#!/bin/sh
+# greetd launches the [default_session] (the greeter itself) directly, with
+# no PAM login session opened for it - so unlike a real logged-in session,
+# nothing ever creates /run/user/<uid> or sets XDG_RUNTIME_DIR here. cage
+# needs both to talk to the DRM/seat backend, so set them up ourselves.
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+mkdir -p "$XDG_RUNTIME_DIR"
+chmod 700 "$XDG_RUNTIME_DIR"
+exec cage -s -- regreet

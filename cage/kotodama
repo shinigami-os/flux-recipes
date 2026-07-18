@@ -1,6 +1,6 @@
 [meta]
 name = cage
-version = 0.2.1
+version = 0.2.1.1
 description = "Kiosk Wayland compositor for running a single app fullscreen (hosts regreet for greetd)"
 license = MIT
 size = 1
@@ -29,6 +29,16 @@ cat > native-file.ini << EOF
 pkg-config = ['sh', '$(pwd)/native-pkgconfig.sh']
 wayland-scanner = '/usr/bin/wayland-scanner'
 EOF
+# GTK4 clients (regreet included) call gtk_window_fullscreen() immediately
+# on window init, which can send xdg_toplevel::set_fullscreen before the
+# surface's first commit - cage's handler here calls
+# wlr_xdg_toplevel_set_size() unconditionally, which hits an assert in
+# wlroots (schedule_configure requires surface->initialized) if that
+# request arrives too early. view_position() already applies the same
+# fullscreen/maximize geometry safely once the initial commit lands, so
+# this handler can just skip acting on a too-early request.
+sed -i "s|struct cg_xdg_shell_view \*xdg_shell_view = wl_container_of(listener, xdg_shell_view, request_fullscreen);|&\n\n\tif (!xdg_shell_view->xdg_toplevel->base->initialized) {\n\t\treturn;\n\t}|" xdg_shell.c
+
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

@@ -17,6 +17,10 @@ runtime = glib dbus polkit elogind
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# generate-version.sh infers the version from the extracted directory name
+# (accountsservice-X.Y.Z) or a git checkout - flux extracts into a plain
+# "accountsservice" dir instead, so neither path works; just hardcode it
+printf '#!/bin/sh\necho 23.13.9\n' > generate-version.sh
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

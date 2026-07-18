@@ -1,139 +1,200 @@
-/* the actual top-level ApplicationWindow is named "window" - "background"
- * is an inner gtk::Picture, which is what "window#background" (never
- * matching anything, since no widget is both a window and named
- * "background") was meant to target */
-window#window,
-picture#background {
+/* regreet builds its UI with relm4's view! macro, where #[name = "x"] only
+ * names the Rust binding - set_widget_name() is never called, so there are
+ * no #id selectors to target. Everything here goes through GTK4 node names
+ * and the few real style classes the templates add. */
+
+window {
     background-color: #0a0a0f;
-    background-image: linear-gradient(to bottom, #0a0a0f 0%, #12101a 100%);
+    background-image: radial-gradient(ellipse at center, #16121f 0%, #0a0a0f 70%);
     color: #e8d8ff;
-    font-family: Raleway, sans-serif;
+    font-family: Raleway, "Noto Sans", sans-serif;
+    font-size: 14px;
 }
 
-/* the login box is an anonymous gtk::Frame - it only carries the
- * "background" class (shared with #clock_frame), it has no id of its own */
-.background {
-    background-color: alpha(#12101a, 0.6);
+/* both the login box and the clock carry .background (added by the
+ * templates); the clock additionally kills its own top radius inline */
+frame.background {
+    background-color: alpha(#12101a, 0.85);
+    border: 1px solid #2a2240;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px alpha(#000000, 0.6),
+                0 0 0 1px alpha(#aa00ff, 0.15);
+}
+
+/* the clock label is the frame's direct child - in the login box every
+ * label sits inside a grid instead, so this can't hit those */
+frame.background > label {
+    font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+    font-size: 24px;
+    font-weight: 500;
+    color: #e8d8ff;
+    padding: 8px 28px;
+}
+
+/* "Welcome to Kira" - the only label spanning the full grid width */
+grid > label {
+    color: #b09acc;
+    font-size: 14px;
+}
+
+/* text entries and the password entry (node: entry.password) */
+entry {
+    background-color: #1c1828;
+    background-image: none;
+    color: #e8d8ff;
+    border: 1px solid #2a2240;
+    border-radius: 10px;
+    padding: 8px 12px;
+    min-height: 32px;
+    caret-color: #aa00ff;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+entry:focus-within {
+    border-color: #aa00ff;
+    box-shadow: 0 0 0 2px alpha(#aa00ff, 0.35);
+}
+
+entry text {
+    color: #e8d8ff;
+    background-color: transparent;
+}
+
+entry text selection {
+    background-color: #7700cc;
+    color: #e8d8ff;
+}
+
+/* the User:/Session: dropdowns render as a button inside a combobox node */
+combobox button {
+    background-color: #1c1828;
+    background-image: none;
+    color: #e8d8ff;
+    border: 1px solid #2a2240;
+    border-radius: 10px;
+    padding: 6px 12px;
+    min-height: 32px;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+combobox button:hover {
+    background-color: #2a2240;
+    border-color: #3d3060;
+}
+
+combobox button:focus {
+    border-color: #aa00ff;
+    box-shadow: 0 0 0 2px alpha(#aa00ff, 0.35);
+}
+
+combobox arrow {
+    color: #b09acc;
+    min-width: 16px;
+    min-height: 16px;
+}
+
+/* dropdown list */
+popover > contents,
+popover contents {
+    background-color: #12101a;
+    color: #e8d8ff;
     border: 1px solid #2a2240;
     border-radius: 12px;
-    padding: 12px 24px;
-    color: #e8d8ff;
+    padding: 4px;
+    box-shadow: 0 8px 24px alpha(#000000, 0.7);
 }
 
-#clock_frame {
-    font-family: "JetBrainsMono Nerd Font", monospace;
-    font-size: 28px;
-}
-
-#message_label {
-    color: #e8d8ff;
-    font-size: 20px;
-    font-weight: 600;
-}
-
-#session_label,
-#input_label {
-    color: #b09acc;
-    font-size: 13px;
-}
-
-#username_entry,
-#secret_entry,
-#session_entry {
-    background-color: #1c1828;
-    color: #e8d8ff;
-    border: 1px solid #2a2240;
-    border-radius: 8px;
-    padding: 8px 12px;
-    caret-color: #aa00ff;
-}
-
-#username_entry:focus,
-#secret_entry:focus,
-#session_entry:focus {
-    border-color: #aa00ff;
-    box-shadow: 0 0 0 1px #aa00ff;
-}
-
-#usernames_box,
-#sessions_box {
-    background-color: #12101a;
-    border: 1px solid #2a2240;
-    border-radius: 8px;
-}
-
-#usernames_box row:hover,
-#sessions_box row:hover {
+popover contents :hover,
+popover contents :selected {
     background-color: #2a2240;
+    color: #e8d8ff;
+    border-radius: 8px;
 }
 
-#usernames_box row:selected,
-#sessions_box row:selected {
+/* generic buttons: the manual-entry toggles and Cancel */
+button {
+    background-color: #1c1828;
+    background-image: none;
+    color: #b09acc;
+    border: 1px solid #2a2240;
+    border-radius: 10px;
+    padding: 6px 14px;
+    min-height: 32px;
+    box-shadow: none;
+    text-shadow: none;
+    transition: background-color 150ms ease, color 150ms ease,
+                border-color 150ms ease;
+}
+
+button:hover {
+    background-color: #2a2240;
+    border-color: #3d3060;
+    color: #e8d8ff;
+}
+
+button:active,
+button:checked {
     background-color: #3d3060;
+    border-color: #6b4f9e;
     color: #e8d8ff;
 }
 
-#user_toggle,
-#sess_toggle,
-#visible_entry {
-    background-color: #1c1828;
-    color: #b09acc;
-    border: 1px solid #2a2240;
-    border-radius: 8px;
+button:focus-visible {
+    box-shadow: 0 0 0 2px alpha(#aa00ff, 0.4);
 }
 
-#user_toggle:hover,
-#sess_toggle:hover,
-#visible_entry:hover {
-    background-color: #2a2240;
-    color: #e8d8ff;
-}
-
-#login_button.suggested-action {
+/* Login */
+button.suggested-action {
     background-color: #aa00ff;
-    color: #e8d8ff;
-    border-radius: 8px;
+    background-image: linear-gradient(to bottom, #b91aff 0%, #8f00d9 100%);
+    color: #ffffff;
+    border: 1px solid #7700cc;
     font-weight: 600;
+    padding: 6px 22px;
 }
 
-#login_button.suggested-action:hover {
+button.suggested-action:hover {
+    background-image: linear-gradient(to bottom, #c333ff 0%, #a000f0 100%);
+    border-color: #aa00ff;
+    box-shadow: 0 0 12px alpha(#aa00ff, 0.5);
+}
+
+button.suggested-action:active {
+    background-image: none;
     background-color: #7700cc;
 }
 
-/* cancel_button is a plain gtk::Button in the template - it doesn't
- * actually carry the destructive-action class, unlike reboot/poweroff */
-#cancel_button {
+/* Reboot / Power Off (EndButton adds destructive-action) */
+button.destructive-action {
     background-color: transparent;
-    color: #ff00aa;
-    border: 1px solid #ff00aa;
-    border-radius: 8px;
-}
-
-#cancel_button:hover {
-    background-color: alpha(#ff00aa, 0.15);
-}
-
-#reboot_button,
-#poweroff_button {
-    background-color: transparent;
+    background-image: none;
     color: #6b4f9e;
     border: 1px solid #2a2240;
-    border-radius: 8px;
+    font-weight: 500;
+    padding: 6px 18px;
 }
 
-#reboot_button:hover,
-#poweroff_button:hover {
-    background-color: #2a2240;
+button.destructive-action:hover {
+    background-color: alpha(#ff00aa, 0.12);
+    border-color: #ff00aa;
+    color: #ff00aa;
+    box-shadow: 0 0 10px alpha(#ff00aa, 0.25);
+}
+
+button.destructive-action:active {
+    background-color: alpha(#ff00aa, 0.22);
     color: #ff00aa;
 }
 
-#notif_label {
-    color: #ffcc00;
+/* notification bar */
+infobar > revealer > box {
+    background-color: alpha(#1c1828, 0.95);
+    border: 1px solid #2a2240;
+    border-radius: 12px;
+    padding: 6px 14px;
 }
 
-#notif_info {
-    background-color: alpha(#1c1828, 0.9);
-    border: 1px solid #2a2240;
-    border-radius: 8px;
-    padding: 6px 12px;
+infobar label {
+    color: #ffcc00;
 }

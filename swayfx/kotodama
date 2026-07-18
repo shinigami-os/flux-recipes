@@ -64,3 +64,6 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+# SwayFX installs itself as plain "sway"; the greeter entry Kira ships is
+# swayfx.desktop, so drop the upstream one rather than list the DE twice
+rm -f "$DESTDIR/usr/share/wayland-sessions/sway.desktop"

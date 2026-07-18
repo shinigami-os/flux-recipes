@@ -1,16 +1,16 @@
-skip_selection = false
+skip_selection = true
 
 # no [background] section - regreet uses glycin to load background images,
 # which needs glycin-loaders (a set of sandboxed decoder helper binaries)
 # that Kira doesn't package; without it the background load hangs and the
-# whole greeter renders as a blank screen. The CSS gradient on
-# window#background covers the visual instead.
+# whole greeter renders as a blank screen. The CSS on `window` draws the
+# backdrop instead.
 
 [GTK]
 application_prefer_dark_theme = true
 cursor_theme_name = "Adwaita"
 cursor_blink = true
-font_name = "Raleway 11"
+font_name = "JetBrains Mono 11"
 icon_theme_name = "Adwaita"
 theme_name = "Adwaita"
 
@@ -19,9 +19,12 @@ reboot = ["reboot"]
 poweroff = ["poweroff"]
 
 [appearance]
-greeting_msg = "Welcome to Kira"
+# the greeting is the one bit of "voice" - left empty on purpose
+greeting_msg = ""
 
 [widget.clock]
-format = "%a %H:%M"
+# the clock label is rendered with set_markup, so the two-tier time/date
+# treatment is done here rather than in CSS (which can't size parts of a label)
+format = "<span size='40pt' weight='300'>%H:%M</span>\n<span size='12pt' foreground='#6b4f9e'>%A · %d %b %Y</span>"
 resolution = "500ms"
-label_width = 150
+label_width = 200

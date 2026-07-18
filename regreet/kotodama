@@ -1,6 +1,6 @@
 [meta]
 name = regreet
-version = 0.5.0.5
+version = 0.5.0.6
 description = "GTK4 greeter frontend for greetd, styled to match Kira"
 license = GPL-3.0-or-later
 size = 10
@@ -11,12 +11,26 @@ sha256 = 7e26799dffdede183fc62d12aedbda5fea92d7d9802a180755d8a1d1fd93f2f7
 
 [deps]
 build = gcc pkgconf gtk4 glib cage
-runtime = gtk4 glib cage accountsservice
+runtime = gtk4 glib cage accountsservice jetbrains-mono-nerd-font raleway-fonts
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# Kira ships its own layout for the greeter: a full replacement of upstream's
+# centred form, plus kira_decorate() which fills in the avatar/user/kernel
+# labels, builds the session pills, and opens the PAM conversation at startup
+# so the password field is there without a click. Appending the function is
+# enough - Rust doesn't care about definition order - so the only edit to
+# upstream's own code is the one-line call.
+cp "$FLUX_RECIPE_DIR/files/templates.rs" src/gui/templates.rs
+cat "$FLUX_RECIPE_DIR/files/kira_decorate.rs" >> src/gui/component.rs
+sed -i 's|^        setup_users_sessions(&model, &widgets);$|        setup_users_sessions(\&model, \&widgets);\n        kira_decorate(\&model, \&widgets, \&sender);|' src/gui/component.rs
+grep -q 'kira_decorate(&model, &widgets, &sender);' src/gui/component.rs || {
+    echo "kira: failed to hook kira_decorate into component.rs" >&2
+    exit 1
+}
+
 mkdir -p .cargo
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > .cargo/config.toml << 'EOF'
@@ -53,5 +67,5 @@ fi
 install -Dm755 "$BINDIR/regreet" "$DESTDIR/usr/bin/regreet"
 install -Dm644 "$FLUX_RECIPE_DIR/files/regreet.toml" "$DESTDIR/etc/greetd/regreet.toml"
 install -Dm644 "$FLUX_RECIPE_DIR/files/regreet.css" "$DESTDIR/etc/greetd/regreet.css"
+# sleex ships its own sleex.desktop; a second copy here would just race it
 install -Dm644 "$FLUX_RECIPE_DIR/files/swayfx.desktop" "$DESTDIR/usr/share/wayland-sessions/swayfx.desktop"
-install -Dm644 "$FLUX_RECIPE_DIR/files/sleex.desktop" "$DESTDIR/usr/share/wayland-sessions/sleex.desktop"

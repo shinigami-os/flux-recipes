@@ -5,13 +5,20 @@
 # by etc/sv/greetd/run (as root, before privileges are dropped to us) since
 # we can't create it under root-owned /run/user ourselves.
 export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+# wlroots picks the keyboard layout up from XKB_DEFAULT_*, and defaults to us
+# when they're unset - so the greeter came up qwerty on an azerty machine even
+# though the console and the session configs are both fr. Follow the keymap the
+# installer wrote, which is the same source of truth the console uses. (Console
+# keymap and XKB layout names agree for fr/de/es/etc; override here if they
+# ever don't.)
+if [ -r /etc/vconsole.conf ]; then
+    . /etc/vconsole.conf 2>/dev/null || true
+fi
+export XKB_DEFAULT_LAYOUT="${KEYMAP:-us}"
 # cage inherits tty1 as its controlling terminal from greetd, so its own
 # stderr prints straight over the physical screen instead of through
 # svlogd - redirect it to a plain file instead so crashes can be inspected
 exec >>/home/greetd/greeter.log 2>&1
 # regreet's own log file defaults to /var/log/regreet/log, which greetd
-# (an unprivileged user) can't create - point it at its own home instead.
-# regreet has its own -L/--verbose flags for level/destination (RUST_LOG
-# is not consulted), debug level temporarily to see why the CSS wasn't
-# rendering
-exec cage -s -- regreet -l /home/greetd/regreet.log -L debug --verbose
+# (an unprivileged user) can't create - point it at its own home instead
+exec cage -s -- regreet -l /home/greetd/regreet.log

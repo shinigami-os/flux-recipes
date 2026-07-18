@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3.17
+version = 0.10.3.18
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5

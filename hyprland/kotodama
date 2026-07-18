@@ -55,3 +55,6 @@ cmake --build build
 
 %install
 DESTDIR="$DESTDIR" cmake --install build
+# Kira exposes Hyprland through the Sleex session, not as a bare desktop
+# entry - leaving this would put a second, unsupported option in the greeter
+rm -f "$DESTDIR/usr/share/wayland-sessions/hyprland.desktop"

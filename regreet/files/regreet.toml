@@ -1,0 +1,25 @@
+skip_selection = false
+
+[background]
+path = "/usr/share/kira/wallpapers/default.png"
+fit = "Cover"
+
+[GTK]
+application_prefer_dark_theme = true
+cursor_theme_name = "Adwaita"
+cursor_blink = true
+font_name = "Raleway 11"
+icon_theme_name = "Adwaita"
+theme_name = "Adwaita"
+
+[commands]
+reboot = ["reboot"]
+poweroff = ["poweroff"]
+
+[appearance]
+greeting_msg = "Welcome to Kira"
+
+[widget.clock]
+format = "%a %H:%M"
+resolution = "500ms"
+label_width = 150

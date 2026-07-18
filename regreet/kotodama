@@ -1,0 +1,57 @@
+[meta]
+name = regreet
+version = 0.5.0
+description = "GTK4 greeter frontend for greetd, styled to match Kira"
+license = GPL-3.0-or-later
+size = 10
+
+[source]
+url = https://github.com/rharish101/ReGreet/archive/refs/tags/0.5.0.tar.gz
+sha256 = 7e26799dffdede183fc62d12aedbda5fea92d7d9802a180755d8a1d1fd93f2f7
+
+[deps]
+build = gcc pkgconf gtk4 glib cage
+runtime = gtk4 glib cage
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p .cargo
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > .cargo/config.toml << 'EOF'
+[target.x86_64-unknown-linux-musl]
+linker = "x86_64-linux-musl-gcc"
+EOF
+fi
+
+%build
+for _h in /home/*; do
+    [ -x "$_h/.cargo/bin/cargo" ] && REAL_HOME="$_h" && break
+done
+export PATH="$PATH:$REAL_HOME/.cargo/bin"
+export CARGO_HOME="$REAL_HOME/.cargo"
+export RUSTUP_HOME="$REAL_HOME/.rustup"
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=x86_64-linux-musl-gcc
+    export PKG_CONFIG_SYSROOT_DIR="${FLUX_CROSS_SYSROOT}"
+    export RUSTFLAGS="-C target-feature=-crt-static"
+    cargo build --release --locked --target x86_64-unknown-linux-musl
+else
+    export RUSTFLAGS="-C target-feature=-crt-static"
+    cargo build --release --locked
+fi
+
+%post-build
+
+%install
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    BINDIR="target/x86_64-unknown-linux-musl/release"
+else
+    BINDIR="target/release"
+fi
+install -Dm755 "$BINDIR/regreet" "$DESTDIR/usr/bin/regreet"
+install -Dm644 "$FLUX_RECIPE_DIR/files/regreet.toml" "$DESTDIR/etc/greetd/regreet.toml"
+install -Dm644 "$FLUX_RECIPE_DIR/files/regreet.css" "$DESTDIR/etc/greetd/regreet.css"
+install -Dm644 "$FLUX_RECIPE_DIR/files/swayfx.desktop" "$DESTDIR/usr/share/wayland-sessions/swayfx.desktop"
+install -Dm644 "$FLUX_RECIPE_DIR/files/sleex.desktop" "$DESTDIR/usr/share/wayland-sessions/sleex.desktop"

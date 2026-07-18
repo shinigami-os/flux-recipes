@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = efivar efibootmgr grub parted e2fsprogs dosfstools shadow wpa_supplicant util-linux
+runtime = efivar efibootmgr grub parted e2fsprogs dosfstools shadow wpa_supplicant util-linux git
 
 [build]
 cflags =

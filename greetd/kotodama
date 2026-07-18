@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3.8
+version = 0.10.3.9
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5
@@ -11,7 +11,7 @@ sha256 = ee5cb70e0add4ca9c9fe57e47581ab0002d44c07743fb5492469f3b570db640b
 
 [deps]
 build = gcc linux-pam
-runtime = linux-pam elogind
+runtime = linux-pam elogind regreet
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

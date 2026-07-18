@@ -1,0 +1,127 @@
+window#background {
+    background-color: #0a0a0f;
+    background-image: linear-gradient(to bottom, #0a0a0f, #12101a);
+    color: #e8d8ff;
+    font-family: "Raleway", sans-serif;
+}
+
+#clock_frame {
+    background-color: alpha(#12101a, 0.6);
+    border: 1px solid #2a2240;
+    border-radius: 12px;
+    padding: 12px 24px;
+    color: #e8d8ff;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 28px;
+}
+
+#message_label {
+    color: #e8d8ff;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#session_label,
+#input_label {
+    color: #b09acc;
+    font-size: 13px;
+}
+
+#username_entry,
+#secret_entry,
+#session_entry {
+    background-color: #1c1828;
+    color: #e8d8ff;
+    border: 1px solid #2a2240;
+    border-radius: 8px;
+    padding: 8px 12px;
+    caret-color: #aa00ff;
+}
+
+#username_entry:focus,
+#secret_entry:focus,
+#session_entry:focus {
+    border-color: #aa00ff;
+    box-shadow: 0 0 0 1px #aa00ff;
+}
+
+#usernames_box,
+#sessions_box {
+    background-color: #12101a;
+    border: 1px solid #2a2240;
+    border-radius: 8px;
+}
+
+#usernames_box row:hover,
+#sessions_box row:hover {
+    background-color: #2a2240;
+}
+
+#usernames_box row:selected,
+#sessions_box row:selected {
+    background-color: #3d3060;
+    color: #e8d8ff;
+}
+
+#user_toggle,
+#sess_toggle,
+#visible_entry {
+    background-color: #1c1828;
+    color: #b09acc;
+    border: 1px solid #2a2240;
+    border-radius: 8px;
+}
+
+#user_toggle:hover,
+#sess_toggle:hover,
+#visible_entry:hover {
+    background-color: #2a2240;
+    color: #e8d8ff;
+}
+
+#login_button.suggested-action {
+    background-color: #aa00ff;
+    color: #e8d8ff;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+#login_button.suggested-action:hover {
+    background-color: #7700cc;
+}
+
+#cancel_button.destructive-action {
+    background-color: transparent;
+    color: #ff00aa;
+    border: 1px solid #ff00aa;
+    border-radius: 8px;
+}
+
+#cancel_button.destructive-action:hover {
+    background-color: alpha(#ff00aa, 0.15);
+}
+
+#reboot_button,
+#poweroff_button {
+    background-color: transparent;
+    color: #6b4f9e;
+    border: 1px solid #2a2240;
+    border-radius: 8px;
+}
+
+#reboot_button:hover,
+#poweroff_button:hover {
+    background-color: #2a2240;
+    color: #ff00aa;
+}
+
+#notif_label {
+    color: #ffcc00;
+}
+
+#notif_info {
+    background-color: alpha(#1c1828, 0.9);
+    border: 1px solid #2a2240;
+    border-radius: 8px;
+    padding: 6px 12px;
+}

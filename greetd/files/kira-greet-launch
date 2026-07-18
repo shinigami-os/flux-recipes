@@ -7,6 +7,8 @@
 export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 # cage inherits tty1 as its controlling terminal from greetd, so its own
 # stderr prints straight over the physical screen instead of through
-# svlogd - redirect it to a plain file instead so it can be inspected
-exec >>/tmp/kira-greet-launch.log 2>&1
-exec cage -s -- regreet
+# svlogd - redirect it to a plain file instead so crashes can be inspected
+exec >>/home/greetd/greeter.log 2>&1
+# regreet's own log file defaults to /var/log/regreet/log, which greetd
+# (an unprivileged user) can't create - point it at its own home instead
+exec cage -s -- regreet -l /home/greetd/regreet.log

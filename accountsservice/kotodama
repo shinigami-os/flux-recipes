@@ -1,0 +1,61 @@
+[meta]
+name = accountsservice
+version = 23.13.9
+description = "D-Bus service for user account query and manipulation (org.freedesktop.Accounts)"
+license = GPL-3.0-or-later
+size = 2
+
+[source]
+url = https://www.freedesktop.org/software/accountsservice/accountsservice-23.13.9.tar.xz
+sha256 = adda4cdeae24fa0992e7df3ffff9effa7090be3ac233a3edfdf69d5a9c9b924f
+
+[deps]
+build = gcc meson ninja pkgconf glib dbus polkit elogind
+runtime = glib dbus polkit elogind
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig']
+EOF
+fi
+
+%build
+# accounts-daemon is D-Bus-activated on demand (see its .service file
+# below), not a persistent runit service - no [Dsystemdsystemunitdir]
+# handling needed beyond telling meson not to look for systemd at all
+meson setup build \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Delogind=true \
+    -Dsystemdsystemunitdir=no \
+    -Dintrospection=false \
+    -Dvapi=false \
+    -Ddocbook=false \
+    -Dgtk_doc=false
+ninja -C build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install
+
+%post-install

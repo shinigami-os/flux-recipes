@@ -1,6 +1,6 @@
 [meta]
 name = regreet
-version = 0.5.0.1
+version = 0.5.0.2
 description = "GTK4 greeter frontend for greetd, styled to match Kira"
 license = GPL-3.0-or-later
 size = 10
@@ -11,7 +11,7 @@ sha256 = 7e26799dffdede183fc62d12aedbda5fea92d7d9802a180755d8a1d1fd93f2f7
 
 [deps]
 build = gcc pkgconf gtk4 glib cage
-runtime = gtk4 glib cage
+runtime = gtk4 glib cage accountsservice
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

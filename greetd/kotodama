@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3.10
+version = 0.10.3.11
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5
@@ -83,6 +83,10 @@ printf 'auth\trequired\tpam_unix.so\naccount\trequired\tpam_unix.so\nsession\tre
 %post-install
 grep -q '^greetd:' /etc/group || addgroup -S greetd
 grep -q '^greetd:' /etc/passwd || adduser -S -G greetd -s /bin/false -H greetd
+# seatd.sock is root:video only - without this, cage/regreet can't reach
+# the real seatd and falls back to an embedded seatd that also can't get
+# permission to the VT, so it just times out waiting for a DRM session
+usermod -aG video greetd
 mkdir -p /home/greetd
 chown greetd:greetd /home/greetd
 chmod 755 /home/greetd

@@ -21,6 +21,11 @@ cflags = -O2 -pipe -march=x86-64-v2
 # (accountsservice-X.Y.Z) or a git checkout - flux extracts into a plain
 # "accountsservice" dir instead, so neither path works; just hardcode it
 printf '#!/bin/sh\necho 23.13.9\n' > generate-version.sh
+# musl's paths.h/utmpx.h define neither WTMPX_FILENAME nor _PATH_WTMPX, so
+# meson falls back to asserting /var/log/utx.log already exists on the
+# *build* machine, which it never does here - just hardcode the path glibc
+# systems use instead of gating the build on that assert
+sed -i "s|assert(run_command('test', '-e', path_wtmp, check: false).returncode() == 0, 'Do not know which filename to watch for wtmp changes')|# patched for musl: skip the build-time existence check|" meson.build
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

@@ -1,6 +1,6 @@
 [meta]
 name = libfm-qt
-version = 2.1.0.2
+version = 2.1.0.3
 description = "Qt port of libfm file management library"
 license = LGPL-2.1-or-later
 size = 3
@@ -53,10 +53,13 @@ fi
 
 %build
 rm -rf build
+QT_VER=$(qmake6 -query QT_VERSION)
+QT_PRIVATE_FLAGS="-I/usr/include/QtCore/$QT_VER/QtCore -I/usr/include/QtGui/$QT_VER/QtGui -I/usr/include/QtWidgets/$QT_VER/QtWidgets"
 cmake -S . -B build -G Ninja \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="$QT_PRIVATE_FLAGS" \
     ${FLUX_CROSS_HOST:+-DCMAKE_TOOLCHAIN_FILE=toolchain.cmake} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH=/usr} \
     ${FLUX_CROSS_HOST:+-DQT_HOST_PATH_CMAKE_DIR=/usr/lib/x86_64-linux-gnu/cmake} \

@@ -31,6 +31,13 @@ sed -i "s|assert(run_command('test', '-e', path_wtmp, check: false).returncode()
 # musl only exposes those under _GNU_SOURCE, which the wrap doesn't define;
 # tests aren't needed for an installed package, so just drop the subdir
 sed -i "/subdir('tests')/d" meson.build
+# musl has no fgetspent_r() (only the non-reentrant fgetspent()); daemon.c
+# needs the _r variant, so provide our own and force-include its prototype
+# into every src/ compile unit (simplest way to reach daemon.c specifically)
+cp "$FLUX_RECIPE_DIR/files/musl-fgetspent-shim.c" src/musl-fgetspent-shim.c
+cp "$FLUX_RECIPE_DIR/files/musl-fgetspent-shim.h" src/musl-fgetspent-shim.h
+sed -i "s|  'wtmp-helper.c',|  'wtmp-helper.c',\n  'musl-fgetspent-shim.c',|" src/meson.build
+sed -i "s|^cflags = \[|cflags = [\n  '-include', meson.current_source_dir() / 'musl-fgetspent-shim.h',|" src/meson.build
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

@@ -4,4 +4,11 @@
 # is the console kernel output actually lands on
 dmesg -D
 exec 2>&1
+# greetd runs the greeter (cage+regreet) as an unprivileged user with no PAM
+# session opened for it, so nothing else creates /run/user/<uid> for it -
+# has to happen here, as root, before greetd drops privileges to spawn it
+greetd_uid="$(id -u greetd)"
+mkdir -p "/run/user/$greetd_uid"
+chown greetd:greetd "/run/user/$greetd_uid"
+chmod 700 "/run/user/$greetd_uid"
 exec greetd

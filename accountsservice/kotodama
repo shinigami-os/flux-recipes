@@ -26,6 +26,11 @@ printf '#!/bin/sh\necho 23.13.9\n' > generate-version.sh
 # *build* machine, which it never does here - just hardcode the path glibc
 # systems use instead of gating the build on that assert
 sed -i "s|assert(run_command('test', '-e', path_wtmp, check: false).returncode() == 0, 'Do not know which filename to watch for wtmp changes')|# patched for musl: skip the build-time existence check|" meson.build
+# there's no -Dtests option to disable the tests/ subdir, and its bundled
+# "mocklibc" subproject wrap assumes glibc-declared fgetpwent/fgetgrent -
+# musl only exposes those under _GNU_SOURCE, which the wrap doesn't define;
+# tests aren't needed for an installed package, so just drop the subdir
+sed -i "/subdir('tests')/d" meson.build
 if [ -n "$FLUX_CROSS_HOST" ]; then
 cat > cross-file.ini << EOF
 [host_machine]

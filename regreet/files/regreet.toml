@@ -1,8 +1,10 @@
 skip_selection = false
 
-[background]
-path = "/usr/share/kira/wallpapers/default.png"
-fit = "Cover"
+# no [background] section - regreet uses glycin to load background images,
+# which needs glycin-loaders (a set of sandboxed decoder helper binaries)
+# that Kira doesn't package; without it the background load hangs and the
+# whole greeter renders as a blank screen. The CSS gradient on
+# window#background covers the visual instead.
 
 [GTK]
 application_prefer_dark_theme = true

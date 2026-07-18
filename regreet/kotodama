@@ -1,6 +1,6 @@
 [meta]
 name = regreet
-version = 0.5.0
+version = 0.5.0.1
 description = "GTK4 greeter frontend for greetd, styled to match Kira"
 license = GPL-3.0-or-later
 size = 10

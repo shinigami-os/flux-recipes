@@ -5,4 +5,8 @@
 # by etc/sv/greetd/run (as root, before privileges are dropped to us) since
 # we can't create it under root-owned /run/user ourselves.
 export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+# cage inherits tty1 as its controlling terminal from greetd, so its own
+# stderr prints straight over the physical screen instead of through
+# svlogd - redirect it to a plain file instead so it can be inspected
+exec >>/tmp/kira-greet-launch.log 2>&1
 exec cage -s -- regreet

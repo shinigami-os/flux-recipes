@@ -9,6 +9,7 @@ export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 # stderr prints straight over the physical screen instead of through
 # svlogd - redirect it to a plain file instead so crashes can be inspected
 exec >>/home/greetd/greeter.log 2>&1
+export RUST_LOG=debug
 # regreet's own log file defaults to /var/log/regreet/log, which greetd
 # (an unprivileged user) can't create - point it at its own home instead
 exec cage -s -- regreet -l /home/greetd/regreet.log

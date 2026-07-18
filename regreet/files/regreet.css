@@ -1,8 +1,8 @@
 window#background {
     background-color: #0a0a0f;
-    background-image: linear-gradient(to bottom, #0a0a0f, #12101a);
+    background-image: linear-gradient(to bottom, #0a0a0f 0%, #12101a 100%);
     color: #e8d8ff;
-    font-family: "Raleway", sans-serif;
+    font-family: Raleway, sans-serif;
 }
 
 #clock_frame {

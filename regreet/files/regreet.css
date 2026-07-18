@@ -1,16 +1,26 @@
-window#background {
+/* the actual top-level ApplicationWindow is named "window" - "background"
+ * is an inner gtk::Picture, which is what "window#background" (never
+ * matching anything, since no widget is both a window and named
+ * "background") was meant to target */
+window#window,
+picture#background {
     background-color: #0a0a0f;
     background-image: linear-gradient(to bottom, #0a0a0f 0%, #12101a 100%);
     color: #e8d8ff;
     font-family: Raleway, sans-serif;
 }
 
-#clock_frame {
+/* the login box is an anonymous gtk::Frame - it only carries the
+ * "background" class (shared with #clock_frame), it has no id of its own */
+.background {
     background-color: alpha(#12101a, 0.6);
     border: 1px solid #2a2240;
     border-radius: 12px;
     padding: 12px 24px;
     color: #e8d8ff;
+}
+
+#clock_frame {
     font-family: "JetBrainsMono Nerd Font", monospace;
     font-size: 28px;
 }
@@ -90,14 +100,16 @@ window#background {
     background-color: #7700cc;
 }
 
-#cancel_button.destructive-action {
+/* cancel_button is a plain gtk::Button in the template - it doesn't
+ * actually carry the destructive-action class, unlike reboot/poweroff */
+#cancel_button {
     background-color: transparent;
     color: #ff00aa;
     border: 1px solid #ff00aa;
     border-radius: 8px;
 }
 
-#cancel_button.destructive-action:hover {
+#cancel_button:hover {
     background-color: alpha(#ff00aa, 0.15);
 }
 

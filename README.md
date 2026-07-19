@@ -82,7 +82,7 @@ Key rules:
 
 ## Status
 
-Phase 2. Core recipe format stable, including the `%post-install` hook and meta-packages. `flux install`, `remove`, `search`, `update`, `info`, and `build` (native and `--cross`) are fully working against this repo. See the [Kira Linux specification](https://github.com/shinigami-os) and the project roadmap.
+Phase 3. Core recipe format stable, including the `%post-install` hook, meta-packages, and `no_sysroot_stage`. Well over 300 recipes covering the base toolchain, desktop stack (Wayland/wlroots, GTK4, greetd + regreet + cage for the login manager), and common developer tooling. `flux install`, `remove`, `search`, `update`, `info`, `list`, `cache`, and `build` (native and `--cross`) are all fully working against this repo. See the [Kira Linux specification](https://github.com/shinigami-os) and the project roadmap.
 
 ## License
 GPL-2.0

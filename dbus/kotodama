@@ -1,6 +1,6 @@
 [meta]
 name = dbus
-version = 1.16.0.5
+version = 1.16.0.6
 description = "D-Bus message bus system"
 license = GPL-2.0-or-later AND AFL-2.1
 size = 3
@@ -54,6 +54,8 @@ install -Dm755 "$FLUX_RECIPE_DIR/files/dbus/log/run" "$DESTDIR/etc/sv/dbus/log/r
 dbus-uuidgen --ensure=/etc/machine-id
 install -dm755 /var/lib/dbus
 ln -sf /etc/machine-id /var/lib/dbus/machine-id
+grep -q '^messagebus:' /etc/group || addgroup -S messagebus
+grep -q '^messagebus:' /etc/passwd || adduser -S -G messagebus -s /bin/false -H messagebus
 # dbus-daemon refuses to activate any system service (org.freedesktop.login1,
 # nm_dispatcher, etc.) unless this helper is setuid root and owned by the
 # messagebus group - cmake install can't set that itself since it runs

@@ -1,6 +1,6 @@
 [meta]
 name = linux-pam
-version = 1.7.0
+version = 1.7.0.1
 description = "Linux Pluggable Authentication Modules"
 license = BSD-3-Clause AND GPL-2.0-or-later
 size = 3
@@ -57,3 +57,7 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+
+%post-install
+chown root:root /usr/sbin/unix_chkpwd
+chmod 4755 /usr/sbin/unix_chkpwd

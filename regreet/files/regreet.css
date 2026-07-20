@@ -64,7 +64,6 @@ frame.clock > label {
     font-size: 36px;
     font-weight: 500;
     letter-spacing: 1px;
-    box-shadow: 0 0 22px alpha(#aa00ff, 0.28);
 }
 
 .user-name {
@@ -102,7 +101,6 @@ frame.clock > label {
 
 .secret-row entry:focus-within {
     border-color: #aa00ff;
-    box-shadow: 0 0 14px alpha(#aa00ff, 0.22);
 }
 
 .secret-row entry text {
@@ -138,7 +136,6 @@ button.submit {
 button.submit:hover {
     background-color: alpha(#aa00ff, 0.3);
     color: #ffffff;
-    box-shadow: 0 0 14px alpha(#aa00ff, 0.4);
 }
 
 button.submit:active {
@@ -178,7 +175,6 @@ button.submit:active {
     color: #e8d8ff;
     border-color: #aa00ff;
     background-color: alpha(#aa00ff, 0.12);
-    box-shadow: 0 0 12px alpha(#aa00ff, 0.25);
 }
 
 /* ---- power controls, bottom right ---- */
@@ -203,7 +199,6 @@ button.submit:active {
     color: #ff00aa;
     border-color: #ff00aa;
     background-color: alpha(#ff00aa, 0.1);
-    box-shadow: 0 0 12px alpha(#ff00aa, 0.25);
 }
 
 /* ---- notifications ---- */

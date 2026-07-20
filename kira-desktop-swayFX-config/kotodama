@@ -7,7 +7,7 @@ size = 1
 
 [source]
 url = git+https://github.com/shinigami-os/kira-desktop#v26.07-3
-sha256 = 776bb337992a05c6c357d29f054cf7190eda7d43
+sha256 = eaa9d8bfec79b07272586c99af620b37276ce343
 
 [deps]
 build =

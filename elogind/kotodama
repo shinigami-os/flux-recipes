@@ -1,6 +1,6 @@
 [meta]
 name = elogind
-version = 252.39.6
+version = 252.39.7
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -10,8 +10,8 @@ url = https://github.com/elogind/elogind/archive/refs/tags/v252.39.tar.gz
 sha256 = 5789c9d483dc236fbf72143dc9989329c399b6a507892c160b3c5852913123d5
 
 [deps]
-build = gcc meson ninja pkgconf glib linux-pam eudev libcap gperf python3
-runtime = glib linux-pam eudev libcap dbus
+build = gcc meson ninja pkgconf glib linux-pam eudev libcap gperf python3 polkit
+runtime = glib linux-pam eudev libcap dbus polkit
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -96,7 +96,7 @@ meson setup build \
     -Dsmack=false \
     -Dselinux=false \
     -Defi=false \
-    -Dpolkit=false \
+    -Dpolkit=true \
     -Dpam=true \
     -Dbashcompletiondir=no \
     -Dzshcompletiondir=no \

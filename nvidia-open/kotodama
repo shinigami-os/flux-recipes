@@ -1,0 +1,56 @@
+[meta]
+name = nvidia-open
+version = 610.43.03
+description = "NVIDIA open-source GPU kernel modules (nvidia, nvidia-drm, nvidia-modeset, nvidia-uvm)"
+license = MIT-and-GPL-2.0-only
+size = 40
+
+[source]
+url = git+https://github.com/NVIDIA/open-gpu-kernel-modules#610.43.03
+sha256 = 452cec62d827034798072827d3866d1881662b77
+
+[deps]
+build = clang lld llvm libelf perl bc
+runtime = nvidia-gsp-firmware
+
+[build]
+cflags =
+
+%pre-build
+# out-of-tree module needs a configured, modules_prepare'd copy of the exact
+# shinigami kernel this will run against - same commit and .config as the
+# real build, since Module.symvers/generated headers must match precisely
+git clone --depth 1 --branch v7.1.3-shinigami-26.07-6 https://github.com/shinigami-os/shinigami.git kernel-src
+cp "$FLUX_RECIPE_DIR/files/shinigami.config" kernel-src/.config
+make -C kernel-src LLVM=1 CC="clang --target=x86_64-linux-musl" olddefconfig
+make -C kernel-src LLVM=1 CC="clang --target=x86_64-linux-musl" modules_prepare -j$(nproc)
+
+%build
+make modules -j$(nproc) \
+    SYSSRC="$PWD/kernel-src" \
+    CC="clang --target=x86_64-linux-musl" \
+    LD=ld.lld \
+    AR=llvm-ar \
+    NM=llvm-nm \
+    OBJCOPY=llvm-objcopy
+
+%post-build
+
+%install
+KERNELRELEASE=$(cd kernel-src && make -s kernelrelease LLVM=1 CC="clang --target=x86_64-linux-musl")
+install -dm755 "$DESTDIR/lib/modules/$KERNELRELEASE/extra"
+find kernel-open -name '*.ko' -exec install -Dm644 {} "$DESTDIR/lib/modules/$KERNELRELEASE/extra/" \;
+install -dm755 "$DESTDIR/etc/modules-load.d"
+printf 'nvidia\nnvidia_drm\nnvidia_modeset\nnvidia_uvm\n' > "$DESTDIR/etc/modules-load.d/nvidia.conf"
+install -dm755 "$DESTDIR/etc/modprobe.d"
+echo 'options nvidia-drm modeset=1' > "$DESTDIR/etc/modprobe.d/nvidia-drm-modeset.conf"
+
+%post-install
+depmod -a
+echo "[nvidia-open] Kernel modules installed for KERNELRELEASE above."
+echo "This is a first-pass recipe: the shinigami kernel is built with"
+echo "CONFIG_LTO_CLANG full LTO targeting x86_64-linux-musl, which is not a"
+echo "combination NVIDIA tests against. If the build above failed with LTO"
+echo "or symbol-versioning errors, that is the likely cause - report the"
+echo "exact error back before assuming the recipe itself is wrong."
+echo "Reboot for the modules to load, or: modprobe nvidia_drm"

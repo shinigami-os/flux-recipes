@@ -1,0 +1,38 @@
+[meta]
+name = nvidia-gsp-firmware
+version = 610.43.03
+description = "NVIDIA GSP firmware blobs (Turing/Ampere/Ada), required by nvidia-open"
+license = NVIDIA-driver-EULA
+size = 115
+
+[source]
+url = https://download.nvidia.com/XFree86/Linux-x86_64/610.43.03/NVIDIA-Linux-x86_64-610.43.03.run
+sha256 = 45e2d4c134a23c35e50f253a4aa63e7e5e8d17e3d185d4a07c8a58e9612ed392
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+sh NVIDIA-Linux-x86_64-610.43.03.run --extract-only
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/lib/firmware/nvidia/610.43.03"
+# gsp_ga10x.bin covers Ampere and Ada Lovelace (including this laptop's
+# AD107M) - NVIDIA has not shipped a separate ad10x blob as of this release.
+# gsp_tu10x.bin is included too for Turing-generation hardware.
+install -m644 NVIDIA-Linux-x86_64-610.43.03/firmware/gsp_ga10x.bin "$DESTDIR/lib/firmware/nvidia/610.43.03/"
+install -m644 NVIDIA-Linux-x86_64-610.43.03/firmware/gsp_tu10x.bin "$DESTDIR/lib/firmware/nvidia/610.43.03/"
+install -dm755 "$DESTDIR/usr/share/licenses/nvidia-gsp-firmware"
+install -m644 NVIDIA-Linux-x86_64-610.43.03/LICENSE "$DESTDIR/usr/share/licenses/nvidia-gsp-firmware/"
+
+%post-install
+echo "[nvidia-gsp-firmware] GSP firmware installed for driver 610.43.03."
+echo "Must stay version-matched with the nvidia-open kernel modules."

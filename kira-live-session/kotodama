@@ -1,6 +1,6 @@
 [meta]
 name = kira-live-session
-version = 1.1
+version = 1.2
 description = "Live-boot autologin user and greetd override for the installer ISO (never installed to the target system)"
 license = MIT
 size = 1
@@ -48,6 +48,9 @@ fi
 cat > /etc/greetd/config.toml << EOF
 [terminal]
 vt = 1
+
+[general]
+runfile = "/run/greetd-tty1.run"
 
 [initial_session]
 command = "$SESSION_CMD"

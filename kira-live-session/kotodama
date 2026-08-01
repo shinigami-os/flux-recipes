@@ -1,0 +1,57 @@
+[meta]
+name = kira-live-session
+version = 1.0
+description = "Live-boot autologin user and greetd override for the installer ISO (never installed to the target system)"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = shadow sudo greetd
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+
+%post-install
+id kira >/dev/null 2>&1 || useradd -m -s /bin/sh -G wheel,video,input,audio kira
+echo "kira:kira" | chpasswd
+install -dm750 /etc/sudoers.d
+echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/90-live-wheel-nopasswd
+chmod 440 /etc/sudoers.d/90-live-wheel-nopasswd
+
+# whichever DE package was installed before this one owns the session
+# script - detect it instead of hardcoding, so this one recipe covers both
+if [ -x /usr/bin/kira-start-sleex ]; then
+    SESSION_CMD=/usr/bin/kira-start-sleex
+elif [ -x /usr/bin/kira-start-swayfx ]; then
+    SESSION_CMD=/usr/bin/kira-start-swayfx
+else
+    echo "[kira-live-session] no kira-start-* script found, install a DE package first" >&2
+    exit 1
+fi
+
+cat > /etc/greetd/config.toml << EOF
+[terminal]
+vt = 1
+
+[initial_session]
+command = "$SESSION_CMD"
+user = "kira"
+
+[default_session]
+command = "/usr/bin/kira-greet-launch"
+user = "greetd"
+EOF
+
+echo "[kira-live-session] live user 'kira' (password: kira, passwordless sudo)"
+echo "auto-logs into $SESSION_CMD on boot. Not present on installed systems."

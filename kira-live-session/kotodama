@@ -1,6 +1,6 @@
 [meta]
 name = kira-live-session
-version = 1.0
+version = 1.1
 description = "Live-boot autologin user and greetd override for the installer ISO (never installed to the target system)"
 license = MIT
 size = 1
@@ -24,7 +24,12 @@ cflags =
 
 %post-install
 id kira >/dev/null 2>&1 || useradd -m -s /bin/sh -G wheel,video,input,audio kira
-echo "kira:kira" | chpasswd
+# leave the account locked (no password), same as the "greetd" system user -
+# greetd's unauthenticated-session flow auto-answers any PAM auth prompt
+# with no response, which pam_unix.so only accepts for a locked account.
+# a real password here makes auth fail silently and initial_session never
+# starts, which just looks like a black screen with nothing logged.
+passwd -l kira
 install -dm750 /etc/sudoers.d
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/90-live-wheel-nopasswd
 chmod 440 /etc/sudoers.d/90-live-wheel-nopasswd
@@ -53,5 +58,5 @@ command = "/usr/bin/kira-greet-launch"
 user = "greetd"
 EOF
 
-echo "[kira-live-session] live user 'kira' (password: kira, passwordless sudo)"
+echo "[kira-live-session] live user 'kira' (locked/no password, passwordless sudo)"
 echo "auto-logs into $SESSION_CMD on boot. Not present on installed systems."

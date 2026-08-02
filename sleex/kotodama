@@ -1,13 +1,13 @@
 [meta]
 name = sleex
 version = 1.36
-description = "AxOS Sleex desktop environment (Hyprland + quickshell shell), Kira's runit-adapted fork"
+description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
 
 [source]
-url = git+https://github.com/shinigami-os/Sleex_runit#Adapting-Sleex-to-runit-systems
-sha256 = 031f1632b9a77cd471c2694a1a71b549d4bae5fa
+url = git+https://github.com/AxOS-project/Sleex#main
+sha256 = c4b5286eb8a5a06b9476557ba5319194f84f98eb
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity qt6-5compat qt6-multimedia quickshell rsync

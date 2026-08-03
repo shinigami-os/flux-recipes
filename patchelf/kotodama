@@ -1,0 +1,29 @@
+[meta]
+name = patchelf
+version = 0.19.1
+description = "Small utility to modify ELF executables (rpath/interpreter), needed by meson-python wheel builds"
+license = GPL-3.0-or-later
+size = 2
+
+[source]
+url = https://github.com/NixOS/patchelf/releases/download/0.19.1/patchelf-0.19.1.tar.gz
+sha256 = 491108728f120ce05b539934b41a750235031a6df8abc6b47e57aff7de15094d
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CXXFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

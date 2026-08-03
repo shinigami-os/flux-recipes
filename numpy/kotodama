@@ -10,7 +10,7 @@ url = https://github.com/numpy/numpy/releases/download/v2.5.1/numpy-2.5.1.tar.gz
 sha256 = a48a113e6afea91f5608793bafa7ef2ad481fefbda87ec5069f483de61cb9fa3
 
 [deps]
-build = gcc make meson ninja pkgconf python3 openblas
+build = gcc make meson ninja pkgconf python3 openblas patchelf
 runtime = openblas python3
 
 [build]
@@ -24,6 +24,9 @@ cflags = -O2 -pipe -march=x86-64-v2
 # uses for jinja2. System meson/ninja (already packaged) are what actually
 # get invoked; meson-python is just the thin PEP517 wrapper around them
 python3 -m ensurepip --default-pip >/dev/null 2>&1 || true
+# patchelf comes from the real system package, not PyPI's "patchelf" -
+# that PyPI package ships a prebuilt manylinux (glibc) binary that won't
+# run on musl at all
 python3 -m pip install --quiet build installer meson-python cython
 
 %build

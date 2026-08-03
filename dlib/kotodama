@@ -1,0 +1,41 @@
+[meta]
+name = dlib
+version = 20.0.1
+description = "C++/Python toolkit for machine learning (face landmarks), needed by howdy"
+license = BSL-1.0
+size = 60
+
+[source]
+url = git+https://github.com/davisking/dlib#v20.0.1
+sha256 = 9b09738b26276eb50cb9c3e8b7731ac68f146ed0
+
+[deps]
+build = gcc cmake ninja pkgconf python3 openblas numpy libjpeg-turbo libpng libX11
+runtime = openblas python3 numpy libjpeg-turbo libpng libX11
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+python3 -m ensurepip --default-pip >/dev/null 2>&1 || true
+python3 -m pip install --quiet packaging setuptools
+
+%build
+# --no USE_AVX_INSTRUCTIONS: same portability reasoning as numpy's
+# cpu-baseline=none - don't assume the build machine's CPU features are
+# present on every machine Kira runs on
+# --no DLIB_USE_CUDA: no CUDA toolkit here, avoid any detection surprises
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+export CXXFLAGS="-O2 -pipe -march=x86-64-v2"
+python3 setup.py build \
+    --no USE_AVX_INSTRUCTIONS \
+    --no DLIB_USE_CUDA \
+    -G Ninja
+
+%post-build
+
+%install
+python3 setup.py install --root="$DESTDIR" --prefix=/usr --optimize=1 \
+    --no USE_AVX_INSTRUCTIONS \
+    --no DLIB_USE_CUDA \
+    -G Ninja

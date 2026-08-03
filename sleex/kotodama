@@ -7,7 +7,7 @@ size = 20
 
 [source]
 url = git+https://github.com/AxOS-project/Sleex#main
-sha256 = c4b5286eb8a5a06b9476557ba5319194f84f98eb
+sha256 = 2802c5ecfc7729c9cafc0f487e7af005259a9fac
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity qt6-5compat qt6-multimedia sleex-ui-kit quickshell rsync

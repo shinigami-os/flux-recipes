@@ -17,6 +17,12 @@ runtime = python2 linux-pam
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# __STRING (used to stringify __LINUX_PAM__/__LINUX_PAM_MINOR__ for a
+# version string) is a glibc-only macro from <sys/cdefs.h> - musl doesn't
+# define it at all, so the preprocessor leaves it as a bare identifier and
+# the compiler treats it as an implicitly-declared function returning int
+{ echo '#ifndef __STRING'; echo '#define __STRING(x) #x'; echo '#endif'; cat src/pam_python.c; } > src/pam_python.c.new
+mv src/pam_python.c.new src/pam_python.c
 
 %build
 # built directly via setup.py rather than the bundled Makefile, which

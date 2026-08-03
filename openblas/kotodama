@@ -30,15 +30,16 @@ cflags = -O2 -pipe -march=x86-64-v2
 # since this needs to run on whatever x86_64 hardware Kira ends up on,
 # not just the machine it was built on
 FLAGS="MAJOR_VERSION=3 NO_AFFINITY=1 NO_STATIC=1 USE_OPENMP=0 DYNAMIC_ARCH=1 TARGET=CORE2 PREFIX=/usr"
+# the main build already produces one combined library with BLAS, CBLAS,
+# LAPACK and LAPACKE all in it (confirmed: "OpenBLAS build complete. (BLAS
+# CBLAS LAPACK LAPACKE)") - Alpine additionally builds interface/
+# shared-blas-lapack for standalone liblapack.so/liblapacke.so aliases, but
+# that make target doesn't exist in this version's interface/Makefile, and
+# nothing needs it since -lopenblas alone already exports those symbols
 make $FLAGS CFLAGS="-O2 -pipe -march=x86-64-v2"
-make -C interface $FLAGS CFLAGS="-O2 -pipe -march=x86-64-v2" shared-blas-lapack
 
 %post-build
 
 %install
 FLAGS="MAJOR_VERSION=3 NO_AFFINITY=1 NO_STATIC=1 USE_OPENMP=0 DYNAMIC_ARCH=1 TARGET=CORE2 PREFIX=/usr"
 make $FLAGS DESTDIR="$DESTDIR" install
-install -Dm755 interface/liblapack.so.3 "$DESTDIR/usr/lib/liblapack.so.3"
-ln -sf liblapack.so.3 "$DESTDIR/usr/lib/liblapack.so"
-install -Dm755 interface/liblapacke.so.3 "$DESTDIR/usr/lib/liblapacke.so.3"
-ln -sf liblapacke.so.3 "$DESTDIR/usr/lib/liblapacke.so"

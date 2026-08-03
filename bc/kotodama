@@ -21,12 +21,14 @@ cflags = -O2 -pipe -march=x86-64-v2
 %build
 export CFLAGS="-O2 -pipe -march=x86-64-v2"
 ./configure --prefix=/usr
-# MAKEINFO=true: no texinfo package here, and the .info docs aren't worth
-# adding one just for - this no-ops the doc/ subdir's automake-generated
-# makeinfo step instead of failing the whole build over missing docs
-make MAKEINFO=true
+# doc/'s generated rule hardcodes a literal "makeinfo" invocation rather
+# than referencing $(MAKEINFO), so overriding that variable on the command
+# line does nothing - no texinfo package here, and the .info docs aren't
+# worth adding one just for, so drop doc/ from SUBDIRS entirely instead
+sed -i '/^SUBDIRS/s/ doc//' Makefile
+make
 
 %post-build
 
 %install
-make MAKEINFO=true DESTDIR="$DESTDIR" install
+make DESTDIR="$DESTDIR" install

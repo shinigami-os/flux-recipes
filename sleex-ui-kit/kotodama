@@ -1,0 +1,30 @@
+[meta]
+name = sleex-ui-kit
+version = 1.0
+description = "Qt/QML component library with Sleex's design language, required by sleex"
+license = GPL-3.0-only
+size = 5
+
+[source]
+url = git+https://github.com/AxOS-project/sleex-ui-kit#main
+sha256 = 15b911419974982d102e5064ea5f59a7afc36fbc
+
+[deps]
+build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-tools qt6-wayland
+runtime = qt6-base qt6-declarative qt6-tools qt6-wayland
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cd src
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+cd src
+DESTDIR="$DESTDIR" cmake --install build

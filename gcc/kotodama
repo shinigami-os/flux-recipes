@@ -1,6 +1,6 @@
 [meta]
 name = gcc
-version = 14.2.0.11
+version = 14.2.0.12
 description = "The GNU Compiler Collection"
 license = GPL-3.0
 size = 100
@@ -36,7 +36,7 @@ export glibcxx_cv_PTHREAD_RWLOCK_CLOCKLOCK=no
 ../configure \
   --prefix=/usr \
   --with-sysroot=/ \
-  --enable-languages=c,c++ \
+  --enable-languages=c,c++,fortran \
   --disable-multilib \
   --disable-bootstrap \
   --with-default-libstdcxx-abi=new \
@@ -71,6 +71,7 @@ if [ -n "$FLUX_CROSS_HOST" ]; then
     rm -f $DESTDIR/usr/lib/libitm.so*
     rm -f $DESTDIR/usr/lib/libquadmath.so*
     rm -f $DESTDIR/usr/lib/libhwasan.so*
+    rm -f $DESTDIR/usr/lib/libgfortran.so*
 fi
 # native build: these libs were just built on musl Kira by musl Kira's own gcc,
 # they are correctly musl-linked and replace kira-base's older bundled copies

@@ -1,0 +1,53 @@
+[meta]
+name = howdy
+version = 2.6.1
+description = "Windows Hello-style face authentication for PAM"
+license = MIT
+size = 60
+
+[source]
+url = git+https://github.com/boltgolt/howdy#v2.6.1
+sha256 = 3c9537a35f23773ceca86e79be1ebed3ebe774cc
+
+[deps]
+build = python2 pam-python dlib opencv numpy bzip2 curl
+runtime = python2 pam-python dlib opencv numpy linux-pam
+
+[build]
+cflags =
+
+%pre-build
+# the 3 dlib face models aren't in howdy's own repo - fetch them from
+# davisking/dlib-models the same way howdy's own archlinux/howdy PKGBUILD
+# does, verifying against the same checksums that PKGBUILD pins
+fetch_model() {
+    name="$1"
+    sha="$2"
+    curl -sL -o "$name.bz2" "https://github.com/davisking/dlib-models/raw/master/$name.bz2"
+    echo "$sha  $name.bz2" | sha256sum -c -
+    bunzip2 -f "$name.bz2"
+}
+fetch_model dlib_face_recognition_resnet_model_v1.dat abb1f61041e434465855ce81c2bd546e830d28bcbed8d27ffbe5bb408b11553a
+fetch_model mmod_human_face_detector.dat db9e9e40f092c118d5eb3e643935b216838170793559515541c56a2b50d9fc84
+fetch_model shape_predictor_5_face_landmarks.dat 6e787bbebf5c9efdb793f6cd1f023230c4413306605f24f299f12869f95aa472
+mkdir -p src/dlib-data
+mv dlib_face_recognition_resnet_model_v1.dat mmod_human_face_detector.dat shape_predictor_5_face_landmarks.dat src/dlib-data/
+
+%build
+
+%post-build
+
+%install
+install -Dm644 LICENSE "$DESTDIR/usr/share/licenses/howdy/LICENSE"
+install -dm755 "$DESTDIR/usr/lib/security/howdy"
+cp -r src/. "$DESTDIR/usr/lib/security/howdy/"
+chmod -R go-w "$DESTDIR/usr/lib/security/howdy"
+chmod +x "$DESTDIR/usr/lib/security/howdy/cli.py"
+install -dm755 "$DESTDIR/usr/bin"
+ln -sf /usr/lib/security/howdy/cli.py "$DESTDIR/usr/bin/howdy"
+install -dm755 "$DESTDIR/usr/share/bash-completion/completions"
+install -Dm644 autocomplete/howdy "$DESTDIR/usr/share/bash-completion/completions/howdy"
+
+%post-install
+echo "[howdy] installed. Add a face model with: sudo howdy add"
+echo "PAM wiring is handled by a separate package/step, not this one."

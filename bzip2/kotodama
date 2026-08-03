@@ -1,0 +1,32 @@
+[meta]
+name = bzip2
+version = 1.0.8
+description = "bzip2 compressor/decompressor, needed to unpack howdy's dlib face models"
+license = BSD-4-Clause
+size = 2
+
+[source]
+url = https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
+sha256 = ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2 -fPIC
+
+%pre-build
+
+%build
+make CC=gcc CFLAGS="-O2 -pipe -march=x86-64-v2 -fPIC -Wall -Winline -D_FILE_OFFSET_BITS=64"
+make -f Makefile-libbz2_so CC=gcc CFLAGS="-O2 -pipe -march=x86-64-v2 -fPIC -Wall -Winline -D_FILE_OFFSET_BITS=64"
+
+%post-build
+
+%install
+make install PREFIX="$DESTDIR/usr"
+install -Dm755 libbz2.so.1.0.8 "$DESTDIR/usr/lib/libbz2.so.1.0.8"
+ln -sf libbz2.so.1.0.8 "$DESTDIR/usr/lib/libbz2.so.1.0"
+ln -sf libbz2.so.1.0.8 "$DESTDIR/usr/lib/libbz2.so.1"
+ln -sf libbz2.so.1.0.8 "$DESTDIR/usr/lib/libbz2.so"

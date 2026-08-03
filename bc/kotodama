@@ -1,0 +1,29 @@
+[meta]
+name = bc
+version = 1.08.2
+description = "GNU arbitrary precision calculator language"
+license = GPL-3.0-or-later
+size = 2
+
+[source]
+url = https://ftp.gnu.org/gnu/bc/bc-1.08.2.tar.gz
+sha256 = ae470fec429775653e042015edc928d07c8c3b2fc59765172a330d3d87785f86
+
+[deps]
+build = gcc make bison
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

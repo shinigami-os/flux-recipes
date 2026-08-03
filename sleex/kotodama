@@ -1,6 +1,6 @@
 [meta]
 name = sleex
-version = 1.36.1
+version = 1.36.2
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -11,8 +11,8 @@ sha256 = 2802c5ecfc7729c9cafc0f487e7af005259a9fac
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity qt6-5compat qt6-multimedia sleex-ui-kit quickshell rsync
-runtime = hyprland quickshell qt6-base qt6-declarative qt6-wayland qt6-connectivity qt6-5compat qt6-multimedia qt6-svg sleex-ui-kit
-optional = matugen hyprlock hypridle wl-clipboard fuzzel foot howdy
+runtime = hyprland quickshell qt6-base qt6-declarative qt6-wayland qt6-connectivity qt6-5compat qt6-multimedia qt6-svg sleex-ui-kit jq sqlite python3 bc
+optional = matugen hyprlock hypridle wl-clipboard fuzzel foot howdy ffmpeg imagemagick kdialog
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

@@ -1,6 +1,6 @@
 [meta]
 name = howdy
-version = 2.6.1
+version = 2.6.1.1
 description = "Windows Hello-style face authentication for PAM"
 license = MIT
 size = 60
@@ -49,5 +49,15 @@ install -dm755 "$DESTDIR/usr/share/bash-completion/completions"
 install -Dm644 autocomplete/howdy "$DESTDIR/usr/share/bash-completion/completions/howdy"
 
 %post-install
+# only sudo gets wired here - the sudo package itself must never carry a
+# hard reference to pam_python.so, since that would break sudo outright on
+# every Kira install that doesn't have howdy. This only runs when howdy is
+# actually being installed, so it's safe to prepend here.
+if [ -f /etc/pam.d/sudo ] && ! grep -q 'howdy/pam.py' /etc/pam.d/sudo; then
+    { echo 'auth	sufficient	/usr/lib/security/pam_python.so /usr/lib/security/howdy/pam.py'; cat /etc/pam.d/sudo; } > /etc/pam.d/sudo.new
+    mv /etc/pam.d/sudo.new /etc/pam.d/sudo
+fi
 echo "[howdy] installed. Add a face model with: sudo howdy add"
-echo "PAM wiring is handled by a separate package/step, not this one."
+echo "[howdy] sudo now tries face auth first, falling back to password."
+echo "[howdy] to also use it for the Sleex lock screen, enable Face Auth in"
+echo "[howdy] Settings > Security (SwayFX has no equivalent integration)."

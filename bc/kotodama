@@ -21,9 +21,12 @@ cflags = -O2 -pipe -march=x86-64-v2
 %build
 export CFLAGS="-O2 -pipe -march=x86-64-v2"
 ./configure --prefix=/usr
-make
+# MAKEINFO=true: no texinfo package here, and the .info docs aren't worth
+# adding one just for - this no-ops the doc/ subdir's automake-generated
+# makeinfo step instead of failing the whole build over missing docs
+make MAKEINFO=true
 
 %post-build
 
 %install
-make DESTDIR="$DESTDIR" install
+make MAKEINFO=true DESTDIR="$DESTDIR" install

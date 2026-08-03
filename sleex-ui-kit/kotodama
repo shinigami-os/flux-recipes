@@ -1,6 +1,6 @@
 [meta]
 name = sleex-ui-kit
-version = 1.0
+version = 1.0.1
 description = "Qt/QML component library with Sleex's design language, required by sleex"
 license = GPL-3.0-only
 size = 5
@@ -20,7 +20,13 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %build
 cd src
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+# unlike Sleex's own CMakeLists (which hardcodes CMAKE_INSTALL_PREFIX "/"),
+# this one never sets it, so plain cmake defaults to /usr/local - its
+# libSleexUiKit*.so land in /usr/local/lib64 while the QML plugins that
+# dlopen them (installed via Qt6's own QT6_INSTALL_QML, under /usr/qml)
+# carry an $ORIGIN/../lib64 rpath expecting /usr/lib64 - force the prefix
+# so both land under the same real, already-searched library path
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 cmake --build build
 
 %post-build

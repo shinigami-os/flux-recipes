@@ -1,0 +1,29 @@
+[meta]
+name = cliphist
+version = 0.7.0
+description = "Wayland clipboard history manager"
+license = MIT
+size = 3
+
+[source]
+url = git+https://github.com/sentriz/cliphist#v0.7.0
+sha256 = efb61cb5b5a28d896c05a24ac83b9c39c96575f2
+
+[deps]
+build = go
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+export CGO_ENABLED=0
+export GOFLAGS=-mod=mod
+go build -o cliphist .
+
+%post-build
+
+%install
+install -Dm755 cliphist "$DESTDIR/usr/bin/cliphist"

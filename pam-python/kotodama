@@ -1,6 +1,6 @@
 [meta]
 name = pam-python
-version = 1.0.7.1
+version = 1.0.7
 description = "Embeds a Python interpreter into PAM so modules can be written in Python - only needed for howdy's PAM glue"
 license = AGPL-3.0-or-later
 size = 2
@@ -10,12 +10,12 @@ url = https://downloads.sourceforge.net/project/pam-python/pam-python-1.0.7-1/pa
 sha256 = 96ce72fe355b03b87c0eb540ecef06f33738f98f56581e81eb5bffbad1a47e07
 
 [deps]
-# pam_python.c itself has no actual Python-2-only C API calls (checked:
-# no PyString_*/Py_InitModule2/PyInt_*, just PY_VERSION_HEX minimum-version
-# guards), and howdy's dev branch made pam.py version-agnostic too, so
-# there's no real reason to keep python2 (EOL) around just for this
-build = gcc make python3 linux-pam
-runtime = python3 linux-pam
+# tried building this against python3 instead: pam_python.c turns out to
+# be full of real Python-2-only C API (PyString_*, PyInt_*,
+# PyExc_StandardError, direct ob_type access), a genuine port, not a
+# quick fix - reverted to python2 rather than rush that
+build = gcc make python2 linux-pam
+runtime = python2 linux-pam
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -28,10 +28,6 @@ cflags = -O2 -pipe -march=x86-64-v2
 { echo '#ifndef __STRING'; echo '#define __STRING(x) #x'; echo '#endif'; cat src/pam_python.c; } > src/pam_python.c.new
 mv src/pam_python.c.new src/pam_python.c
 
-# os.environ.has_key(...) is a Python-2-only dict method, removed entirely
-# in Python 3 - setup.py itself won't even import under python3 without this
-sed -i 's/os\.environ\.has_key("Py_DEBUG")/"Py_DEBUG" in os.environ/' src/setup.py
-
 %build
 # built directly via setup.py rather than the bundled Makefile, which
 # hardcodes -Werror alongside -Wall -Wextra -Wshadow etc - this 15-year-old
@@ -40,7 +36,7 @@ sed -i 's/os\.environ\.has_key("Py_DEBUG")/"Py_DEBUG" in os.environ/' src/setup.
 # glue script
 cd src
 export CFLAGS="-O2 -pipe -march=x86-64-v2"
-python3 setup.py build
+python2 setup.py build
 
 %post-build
 

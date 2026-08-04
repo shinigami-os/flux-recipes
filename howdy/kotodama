@@ -11,9 +11,10 @@ size = 60
 # output, and an `add <label>` positional, all three of which Sleex's own
 # Settings > Security page assumes and v2.6.1 simply doesn't have. It also
 # replaces the SUDO_USER-only root check with a plain os.geteuid() != 0
-# check, and pam.py is now version-agnostic (configparser on py3, falls
-# back to ConfigParser on py2) - see pam-python's own kotodama for the
-# other half of that: pam-python now builds against python3 instead.
+# check, which also happens to fix Sleex calling howdy via pkexec instead
+# of sudo (pkexec never set SUDO_USER, so v2.6.1's cli.py always refused
+# to run under it). pam.py itself now runs under whatever interpreter
+# pam-python embeds - still python2 there, see pam-python's own kotodama.
 url = git+https://github.com/boltgolt/howdy#dev
 sha256 = 3306db358a02fe9a6dc70bb6ad0069d7a691c7a3
 

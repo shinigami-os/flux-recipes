@@ -1,17 +1,25 @@
 [meta]
 name = howdy
-version = 2.6.1.3
+version = 3.0.0-dev
 description = "Windows Hello-style face authentication for PAM"
 license = MIT
 size = 60
 
 [source]
-url = git+https://github.com/boltgolt/howdy#v2.6.1
-sha256 = 3c9537a35f23773ceca86e79be1ebed3ebe774cc
+# the dev branch (unreleased, tracking toward 3.0.0) is what AxOS/Sleex
+# actually targets - it's the version that adds --plain, CSV `list`
+# output, and an `add <label>` positional, all three of which Sleex's own
+# Settings > Security page assumes and v2.6.1 simply doesn't have. It also
+# replaces the SUDO_USER-only root check with a plain os.geteuid() != 0
+# check, and pam.py is now version-agnostic (configparser on py3, falls
+# back to ConfigParser on py2) - see pam-python's own kotodama for the
+# other half of that: pam-python now builds against python3 instead.
+url = git+https://github.com/boltgolt/howdy#dev
+sha256 = 3306db358a02fe9a6dc70bb6ad0069d7a691c7a3
 
 [deps]
-build = python2 pam-python dlib opencv numpy bzip2 curl
-runtime = python2 pam-python dlib opencv numpy linux-pam
+build = python3 pam-python dlib opencv numpy bzip2 curl
+runtime = python3 pam-python dlib opencv numpy linux-pam
 
 [build]
 cflags =
@@ -32,15 +40,6 @@ fetch_model mmod_human_face_detector.dat db9e9e40f092c118d5eb3e643935b2168381707
 fetch_model shape_predictor_5_face_landmarks.dat 6e787bbebf5c9efdb793f6cd1f023230c4413306605f24f299f12869f95aa472
 mkdir -p src/dlib-data
 mv dlib_face_recognition_resnet_model_v1.dat mmod_human_face_detector.dat shape_predictor_5_face_landmarks.dat src/dlib-data/
-
-# cli.py refuses to run at all unless SUDO_USER is set, which only sudo
-# sets - Sleex's own Settings > Security page invokes howdy via pkexec
-# instead (see AxOS-project/Sleex Security.qml, "pkexec /usr/bin/howdy
-# --plain -U ... list/add/remove"), so every single call from Sleex,
-# including plain "list", was hitting this gate and exiting before doing
-# anything at all. pkexec sets its own equivalent, PKEXEC_UID - accept
-# either.
-sed -i 's/if os.getenv("SUDO_USER") is None:/if os.getenv("SUDO_USER") is None and os.getenv("PKEXEC_UID") is None:/' src/cli.py
 
 %build
 

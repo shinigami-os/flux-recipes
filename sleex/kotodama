@@ -21,7 +21,7 @@ cflags = -O2 -pipe -march=x86-64-v2
 # Sleex's own lockscreen/pam/password_face.conf (loaded when Settings >
 # Security > Face Auth is on) references /lib/security/pam_howdy.so, which
 # doesn't exist anywhere - upstream howdy has never shipped a compiled PAM
-# module by that name, only the python2/pam-python bridge (pam_python.so
+# module by that name, only the pam-python bridge (pam_python.so
 # invoking a script). Point it at the real module + script Kira installs.
 sed -i 's#/lib/security/pam_howdy.so#/usr/lib/security/pam_python.so /usr/lib/security/howdy/pam.py#' \
     src/share/sleex/modules/lockscreen/pam/password_face.conf

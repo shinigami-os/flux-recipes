@@ -41,4 +41,15 @@ if [ ! -S /var/run/dbus/system_bus_socket ]; then
     echo "kira-start-sleex: system dbus socket never appeared after 15s, continuing anyway" >&2
 fi
 
+# nothing else in the whole session ever starts the audio stack - Sleex's
+# own execs.lua doesn't, and Kira's execs.lua override is empty - so
+# without this there's simply no pipewire-0 socket at all ("Failed to
+# connect pipewire context. Errno: 112", pa_context_connect() failing,
+# QtMultimedia finding no backend). The stale-lock cleanup a few lines up
+# already anticipated pipewire running here; it just never actually got
+# started.
+pipewire &
+wireplumber &
+pipewire-pulse &
+
 exec dbus-run-session -- /usr/bin/sleex

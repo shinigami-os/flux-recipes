@@ -1,6 +1,6 @@
 [meta]
 name = bash
-version = 5.3
+version = 5.3.1
 description = "GNU Bourne-Again Shell"
 license = GPL-3.0-or-later
 size = 3
@@ -33,3 +33,9 @@ make
 
 %install
 make DESTDIR="$DESTDIR" install
+
+%post-install
+# see zsh's kotodama for why this matters: kira-base only ever seeds
+# /etc/shells with /bin/sh, so anything checking it (notably pkexec/polkit)
+# rejects any real shell outright even though it works fine otherwise
+grep -qx /usr/bin/bash /etc/shells || echo /usr/bin/bash >> /etc/shells

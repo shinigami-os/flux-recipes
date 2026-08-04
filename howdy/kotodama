@@ -1,6 +1,6 @@
 [meta]
 name = howdy
-version = 2.6.1.1
+version = 2.6.1.2
 description = "Windows Hello-style face authentication for PAM"
 license = MIT
 size = 60
@@ -56,6 +56,27 @@ install -Dm644 autocomplete/howdy "$DESTDIR/usr/share/bash-completion/completion
 if [ -f /etc/pam.d/sudo ] && ! grep -q 'howdy/pam.py' /etc/pam.d/sudo; then
     { echo 'auth	sufficient	/usr/lib/security/pam_python.so /usr/lib/security/howdy/pam.py'; cat /etc/pam.d/sudo; } > /etc/pam.d/sudo.new
     mv /etc/pam.d/sudo.new /etc/pam.d/sudo
+fi
+# howdy's config.ini ships "device_path = none" - the real distro
+# installers (Debian/Arch) fill this in via their own interactive/apt
+# hooks, which we don't have. video_capture.py does a plain
+# os.path.exists() on this value with zero auto-detection of its own, so
+# without this it always fails with "Camera path is not configured
+# correctly" the first time anyone actually tries to use it. Probe
+# /dev/video* with opencv (already a dep) and pick the first one that
+# actually opens and returns a frame - cheap sanity check, no v4l-utils
+# needed just for this. Kept as its own files/ script rather than an
+# inline heredoc: kotodama's parser left-trims every hook line
+# independently, which would silently mangle indentation-sensitive Python.
+if grep -q '^device_path = none$' /usr/lib/security/howdy/config.ini; then
+    found=$(python3 "$FLUX_RECIPE_DIR/files/detect_camera.py")
+    if [ -n "$found" ]; then
+        sed -i "s#^device_path = none\$#device_path = $found#" /usr/lib/security/howdy/config.ini
+        echo "[howdy] camera auto-detected: $found"
+    else
+        echo "[howdy] no working camera found under /dev/video* - set"
+        echo "[howdy] device_path manually in /usr/lib/security/howdy/config.ini"
+    fi
 fi
 echo "[howdy] installed. Add a face model with: sudo howdy add"
 echo "[howdy] sudo now tries face auth first, falling back to password."

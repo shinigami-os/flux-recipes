@@ -1,0 +1,31 @@
+[meta]
+name = attr
+version = 2.6.0
+description = "Extended attributes library, needed by acl"
+license = LGPL-2.1-or-later
+size = 2
+
+[source]
+# upstream (savannah.gnu.org) was returning 502s at packaging time - same
+# tarball, repackaged by Debian, verified against its own sha256
+url = http://deb.debian.org/debian/pool/main/a/attr/attr_2.6.0.orig.tar.xz
+sha256 = 6c8a2148a7b85043b68492bce43316b0e2e214fc4e628c7ede078e76e216330b
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

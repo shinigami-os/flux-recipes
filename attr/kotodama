@@ -1,15 +1,21 @@
 [meta]
 name = attr
-version = 2.6.0
+version = 2.5.2
 description = "Extended attributes library, needed by acl"
 license = LGPL-2.1-or-later
 size = 2
 
 [source]
+# deliberately not the latest (2.6.0): that version added libmisc/xattrat.c,
+# using the newer *at-family xattr syscalls (struct xattr_args, Linux
+# 6.13+) that musl's headers don't define at all - a real glibc/musl
+# divergence, not something to patch around. acl only needs the original
+# getxattr/setxattr/listxattr functions, which 2.5.2 already has, so this
+# sidesteps the incompatibility entirely instead of fighting it.
 # upstream (savannah.gnu.org) was returning 502s at packaging time - same
 # tarball, repackaged by Debian, verified against its own sha256
-url = http://deb.debian.org/debian/pool/main/a/attr/attr_2.6.0.orig.tar.xz
-sha256 = 6c8a2148a7b85043b68492bce43316b0e2e214fc4e628c7ede078e76e216330b
+url = http://deb.debian.org/debian/pool/main/a/attr/attr_2.5.2.orig.tar.xz
+sha256 = f2e97b0ab7ce293681ab701915766190d607a1dba7fae8a718138150b700a70b
 
 [deps]
 build = gcc make

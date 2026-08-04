@@ -1,0 +1,27 @@
+[meta]
+name = i2c-tools
+version = 4.4
+description = "I2C bus tools and libi2c, needed by ddcutil for DDC/CI monitor control"
+license = GPL-2.0-only
+size = 2
+
+[source]
+url = https://mirrors.edge.kernel.org/pub/software/utils/i2c-tools/i2c-tools-4.4.tar.xz
+sha256 = 8b15f0a880ab87280c40cfd7235cfff28134bf14d5646c07518b1ff6642a2473
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+make CC=gcc CFLAGS="-O2 -pipe -march=x86-64-v2" PREFIX=/usr
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR="$DESTDIR" install

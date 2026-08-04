@@ -1,0 +1,31 @@
+[meta]
+name = acl
+version = 2.4.0
+description = "POSIX Access Control Lists library and utilities"
+license = LGPL-2.1-or-later
+size = 3
+
+[source]
+# upstream (savannah.gnu.org) was returning 502s at packaging time - same
+# tarball, repackaged by Debian, verified against its own sha256
+url = http://deb.debian.org/debian/pool/main/a/acl/acl_2.4.0.orig.tar.xz
+sha256 = e661131456d2708a01c614a0f400e11d7d1bfaeb6f3e74b75bb980b72f0161a3
+
+[deps]
+build = gcc make
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+./configure --prefix=/usr
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

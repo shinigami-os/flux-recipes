@@ -25,6 +25,9 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# basename() needs <libgen.h> - musl doesn't pull it in transitively via
+# other headers the way glibc often does, so this is missing entirely
+grep -q '#include <libgen.h>' tools/attr.c || sed -i '1i #include <libgen.h>' tools/attr.c
 
 %build
 export CFLAGS="-O2 -pipe -march=x86-64-v2"

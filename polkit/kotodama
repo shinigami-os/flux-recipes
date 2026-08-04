@@ -1,6 +1,6 @@
 [meta]
 name = polkit
-version = 127.2
+version = 127.3
 description = "Framework for controlling system-wide privileges"
 license = LGPL-2.0-or-later
 size = 2
@@ -54,6 +54,16 @@ ninja -C build
 DESTDIR="$DESTDIR" ninja -C build install
 install -dm755 "$DESTDIR/etc/sv/polkitd"
 install -Dm755 "$FLUX_RECIPE_DIR/files/polkitd/run" "$DESTDIR/etc/sv/polkitd/run"
+# built with -Dauthfw=pam, but nothing ever shipped the actual PAM service
+# file pkexec authenticates against ("polkit-1", the hardcoded service name
+# polkit itself uses) - without it, and with no /etc/pam.d/other fallback
+# either, PAM has no valid stack for this service at all and fails closed
+# unconditionally, so pkexec rejects every password regardless of whether
+# it's correct. This is why Sleex's Settings > Security page (which calls
+# howdy through pkexec) never authenticated, but it's not howdy-specific -
+# it broke every pkexec-based action on the system.
+install -dm755 "$DESTDIR/etc/pam.d"
+printf 'auth\trequired\tpam_unix.so\naccount\trequired\tpam_unix.so\nsession\trequired\tpam_unix.so\n' > "$DESTDIR/etc/pam.d/polkit-1"
 
 %post-install
 sv up /etc/sv/polkitd 2>/dev/null || true

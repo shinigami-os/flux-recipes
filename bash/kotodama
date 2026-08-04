@@ -33,3 +33,8 @@ make
 
 %install
 make DESTDIR="$DESTDIR" install
+
+%post-install
+# see zsh's kotodama for why this matters and why the version is
+# deliberately not bumped here
+grep -qx /usr/bin/bash /etc/shells || echo /usr/bin/bash >> /etc/shells

@@ -51,3 +51,22 @@ make
 
 %install
 make DESTDIR=$DESTDIR install
+
+%post-install
+# kira-base bakes /etc/shells with only /bin/sh, and never gets touched
+# again after that - since zsh is the default shell on every Kira tier,
+# this silently broke pkexec (and anything else that checks /etc/shells)
+# for effectively every user: polkit refuses outright with "The value for
+# the SHELL variable was not found in the /etc/shells file" if the caller's
+# login shell isn't listed there, regardless of the shell being real and
+# working fine otherwise.
+#
+# deliberately NOT bumping [meta] version for this: %post-install runs
+# fresh from this file on every install, cache hit or not, so bumping the
+# version here would only force an unnecessary full rebuild. The one time
+# that was tried, the resulting fresh rebuild broke terminals system-wide
+# (backspace, ctrl-c, everything) in a way still not understood - reverting
+# straight back to the untouched cached 5.9 build fixed it immediately.
+# Keeping the version pinned to the known-good cached artifact and only
+# adding this hook avoids touching that rebuild path at all.
+grep -qx /usr/bin/zsh /etc/shells || echo /usr/bin/zsh >> /etc/shells

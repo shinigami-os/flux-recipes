@@ -1,6 +1,6 @@
 [meta]
 name = sleex
-version = 1.36.3
+version = 1.36.4
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -25,6 +25,19 @@ cflags = -O2 -pipe -march=x86-64-v2
 # invoking a script). Point it at the real module + script Kira installs.
 sed -i 's#/lib/security/pam_howdy.so#/usr/lib/security/pam_python.so /usr/lib/security/howdy/pam.py#' \
     src/share/sleex/modules/lockscreen/pam/password_face.conf
+
+# upstream's own wayland-sessions/sleex.desktop says "Exec=sleex" (the raw
+# launcher, no env setup at all). kira-desktop-sleex ships a proper wrapper
+# at /usr/bin/kira-start-sleex (XDG_DATA_DIRS with the flatpak export path,
+# dbus-run-session, XDG_RUNTIME_DIR setup...) but nothing ever pointed the
+# actual session entry at it - regreet reads this exact file directly, so
+# every real login silently ran the bare upstream binary instead, with none
+# of that setup. This is why flatpak apps never showed in the launcher and
+# why Hyprland's own process had neither XDG_DATA_DIRS nor
+# DBUS_SESSION_BUS_ADDRESS set: kira-start-sleex, which sets both, was
+# never actually being invoked by a real graphical login.
+sed -i 's#^Exec=sleex$#Exec=/usr/bin/kira-start-sleex#' \
+    src/share/wayland-sessions/sleex.desktop
 
 %build
 cd src/share/sleex

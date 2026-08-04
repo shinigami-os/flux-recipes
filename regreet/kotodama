@@ -67,5 +67,7 @@ fi
 install -Dm755 "$BINDIR/regreet" "$DESTDIR/usr/bin/regreet"
 install -Dm644 "$FLUX_RECIPE_DIR/files/regreet.toml" "$DESTDIR/etc/greetd/regreet.toml"
 install -Dm644 "$FLUX_RECIPE_DIR/files/regreet.css" "$DESTDIR/etc/greetd/regreet.css"
-# sleex ships its own sleex.desktop; a second copy here would just race it
+# sleex ships its own sleex.desktop (a second copy here would just race
+# it) - its Exec= line is patched in sleex's own recipe to point at
+# kira-start-sleex instead of the bare upstream binary, see sleex/kotodama
 install -Dm644 "$FLUX_RECIPE_DIR/files/swayfx.desktop" "$DESTDIR/usr/share/wayland-sessions/swayfx.desktop"

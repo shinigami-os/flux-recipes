@@ -1,13 +1,13 @@
 [meta]
 name = sleex-ui-kit
-version = 1.0.1
+version = 1.0.2
 description = "Qt/QML component library with Sleex's design language, required by sleex"
 license = GPL-3.0-only
 size = 5
 
 [source]
 url = git+https://github.com/AxOS-project/sleex-ui-kit#main
-sha256 = 15b911419974982d102e5064ea5f59a7afc36fbc
+sha256 = d94411448b1d8a40eae653f7777a0a7153fab7e9
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-tools qt6-wayland
@@ -17,6 +17,17 @@ runtime = qt6-base qt6-declarative qt6-tools qt6-wayland
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# WallpaperDisplay.qml's static Image/AnimatedImage elements pass a bare
+# absolute filesystem path straight to `source` - fine for a plain QML
+# file, but this component gets compiled into a Qt resource (qrc:/) module,
+# so a "/usr/share/..." string resolves against that qrc: root instead of
+# the real filesystem ("Cannot open: qrc:/usr/share/backgrounds/..."),
+# leaving the wallpaper layer black. The MediaPlayer element a few lines
+# below already handles this correctly for video wallpapers
+# (root.source.startsWith("/") ? "file://" + root.source : root.source) -
+# apply the same fix to the two elements that never got it.
+sed -i 's#source: root._isAnimated || root._isVideo ? "" : root.source#source: root._isAnimated || root._isVideo ? "" : (root.source.startsWith("/") ? "file://" + root.source : root.source)#' src/src/Widgets/WallpaperDisplay.qml
+sed -i 's#source: root._isAnimated ? root.source : ""#source: root._isAnimated ? (root.source.startsWith("/") ? "file://" + root.source : root.source) : ""#' src/src/Widgets/WallpaperDisplay.qml
 
 %build
 cd src

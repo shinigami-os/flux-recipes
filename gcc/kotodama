@@ -35,6 +35,7 @@ export glibcxx_cv_PTHREAD_MUTEX_CLOCKLOCK=no
 export glibcxx_cv_PTHREAD_RWLOCK_CLOCKLOCK=no
 ../configure \
   --prefix=/usr \
+  --libdir=/usr/lib \
   --with-sysroot=/ \
   --enable-languages=c,c++,fortran \
   --disable-multilib \

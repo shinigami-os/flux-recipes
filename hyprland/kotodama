@@ -1,6 +1,6 @@
 [meta]
 name = hyprland
-version = 0.55.4
+version = 0.55.4.1
 description = "A dynamic tiling Wayland compositor that does not sacrifice on its looks"
 license = BSD-3-Clause
 size = 120

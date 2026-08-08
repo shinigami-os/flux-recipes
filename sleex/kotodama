@@ -1,6 +1,6 @@
 [meta]
 name = sleex
-version = 1.36.4
+version = 1.36.5
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -38,6 +38,11 @@ sed -i 's#/lib/security/pam_howdy.so#/usr/lib/security/pam_python.so /usr/lib/se
 # never actually being invoked by a real graphical login.
 sed -i 's#^Exec=sleex$#Exec=/usr/bin/kira-start-sleex#' \
     src/share/wayland-sessions/sleex.desktop
+
+# upstream throws Hyprland's own stdout/stderr away, so a crash here just
+# looks like a silent bounce back to the greeter with no way to tell why
+sed -i 's#start-hyprland -- --config /etc/sleex/hyprland.lua > /dev/null 2>&1#start-hyprland -- --config /etc/sleex/hyprland.lua#' \
+    src/bin/sleex
 
 %build
 cd src/share/sleex

@@ -1,44 +1,74 @@
 [meta]
 name = gcc-libs
-version = 14.2.0.12
+version = 14.2.0.13
 description = "GCC runtime libraries (libgcc_s, libstdc++, libgomp, libatomic)"
 license = GPL-3.0-or-later WITH GCC-exception-3.1
-size = 5
+size = 100
 
 [source]
-url =
-sha256 =
+url = https://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.xz
+sha256 = a7b39bc69cbf9e25826c5a60ab26477001f7c08d85cec04bc0e29cabed6f3cc9
 
 [deps]
-build = gcc
+build = gcc make gmp mpfr mpc zlib
+runtime =
 
 [build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p build
+# same musl __libc_single_threaded fix gcc's own recipe needs - this is
+# building the exact same target libs gcc itself builds, just not keeping
+# the compiler around afterward
+find . -name atomicity.h -path "*ext*" -exec \
+    sed -i 's/__has_include(<sys\/single_threaded\.h>)/0/' {} \;
+
+%build
+cd build
+export glibcxx_cv_PTHREAD_COND_CLOCKWAIT=no
+export glibcxx_cv_PTHREAD_MUTEX_CLOCKLOCK=no
+export glibcxx_cv_PTHREAD_RWLOCK_CLOCKLOCK=no
+../configure \
+  --prefix=/usr \
+  --with-sysroot=/ \
+  --enable-languages=c,c++ \
+  --disable-multilib \
+  --disable-bootstrap \
+  --with-default-libstdcxx-abi=new \
+  --with-gmp="${FLUX_CROSS_SYSROOT:-}/usr" \
+  --with-mpfr="${FLUX_CROSS_SYSROOT:-}/usr" \
+  --with-mpc="${FLUX_CROSS_SYSROOT:-}/usr" \
+  --build=$(gcc -dumpmachine) \
+  --host=${FLUX_CROSS_HOST:-$(gcc -dumpmachine)} \
+  ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
+  ${FLUX_CROSS_HOST:+CXX_FOR_BUILD=g++} \
+  ${CC:+CC=$CC}
+# target libs are built by the freshly-built compiler itself, so there's
+# no way to get them without building the whole thing - only the install
+# step below is scoped down to just the runtime libs
+make
+
+%post-build
 
 %install
-CROSS_LIB=/opt/musl-cross/x86_64-linux-musl/lib
-if [ -d "$CROSS_LIB" ]; then
-    install -dm755 "$DESTDIR/usr/lib"
-    cp -Pf \
-        "$CROSS_LIB/libgcc_s.so" \
-        "$CROSS_LIB/libgcc_s.so.1" \
-        "$CROSS_LIB/libstdc++.so" \
-        "$CROSS_LIB/libstdc++.so.6" \
-        "$CROSS_LIB/libstdc++.so.6.0.29" \
-        "$CROSS_LIB/libatomic.so" \
-        "$CROSS_LIB/libatomic.so.1" \
-        "$CROSS_LIB/libatomic.so.1.2.0" \
-        "$CROSS_LIB/libgomp.so" \
-        "$CROSS_LIB/libgomp.so.1" \
-        "$CROSS_LIB/libgomp.so.1.0.0" \
-        "$DESTDIR/usr/lib/"
+cd build
+make DESTDIR="$PWD/_full_install" install
+install -dm755 "$DESTDIR/usr/lib"
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    CROSS_LIB=/opt/musl-cross/x86_64-linux-musl/lib
+    if [ -d "$CROSS_LIB" ]; then
+        # confirmed: cross-built target-libs land glibc-linked despite
+        # --host=x86_64-linux-musl - the musl-cross-make toolchain's own
+        # copies are the musl-correct ones
+        cp -Pf "$CROSS_LIB"/libgcc_s.so* "$DESTDIR/usr/lib/"
+        cp -Pf "$CROSS_LIB"/libstdc++.so* "$DESTDIR/usr/lib/"
+        cp -Pf "$CROSS_LIB"/libatomic.so* "$DESTDIR/usr/lib/"
+        cp -Pf "$CROSS_LIB"/libgomp.so* "$DESTDIR/usr/lib/"
+    fi
 else
-    # native build: gcc (a build dep above) is already installed on this
-    # machine by now, and its own libstdc++/libgcc_s/etc are the real,
-    # current ones - kira-base's bundled copies predate this gcc version
-    # and never get refreshed on their own, so ship a copy of these here
-    install -dm755 "$DESTDIR/usr/lib"
-    cp -Pf /usr/lib/libgcc_s.so* "$DESTDIR/usr/lib/"
-    cp -Pf /usr/lib/libstdc++.so* "$DESTDIR/usr/lib/"
-    cp -Pf /usr/lib/libatomic.so* "$DESTDIR/usr/lib/"
-    cp -Pf /usr/lib/libgomp.so* "$DESTDIR/usr/lib/"
+    cp -Pf "$PWD/_full_install/usr/lib/libgcc_s.so"* "$DESTDIR/usr/lib/"
+    cp -Pf "$PWD/_full_install/usr/lib/libstdc++.so"* "$DESTDIR/usr/lib/"
+    cp -Pf "$PWD/_full_install/usr/lib/libatomic.so"* "$DESTDIR/usr/lib/"
+    cp -Pf "$PWD/_full_install/usr/lib/libgomp.so"* "$DESTDIR/usr/lib/"
 fi

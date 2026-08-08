@@ -55,6 +55,11 @@ make
 
 %install
 cd build
+# see gcc-libs/kotodama - GCC decides target libs belong in lib64 based on
+# /usr/lib64 existing on the real build host, which only resolves back to
+# lib here because of a symlink a fresh DESTDIR won't have
+mkdir -p "$DESTDIR/usr"
+ln -sf lib "$DESTDIR/usr/lib64"
 make DESTDIR=$DESTDIR install
 # gcc-libs (a runtime dep) owns all of these now, cross or native - cross
 # because the ones built here land glibc-linked despite --host=musl, native

@@ -54,6 +54,12 @@ make
 
 %install
 cd build
+# GCC decides target libs belong in lib64 based on /usr/lib64 existing on
+# the real build host (it does here, as a symlink to lib) - that's harmless
+# on the real system since the symlink resolves back to lib, but a fresh
+# empty DESTDIR has no such symlink, so give it one before install runs
+mkdir -p "$PWD/_full_install/usr"
+ln -s lib "$PWD/_full_install/usr/lib64"
 make DESTDIR="$PWD/_full_install" install
 install -dm755 "$DESTDIR/usr/lib"
 if [ -n "$FLUX_CROSS_HOST" ]; then

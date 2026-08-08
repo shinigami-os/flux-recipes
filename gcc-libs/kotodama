@@ -1,6 +1,6 @@
 [meta]
 name = gcc-libs
-version = 11.2.1
+version = 14.2.0.12
 description = "GCC runtime libraries (libgcc_s, libstdc++, libgomp, libatomic)"
 license = GPL-3.0-or-later WITH GCC-exception-3.1
 size = 5
@@ -9,11 +9,13 @@ size = 5
 url =
 sha256 =
 
+[deps]
+build = gcc
+
 [build]
 
 %install
 CROSS_LIB=/opt/musl-cross/x86_64-linux-musl/lib
-# real Kira systems already have these libs from kira-base, nothing to do there
 if [ -d "$CROSS_LIB" ]; then
     install -dm755 "$DESTDIR/usr/lib"
     cp -Pf \
@@ -29,4 +31,14 @@ if [ -d "$CROSS_LIB" ]; then
         "$CROSS_LIB/libgomp.so.1" \
         "$CROSS_LIB/libgomp.so.1.0.0" \
         "$DESTDIR/usr/lib/"
+else
+    # native build: gcc (a build dep above) is already installed on this
+    # machine by now, and its own libstdc++/libgcc_s/etc are the real,
+    # current ones - kira-base's bundled copies predate this gcc version
+    # and never get refreshed on their own, so ship a copy of these here
+    install -dm755 "$DESTDIR/usr/lib"
+    cp -Pf /usr/lib/libgcc_s.so* "$DESTDIR/usr/lib/"
+    cp -Pf /usr/lib/libstdc++.so* "$DESTDIR/usr/lib/"
+    cp -Pf /usr/lib/libatomic.so* "$DESTDIR/usr/lib/"
+    cp -Pf /usr/lib/libgomp.so* "$DESTDIR/usr/lib/"
 fi

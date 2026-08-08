@@ -11,7 +11,7 @@ sha256 =
 
 [deps]
 build = gcc cmake ninja pkgconf hyprwayland-scanner aquamarine hyprlang hyprutils hyprcursor hyprgraphics hyprland-protocols hyprwire wayland wayland-protocols libxkbcommon libdrm pixman cairo pango libinput mesa libglvnd glib re2 muparser lcms2 libXcursor util-linux lua55 glslang libxcb xcb-util-wm xcb-util-errors
-runtime = aquamarine hyprlang hyprutils hyprcursor hyprgraphics hyprwire wayland libxkbcommon libdrm pixman cairo pango libinput mesa libglvnd glib re2 muparser lcms2 libXcursor util-linux lua55 glslang libxcb xcb-util-wm xcb-util-errors
+runtime = gcc-libs aquamarine hyprlang hyprutils hyprcursor hyprgraphics hyprwire wayland libxkbcommon libdrm pixman cairo pango libinput mesa libglvnd glib re2 muparser lcms2 libXcursor util-linux lua55 glslang libxcb xcb-util-wm xcb-util-errors
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

@@ -19,6 +19,15 @@ export XKB_DEFAULT_LAYOUT="${KEYMAP:-us}"
 # stderr prints straight over the physical screen instead of through
 # svlogd - redirect it to a plain file instead so crashes can be inspected
 exec >>/home/greetd/greeter.log 2>&1
+# regreet talks to accounts-daemon over the system bus at startup and
+# panics outright if the socket isn't there yet, same race kira-start-sleex
+# already waits out for pipewire/dbus
+i=0
+while [ ! -S /var/run/dbus/system_bus_socket ] && [ $i -lt 15 ]; do
+    sleep 1
+    i=$((i + 1))
+done
+
 # regreet's own log file defaults to /var/log/regreet/log, which greetd
 # (an unprivileged user) can't create - point it at its own home instead
 exec cage -s -- regreet -l /home/greetd/regreet.log

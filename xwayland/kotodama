@@ -1,6 +1,6 @@
 [meta]
 name = xwayland
-version = 24.1.12
+version = 24.1.12.1
 description = "X server for running X11 apps under Wayland"
 license = MIT
 size = 3
@@ -10,8 +10,8 @@ url = https://xorg.freedesktop.org/releases/individual/xserver/xwayland-24.1.12.
 sha256 = 6df02c511b92c1b9848734d9d1b03a4c24f8375ba3cada44e9684a21b5f78e21
 
 [deps]
-build = gcc meson ninja pkgconf xorgproto libXau libxcb libX11 libXext libXfont2 libxkbfile libxcvt xshmfence xkbcomp pixman mesa libdrm libepoxy libglvnd libmd wayland wayland-protocols
-runtime = libXau libxcb libX11 libXext libXfont2 libxkbfile libxcvt xshmfence xkbcomp pixman mesa libdrm libepoxy libmd wayland
+build = gcc meson ninja pkgconf xorgproto libXau libxcb libX11 libXext libXfont2 libxkbfile libxcvt xshmfence xkbcomp pixman mesa libdrm libepoxy libglvnd libmd libbsd wayland wayland-protocols
+runtime = libXau libxcb libX11 libXext libXfont2 libxkbfile libxcvt xshmfence xkbcomp pixman mesa libdrm libepoxy libmd libbsd wayland
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

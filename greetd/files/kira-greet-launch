@@ -30,4 +30,10 @@ done
 
 # regreet's own log file defaults to /var/log/regreet/log, which greetd
 # (an unprivileged user) can't create - point it at its own home instead
-exec cage -s -- regreet -l /home/greetd/regreet.log
+#
+# cage defaults to "-m extend", which treats every connected output as one
+# combined canvas and stretches the single regreet window across all of
+# them - with two real separate monitors (not a bezel-matched video wall)
+# that reads as garbled/split-in-half. "-m last" confines it to a single
+# output instead.
+exec cage -s -m last -- regreet -l /home/greetd/regreet.log

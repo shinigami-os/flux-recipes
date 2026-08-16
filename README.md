@@ -50,7 +50,7 @@ make DESTDIR=$DESTDIR install
 ### Sections
 - `[meta]`: name, version, description, license, size (in MB)
 - `[source]`: direct tarball URL and SHA-256 checksum, leave both empty for a meta-package
-- `[deps]`: space-separated build and runtime dependency lists
+- `[deps]`: space-separated build and runtime dependency lists. A third, non-standard `optional` list is used by a couple of recipes for nice-to-have deps flux doesn't resolve automatically - document any real usage here before relying on it further.
 - `[build]`: optional cflags and ldflags overrides
 
 ### Hooks
@@ -75,14 +75,14 @@ The `kira-desktop-*` packages follow this pattern: each clones the `kira-desktop
 Read the full kotodama format documentation in the [Kira Linux specification](https://github.com/shinigami-os) before submitting a recipe. Recipes are reviewed before merge. The recipe must build cleanly and pass basic sanity checks before entering the repo.
 
 Key rules:
-- `sha256` must be the real checksum of the source tarball. `SKIP` is never accepted in the official repo.
-- `url` must point directly to a source tarball, not a release page.
+- For a tarball `url`, `sha256` must be the real checksum of that tarball. `SKIP` is never accepted in the official repo.
+- `url` must point directly to a source tarball, a bare single file, or `git+<repo>#<ref>` - never a release page. For a `git+` URL on a floating branch (not a tag), `sha256` holds a pinned commit hash instead of a tarball checksum - prefer pinning to a tag when one exists.
 - `name` must match the directory name exactly.
 - Hooks must use `$DESTDIR` in `%install`, never install directly to `/`.
 
 ## Status
 
-Phase 3. Core recipe format stable, including the `%post-install` hook, meta-packages, and `no_sysroot_stage`. Well over 300 recipes covering the base toolchain, desktop stack (Wayland/wlroots, GTK4, greetd + regreet + cage for the login manager), and common developer tooling. `flux install`, `remove`, `search`, `update`, `info`, `list`, `cache`, and `build` (native and `--cross`) are all fully working against this repo. See the [Kira Linux specification](https://github.com/shinigami-os) and the project roadmap.
+Phase 3. Core recipe format stable, including the `%post-install` hook, meta-packages, and `no_sysroot_stage`. 396 recipes covering the base toolchain, desktop stack (Wayland/wlroots, GTK4, Hyprland/quickshell, greetd + regreet + cage for the login manager), and common developer tooling. `flux install`, `remove`, `search`, `update`, `info`, `list`, `cache`, and `build` (native and `--cross`) are all fully working against this repo. See the [Kira Linux specification](https://github.com/shinigami-os) and the project roadmap.
 
 ## License
 GPL-2.0

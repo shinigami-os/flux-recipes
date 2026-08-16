@@ -18,9 +18,8 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 mkdir -p build
-# same musl __libc_single_threaded fix gcc's own recipe needs - this is
-# building the exact same target libs gcc itself builds, just not keeping
-# the compiler around afterward
+# same musl __libc_single_threaded fix gcc's own recipe needs - these are
+# the same target libs gcc itself builds, just without keeping the compiler around
 find . -name atomicity.h -path "*ext*" -exec \
     sed -i 's/__has_include(<sys\/single_threaded\.h>)/0/' {} \;
 
@@ -45,9 +44,8 @@ export glibcxx_cv_PTHREAD_RWLOCK_CLOCKLOCK=no
   ${FLUX_CROSS_HOST:+CC_FOR_BUILD=gcc} \
   ${FLUX_CROSS_HOST:+CXX_FOR_BUILD=g++} \
   ${CC:+CC=$CC}
-# target libs are built by the freshly-built compiler itself, so there's
-# no way to get them without building the whole thing - only the install
-# step below is scoped down to just the runtime libs
+# target libs are built by the freshly-built compiler itself, so there's no way
+# to get them without building the whole thing; only install is scoped down
 make
 
 %post-build
@@ -65,9 +63,8 @@ install -dm755 "$DESTDIR/usr/lib"
 if [ -n "$FLUX_CROSS_HOST" ]; then
     CROSS_LIB=/opt/musl-cross/x86_64-linux-musl/lib
     if [ -d "$CROSS_LIB" ]; then
-        # confirmed: cross-built target-libs land glibc-linked despite
-        # --host=x86_64-linux-musl - the musl-cross-make toolchain's own
-        # copies are the musl-correct ones
+        # cross-built target-libs land glibc-linked despite --host=x86_64-linux-musl;
+        # the musl-cross-make toolchain's own copies are the musl-correct ones
         cp -Pf "$CROSS_LIB"/libgcc_s.so* "$DESTDIR/usr/lib/"
         cp -Pf "$CROSS_LIB"/libstdc++.so* "$DESTDIR/usr/lib/"
         cp -Pf "$CROSS_LIB"/libatomic.so* "$DESTDIR/usr/lib/"

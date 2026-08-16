@@ -17,26 +17,18 @@ runtime = qt6-base qt6-declarative qt6-tools qt6-wayland
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# WallpaperDisplay.qml's static Image/AnimatedImage elements pass a bare
-# absolute filesystem path straight to `source` - fine for a plain QML
-# file, but this component gets compiled into a Qt resource (qrc:/) module,
-# so a "/usr/share/..." string resolves against that qrc: root instead of
-# the real filesystem ("Cannot open: qrc:/usr/share/backgrounds/..."),
-# leaving the wallpaper layer black. The MediaPlayer element a few lines
-# below already handles this correctly for video wallpapers
-# (root.source.startsWith("/") ? "file://" + root.source : root.source) -
-# apply the same fix to the two elements that never got it.
+# WallpaperDisplay.qml compiles into a qrc:/ resource, so a bare absolute path
+# passed to Image/AnimatedImage's `source` resolves against qrc:/ instead of the
+# real filesystem, leaving the wallpaper black. MediaPlayer nearby already
+# file://-prefixes correctly; apply the same fix to the two elements missing it.
 sed -i 's#source: root._isAnimated || root._isVideo ? "" : root.source#source: root._isAnimated || root._isVideo ? "" : (root.source.startsWith("/") ? "file://" + root.source : root.source)#' src/src/Widgets/WallpaperDisplay.qml
 sed -i 's#source: root._isAnimated ? root.source : ""#source: root._isAnimated ? (root.source.startsWith("/") ? "file://" + root.source : root.source) : ""#' src/src/Widgets/WallpaperDisplay.qml
 
 %build
 cd src
-# unlike Sleex's own CMakeLists (which hardcodes CMAKE_INSTALL_PREFIX "/"),
-# this one never sets it, so plain cmake defaults to /usr/local - its
-# libSleexUiKit*.so land in /usr/local/lib64 while the QML plugins that
-# dlopen them (installed via Qt6's own QT6_INSTALL_QML, under /usr/qml)
-# carry an $ORIGIN/../lib64 rpath expecting /usr/lib64 - force the prefix
-# so both land under the same real, already-searched library path
+# unlike Sleex's own CMakeLists, this one never sets CMAKE_INSTALL_PREFIX, so it
+# defaults to /usr/local while the QML plugins that dlopen these libs carry a
+# rpath expecting /usr/lib64 - force the prefix so both paths actually match
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 cmake --build build
 

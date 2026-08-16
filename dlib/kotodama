@@ -21,13 +21,11 @@ python3 -m ensurepip --default-pip >/dev/null 2>&1 || true
 python3 -m pip install --quiet packaging setuptools
 
 %build
-# dlib's setup.py documents a --no/-G custom-argument mechanism for passing
-# cmake options (e.g. --no USE_AVX_INSTRUCTIONS, --no DLIB_USE_CUDA), but it
-# only strips those tokens out of sys.argv once the build_ext step actually
-# runs - modern setuptools validates the whole command line up front and
-# fails immediately on the unrecognized "USE_AVX_INSTRUCTIONS" token before
-# ever reaching that point. Skipping it: CUDA auto-skips with no toolkit
-# present anyway, and AVX auto-detection risk is accepted for now.
+# dlib's setup.py documents a --no <OPTION> mechanism for passing cmake options,
+# but it only strips those tokens once build_ext runs - modern setuptools
+# validates the whole command line up front and fails on the unrecognized
+# token first. Skipped: CUDA auto-skips with no toolkit present anyway, and
+# AVX auto-detection risk is accepted for now.
 export CFLAGS="-O2 -pipe -march=x86-64-v2"
 export CXXFLAGS="-O2 -pipe -march=x86-64-v2"
 python3 setup.py build

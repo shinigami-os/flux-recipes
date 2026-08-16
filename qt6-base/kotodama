@@ -17,12 +17,10 @@ runtime = glib dbus libglvnd libdrm libxkbcommon wayland zlib zstd freetype harf
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# __cxa_call_terminate is missing from Kira's libstdc++ across every gcc
-# build so far (confirmed present in gcc's own eh_call.cc source with no
-# platform guard - the gap is elsewhere in the build system, not worth
-# another gcc rebuild for a code path this rare: it only runs when a
-# noexcept destructor itself throws while unwinding). Provide a minimal
-# stub that does exactly what the real implementation falls back to anyway.
+# __cxa_call_terminate is missing from Kira's libstdc++ across every gcc build so
+# far, though it's present in gcc's own eh_call.cc with no platform guard - not
+# worth a gcc rebuild for a path this rare (only runs when a noexcept destructor
+# itself throws). Provide a minimal stub matching the real fallback behavior.
 cat > cxa_call_terminate_shim.c << 'EOF'
 extern void abort(void);
 void __cxa_call_terminate(void* p) {

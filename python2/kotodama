@@ -19,13 +19,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-# GCC 14 makes implicit-function-declaration a hard error by default;
-# Python 2.7's ancient build trips this in several places. Deliberately
-# not linking openssl here: Python 2.7's _ssl module targets OpenSSL
-# 1.0/1.1 APIs that OpenSSL 3.x removed outright, and this build only
-# exists for howdy's tiny PAM glue script (ConfigParser + subprocess +
-# os + glob + syslog, all pure stdlib, no networking) - not worth
-# dragging in that whole compatibility mess for something unused.
+# GCC 14 makes implicit-function-declaration a hard error by default; Python
+# 2.7's ancient build trips this in several places. Deliberately not linking
+# openssl: 2.7's _ssl module targets OpenSSL 1.0/1.1 APIs that 3.x removed, and
+# this build only exists for howdy's stdlib-only PAM glue script (no networking).
 export CFLAGS="-O2 -pipe -march=x86-64-v2 -Wno-error=implicit-function-declaration"
 ./configure \
   --prefix=/usr \

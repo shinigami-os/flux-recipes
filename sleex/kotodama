@@ -18,24 +18,14 @@ optional = matugen hyprlock hypridle wl-clipboard fuzzel foot howdy ffmpeg image
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# Sleex's own lockscreen/pam/password_face.conf (loaded when Settings >
-# Security > Face Auth is on) references /lib/security/pam_howdy.so, which
-# doesn't exist anywhere - upstream howdy has never shipped a compiled PAM
-# module by that name, only the pam-python bridge (pam_python.so
-# invoking a script). Point it at the real module + script Kira installs.
+# password_face.conf points at /lib/security/pam_howdy.so, which doesn't exist -
+# howdy only ships the pam-python bridge. Point it at the real module + script.
 sed -i 's#/lib/security/pam_howdy.so#/usr/lib/security/pam_python.so /usr/lib/security/howdy/pam.py#' \
     src/share/sleex/modules/lockscreen/pam/password_face.conf
 
-# upstream's own wayland-sessions/sleex.desktop says "Exec=sleex" (the raw
-# launcher, no env setup at all). kira-desktop-sleex ships a proper wrapper
-# at /usr/bin/kira-start-sleex (XDG_DATA_DIRS with the flatpak export path,
-# dbus-run-session, XDG_RUNTIME_DIR setup...) but nothing ever pointed the
-# actual session entry at it - regreet reads this exact file directly, so
-# every real login silently ran the bare upstream binary instead, with none
-# of that setup. This is why flatpak apps never showed in the launcher and
-# why Hyprland's own process had neither XDG_DATA_DIRS nor
-# DBUS_SESSION_BUS_ADDRESS set: kira-start-sleex, which sets both, was
-# never actually being invoked by a real graphical login.
+# upstream sleex.desktop has Exec=sleex (raw binary, no env setup). regreet reads
+# this file directly, so login never invoked kira-start-sleex, the wrapper that
+# sets XDG_DATA_DIRS/DBUS_SESSION_BUS_ADDRESS - point the entry at it instead.
 sed -i 's#^Exec=sleex$#Exec=/usr/bin/kira-start-sleex#' \
     src/share/wayland-sessions/sleex.desktop
 
@@ -55,16 +45,13 @@ cmake --build build
 %post-build
 
 %install
-# executables
 install -dm755 "$DESTDIR/usr/bin"
 cp -a src/bin/. "$DESTDIR/usr/bin/"
 chmod 755 "$DESTDIR/usr/bin/"*
-# system config (sleex hyprland lua config + xdg mimeapps)
 install -dm755 "$DESTDIR/etc"
 cp -a src/etc/. "$DESTDIR/etc/"
-# compiled quickshell plugin (CMakeLists sets prefix "/")
+# CMakeLists sets prefix "/" for the compiled quickshell plugin
 ( cd src/share/sleex && DESTDIR="$DESTDIR" cmake --install build )
-# QML shell runtime tree
 install -dm755 "$DESTDIR/usr/share/sleex"
 rsync -a \
     --exclude 'build/' \
@@ -73,6 +60,5 @@ rsync -a \
     --exclude '.qmlls.ini' \
     --exclude '.qt/' \
     src/share/sleex/ "$DESTDIR/usr/share/sleex/"
-# wayland session entry
 install -Dm644 src/share/wayland-sessions/sleex.desktop \
     "$DESTDIR/usr/share/wayland-sessions/sleex.desktop"

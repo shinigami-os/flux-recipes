@@ -1,7 +1,7 @@
 [meta]
 name = ttf-dejavu
 version = 2.37
-description = "DejaVu font family — wide Unicode coverage, metric-compatible with Bitstream Vera"
+description = "DejaVu font family - wide Unicode coverage, metric-compatible with Bitstream Vera"
 license = custom
 size = 10
 

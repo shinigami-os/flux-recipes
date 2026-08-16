@@ -1,7 +1,7 @@
 [meta]
 name = noto-fonts
 version = 20201206
-description = "Noto font family — comprehensive Unicode coverage (Sans, Serif, Mono)"
+description = "Noto font family - comprehensive Unicode coverage (Sans, Serif, Mono)"
 license = OFL-1.1
 size = 80
 

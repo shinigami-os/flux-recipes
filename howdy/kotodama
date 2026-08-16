@@ -6,15 +6,11 @@ license = MIT
 size = 60
 
 [source]
-# the dev branch (unreleased, tracking toward 3.0.0) is what AxOS/Sleex
-# actually targets - it's the version that adds --plain, CSV `list`
-# output, and an `add <label>` positional, all three of which Sleex's own
-# Settings > Security page assumes and v2.6.1 simply doesn't have. It also
-# replaces the SUDO_USER-only root check with a plain os.geteuid() != 0
-# check, which also happens to fix Sleex calling howdy via pkexec instead
-# of sudo (pkexec never set SUDO_USER, so v2.6.1's cli.py always refused
-# to run under it). pam.py itself now runs under whatever interpreter
-# pam-python embeds - still python2 there, see pam-python's own kotodama.
+# the dev branch (unreleased, toward 3.0.0) is what Sleex actually targets: it
+# adds --plain, CSV `list` output, and `add <label>`, all of which Sleex's
+# Settings > Security page assumes and v2.6.1 lacks. It also replaces the
+# SUDO_USER-only root check with os.geteuid() != 0, fixing howdy called via
+# pkexec (which never sets SUDO_USER, so v2.6.1 always refused to run under it).
 url = git+https://github.com/boltgolt/howdy#dev
 sha256 = 3306db358a02fe9a6dc70bb6ad0069d7a691c7a3
 
@@ -27,8 +23,8 @@ cflags =
 
 %pre-build
 # the 3 dlib face models aren't in howdy's own repo - fetch them from
-# davisking/dlib-models the same way howdy's own archlinux/howdy PKGBUILD
-# does, verifying against the same checksums that PKGBUILD pins
+# davisking/dlib-models like the archlinux/howdy PKGBUILD does, verifying
+# against the same checksums it pins
 fetch_model() {
     name="$1"
     sha="$2"
@@ -58,25 +54,19 @@ install -dm755 "$DESTDIR/usr/share/bash-completion/completions"
 install -Dm644 autocomplete/howdy "$DESTDIR/usr/share/bash-completion/completions/howdy"
 
 %post-install
-# only sudo gets wired here - the sudo package itself must never carry a
-# hard reference to pam_python.so, since that would break sudo outright on
-# every Kira install that doesn't have howdy. This only runs when howdy is
-# actually being installed, so it's safe to prepend here.
+# only sudo gets wired here - the sudo package itself must never hard-reference
+# pam_python.so, since that would break sudo on every install without howdy.
+# This only runs when howdy is actually being installed.
 if [ -f /etc/pam.d/sudo ] && ! grep -q 'howdy/pam.py' /etc/pam.d/sudo; then
     { echo 'auth	sufficient	/usr/lib/security/pam_python.so /usr/lib/security/howdy/pam.py'; cat /etc/pam.d/sudo; } > /etc/pam.d/sudo.new
     mv /etc/pam.d/sudo.new /etc/pam.d/sudo
 fi
-# howdy's config.ini ships "device_path = none" - the real distro
-# installers (Debian/Arch) fill this in via their own interactive/apt
-# hooks, which we don't have. video_capture.py does a plain
-# os.path.exists() on this value with zero auto-detection of its own, so
-# without this it always fails with "Camera path is not configured
-# correctly" the first time anyone actually tries to use it. Probe
-# /dev/video* with opencv (already a dep) and pick the first one that
-# actually opens and returns a frame - cheap sanity check, no v4l-utils
-# needed just for this. Kept as its own files/ script rather than an
-# inline heredoc: kotodama's parser left-trims every hook line
-# independently, which would silently mangle indentation-sensitive Python.
+# howdy ships config.ini with "device_path = none"; the real distro installers
+# fill this in via interactive/apt hooks we don't have, and video_capture.py has
+# zero auto-detection of its own, so it always fails until this runs. Probe
+# /dev/video* with opencv and pick the first one that opens and returns a frame.
+# Kept as its own files/ script: kotodama's hook-body left-trim would mangle
+# indentation-sensitive Python pasted inline.
 if grep -q '^device_path = none$' /usr/lib/security/howdy/config.ini; then
     found=$(python3 "$FLUX_RECIPE_DIR/files/detect_camera.py")
     if [ -n "$found" ]; then

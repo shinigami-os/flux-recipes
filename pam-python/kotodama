@@ -21,19 +21,16 @@ runtime = python2 linux-pam
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# __STRING (used to stringify __LINUX_PAM__/__LINUX_PAM_MINOR__ for a
-# version string) is a glibc-only macro from <sys/cdefs.h> - musl doesn't
-# define it at all, so the preprocessor leaves it as a bare identifier and
-# the compiler treats it as an implicitly-declared function returning int
+# __STRING (used to stringify __LINUX_PAM__/__LINUX_PAM_MINOR__) is a
+# glibc-only macro from <sys/cdefs.h> - musl doesn't define it, leaving it
+# as a bare identifier the compiler treats as an implicit function declaration
 { echo '#ifndef __STRING'; echo '#define __STRING(x) #x'; echo '#endif'; cat src/pam_python.c; } > src/pam_python.c.new
 mv src/pam_python.c.new src/pam_python.c
 
 %build
-# built directly via setup.py rather than the bundled Makefile, which
-# hardcodes -Werror alongside -Wall -Wextra -Wshadow etc - this 15-year-old
-# C file trips several of those under any remotely modern compiler, and
-# none of that is worth fighting for a module only used to run one tiny
-# glue script
+# built via setup.py rather than the bundled Makefile, which hardcodes -Werror
+# alongside -Wall -Wextra -Wshadow - this 15-year-old C file trips several of
+# those under any modern compiler, not worth fighting for one glue script
 cd src
 export CFLAGS="-O2 -pipe -march=x86-64-v2"
 python2 setup.py build

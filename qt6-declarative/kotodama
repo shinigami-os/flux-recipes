@@ -17,13 +17,10 @@ runtime = qt6-base libglvnd mesa
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# ios_base_library_init is only ever emitted as a linker alias for
-# std::ios_base::Init::Init() when libstdc++ detects GNU symbol versioning
-# at its own build time; Qt's <iostream> usage references the alias name
-# directly, but Kira's libstdc++ never created it. Provide it ourselves -
-# only needs to reach shared libs (that's where the undefined ref lives),
-# not executables, so this stays out of CMAKE_EXE_LINKER_FLAGS entirely to
-# avoid breaking CMake's own C-only compiler sanity check.
+# ios_base_library_init is only emitted as a linker alias when libstdc++ detects
+# GNU symbol versioning at its own build time; Kira's libstdc++ never created it,
+# but Qt's <iostream> usage references the name directly. Provide it ourselves,
+# scoped to CMAKE_SHARED_LINKER_FLAGS only so CMake's C-only sanity check still passes.
 cat > ios_base_library_init_shim.cpp << 'EOF'
 #include <ios>
 namespace std {

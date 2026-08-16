@@ -23,19 +23,15 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-# NO_AFFINITY: Alpine notes this doesn't work reliably on musl
-# USE_OPENMP=0: avoids a known miscompile class (GCC bug 60035), matches
-# every other musl distro's OpenBLAS build
-# DYNAMIC_ARCH=1 + TARGET=CORE2: runtime CPU dispatch with a safe baseline,
-# since this needs to run on whatever x86_64 hardware Kira ends up on,
-# not just the machine it was built on
+# NO_AFFINITY: doesn't work reliably on musl (Alpine). USE_OPENMP=0: avoids a
+# known miscompile class (GCC bug 60035). DYNAMIC_ARCH=1 + TARGET=CORE2: runtime
+# CPU dispatch with a safe baseline, since this needs to run on whatever x86_64
+# hardware Kira ends up on, not just the build machine
 FLAGS="MAJOR_VERSION=3 NO_AFFINITY=1 NO_STATIC=1 USE_OPENMP=0 DYNAMIC_ARCH=1 TARGET=CORE2 PREFIX=/usr"
-# the main build already produces one combined library with BLAS, CBLAS,
-# LAPACK and LAPACKE all in it (confirmed: "OpenBLAS build complete. (BLAS
-# CBLAS LAPACK LAPACKE)") - Alpine additionally builds interface/
-# shared-blas-lapack for standalone liblapack.so/liblapacke.so aliases, but
-# that make target doesn't exist in this version's interface/Makefile, and
-# nothing needs it since -lopenblas alone already exports those symbols
+# the main build already produces one combined library with BLAS, CBLAS, LAPACK
+# and LAPACKE all in it; Alpine additionally builds standalone liblapack.so/
+# liblapacke.so aliases, but that make target doesn't exist in this version's
+# Makefile, and nothing needs it since -lopenblas alone exports those symbols
 make $FLAGS CFLAGS="-O2 -pipe -march=x86-64-v2"
 
 %post-build

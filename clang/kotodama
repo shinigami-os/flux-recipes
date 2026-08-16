@@ -25,12 +25,10 @@ cmake -S llvm -B ../clang-build -G Ninja \
   -DLLVM_ENABLE_PROJECTS="clang;lld" \
   -DCMAKE_INSTALL_PREFIX=/usr \
   -DLLVM_TARGETS_TO_BUILD=X86
-# LLVM_BUILD_LLVM_DYLIB's monolithic libLLVM.so link step needs several GB
-# in one process - on a no-swap machine that's an OOM SIGKILL waiting to
-# happen, and it leaves a truncated .o silently archived into a .a, which
-# only surfaces later as a baffling "member ... is not an object" link
-# error. Not needed just to get a working clang/clang++/lld for the kernel
-# build. -j4 caps peak parallel memory use for the same no-swap reason.
+# LLVM_BUILD_LLVM_DYLIB's monolithic libLLVM.so link step needs several GB in one
+# process - an OOM SIGKILL on this no-swap machine, leaving a truncated .o
+# silently archived into a .a that only surfaces later as a baffling link error.
+# Not needed for a working clang/clang++/lld. -j4 caps peak memory for the same reason.
 ninja -C ../clang-build -j4
 
 %post-build

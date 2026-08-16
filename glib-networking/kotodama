@@ -17,11 +17,9 @@ runtime = glib openssl gsettings-desktop-schemas
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# a stale OCSP staple (common with CDN-cached responses, e.g. Flathub) was
-# being treated as a hard TLS failure ("Unacceptable TLS certificate"),
-# even though the certificate chain itself verifies fine and curl/browsers
-# don't hard-fail on this - only skip the freshness check, still honor an
-# actual REVOKED/UNKNOWN status from the (stale) response
+# a stale OCSP staple (common with CDN-cached responses, e.g. Flathub) was being
+# treated as a hard TLS failure, even though curl/browsers don't hard-fail on
+# this - only skip the freshness check, still honor an actual REVOKED/UNKNOWN status
 sed -i '575,582c\      if (!OCSP_check_validity (this_update_time, next_update_time, 300L, -1L)) ERR_clear_error ();' tls/openssl/gtlsdatabase-openssl.c
 
 %build

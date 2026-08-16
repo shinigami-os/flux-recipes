@@ -21,12 +21,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 # package here - bootstrap pip (bundled offline in cpython) then install it
 python3 -m ensurepip --default-pip >/dev/null 2>&1 || true
 python3 -m pip install --quiet jinja2
-# busybox's realpath has no --relative-to (a GNU coreutils extension);
-# meson.build only uses this to embed a cosmetic path string, so swap the
-# whole call (fixed at lines 35-38 of this pinned tarball) for a portable
-# python3 equivalent (already a build dep) via a line-range sed replace,
-# since kotodama hook bodies strip leading whitespace and break indented
-# multi-line python pasted directly into a %pre-build block
+# busybox's realpath has no --relative-to (a GNU coreutils extension); meson.build
+# only uses it for a cosmetic path string, so swap the call (lines 35-38 of this
+# pinned tarball) for a python3 one-liner instead - kotodama hook bodies strip
+# leading whitespace and would mangle indented multi-line python pasted in directly
 grep -q "run_command('realpath'," meson.build
 sed -i "35,38c relative_source_path = run_command('python3', '-c', 'import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))', project_source_root, project_build_root, check : true).stdout().strip()" meson.build
 # musl does not provide transitive includes that glibc does

@@ -18,11 +18,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 # Kira ships its own layout for the greeter: a full replacement of upstream's
-# centred form, plus kira_decorate() which fills in the avatar/user/kernel
-# labels, builds the session pills, and opens the PAM conversation at startup
-# so the password field is there without a click. Appending the function is
-# enough - Rust doesn't care about definition order - so the only edit to
-# upstream's own code is the one-line call.
+# centred form, plus kira_decorate() which fills in avatar/user/kernel labels,
+# builds the session pills, and opens the PAM conversation at startup. Appending
+# the function is enough - Rust doesn't care about definition order - so the
+# only edit to upstream's own code is the one-line call.
 cp "$FLUX_RECIPE_DIR/files/templates.rs" src/gui/templates.rs
 cat "$FLUX_RECIPE_DIR/files/kira_decorate.rs" >> src/gui/component.rs
 sed -i 's|^        setup_users_sessions(&model, &widgets);$|        setup_users_sessions(\&model, \&widgets);\n        kira_decorate(\&model, \&widgets, \&sender);|' src/gui/component.rs

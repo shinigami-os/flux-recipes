@@ -1,7 +1,7 @@
 [meta]
 name = ttf-liberation
 version = 2.1.5
-description = "Liberation fonts — metric-compatible replacements for Arial, Times New Roman, Courier New"
+description = "Liberation fonts - metric-compatible replacements for Arial, Times New Roman, Courier New"
 license = OFL-1.1
 size = 3
 

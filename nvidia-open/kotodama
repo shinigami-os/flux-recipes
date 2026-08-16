@@ -10,7 +10,7 @@ url = git+https://github.com/NVIDIA/open-gpu-kernel-modules#610.43.03
 sha256 = 452cec62d827034798072827d3866d1881662b77
 
 [deps]
-build = clang lld llvm libelf perl bc
+build = clang libelf perl bc
 runtime = nvidia-gsp-firmware
 
 [build]

@@ -17,10 +17,9 @@ runtime = qt6-base qt6-wayland wayland
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# src/CMakeLists.txt links Qt::WaylandClientPrivate directly, but upstream's
-# own find_package call never requests that component - it apparently relied
-# on some now-changed Qt 6.8 behavior that auto-exposed it. Request it
-# explicitly so the target actually gets defined.
+# src/CMakeLists.txt links Qt::WaylandClientPrivate directly, but upstream's own
+# find_package call never requests that component - request it explicitly so
+# the target actually gets defined
 sed -i 's/REQUIRED COMPONENTS WaylandClient Qml/REQUIRED COMPONENTS WaylandClient WaylandClientPrivate/' CMakeLists.txt
 sed -i 's/add_subdirectory(declarative)/if(TARGET Qt6::Qml)\nadd_subdirectory(declarative)\nendif()/' src/CMakeLists.txt
 sed -i '/add_subdirectory(tests)/d' CMakeLists.txt

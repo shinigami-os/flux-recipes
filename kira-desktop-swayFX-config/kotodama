@@ -1,13 +1,13 @@
 [meta]
 name = kira-desktop-swayFX-config
-version = 26.08-1
+version = 26.08-2
 description = "Default SwayFX desktop configuration files (skel, root, launch script)"
 license = MIT
 size = 1
 
 [source]
-url = git+https://github.com/shinigami-os/kira-desktop#v26.08
-sha256 = 7f8d07e72865ef15fca07d07de78a37ff43e93f8
+url = git+https://github.com/shinigami-os/kira-desktop#v26.08-1
+sha256 = eaa43e100e08a150a40715d6f6c64268007e7e25
 
 [deps]
 build =
@@ -43,4 +43,4 @@ for home in /home/*; do
     cp -a /etc/skel/.config/. "$home/.config/"
     chown -R "$username:$username" "$home/.config/" 2>/dev/null || true
 done
-echo "[kira-desktop-swayFX-config] Config updated to v26.08. Reload sway (mod+Shift+r) or log out and back in."
+echo "[kira-desktop-swayFX-config] Config updated to v26.08-1. Reload sway (mod+Shift+r) or log out and back in."

@@ -1,6 +1,6 @@
 [meta]
 name = kira-net
-version = 1.4
+version = 1.5
 description = "Networking stack: NetworkManager (internal DHCP, manages wifi+ethernet), iwd, libnl plus their runit services"
 license = MIT
 size = 1
@@ -21,12 +21,11 @@ cflags =
 %post-build
 
 %install
-install -dm755 "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/iwd"
-install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
+# networkmanager's own service file comes from the networkmanager package itself, not here - a stale duplicate used to live in this recipe and silently clobber the real one on every install
+install -dm755 "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/iwd"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/run" "$DESTDIR/etc/sv/sshd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/iwd/run" "$DESTDIR/etc/sv/iwd/run"
-install -dm755 "$DESTDIR/etc/sv/networkmanager/log" "$DESTDIR/etc/sv/sshd/log" "$DESTDIR/etc/sv/iwd/log"
-install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/log/run" "$DESTDIR/etc/sv/networkmanager/log/run"
+install -dm755 "$DESTDIR/etc/sv/sshd/log" "$DESTDIR/etc/sv/iwd/log"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/log/run" "$DESTDIR/etc/sv/sshd/log/run"
 install -m755 "$FLUX_RECIPE_DIR/files/iwd/log/run" "$DESTDIR/etc/sv/iwd/log/run"
 
@@ -53,7 +52,7 @@ chmod 711 /var/empty
 # sv up alone doesn't delete a down file, only overrides runsv for the
 # current session - clear it for real so a stray down file (however it
 # got there) can't silently disable any of these again on the next boot
-for svc in networkmanager iwd sshd; do
+for svc in iwd sshd; do
     rm -f /etc/sv/$svc/down
     sv up /etc/sv/$svc 2>/dev/null || true
 done

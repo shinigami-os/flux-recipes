@@ -15,8 +15,10 @@ icon_theme_name = "Adwaita"
 theme_name = "Adwaita"
 
 [commands]
-reboot = ["reboot"]
-poweroff = ["poweroff"]
+# regreet runs as the unprivileged greetd user - bare reboot/poweroff need
+# root, so go through the NOPASSWD sudoers rule greetd's own kotodama ships
+reboot = ["sudo", "/sbin/reboot"]
+poweroff = ["sudo", "/sbin/poweroff"]
 
 [appearance]
 # the greeting is the one bit of "voice" - left empty on purpose

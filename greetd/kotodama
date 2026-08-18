@@ -1,6 +1,6 @@
 [meta]
 name = greetd
-version = 0.10.3.21
+version = 0.10.3.22
 description = "Flexible and agnostic login manager daemon"
 license = GPL-3.0-only
 size = 5
@@ -11,7 +11,7 @@ sha256 = ee5cb70e0add4ca9c9fe57e47581ab0002d44c07743fb5492469f3b570db640b
 
 [deps]
 build = gcc linux-pam
-runtime = linux-pam elogind regreet
+runtime = linux-pam elogind regreet sudo
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -79,6 +79,12 @@ install -dm755 "$DESTDIR/etc/pam.d"
 # bluetooth, etc.) even though the defaults say to allow it
 printf 'auth\trequired\tpam_unix.so\naccount\trequired\tpam_unix.so\nsession\trequired\tpam_unix.so\nsession\toptional\tpam_elogind.so\n' \
     > "$DESTDIR/etc/pam.d/greetd"
+# regreet runs as the unprivileged greetd user with no PAM session opened, so
+# its power buttons can't reach elogind's allow_active polkit path like the
+# desktop session's own reboot/poweroff bindings do - go through sudo instead
+install -dm700 "$DESTDIR/etc/sudoers.d"
+printf 'greetd ALL=(root) NOPASSWD: /sbin/reboot, /sbin/poweroff\n' > "$DESTDIR/etc/sudoers.d/greetd"
+chmod 440 "$DESTDIR/etc/sudoers.d/greetd"
 
 %post-install
 grep -q '^greetd:' /etc/group || addgroup -S greetd

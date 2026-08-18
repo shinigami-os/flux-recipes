@@ -1,5 +1,0 @@
-#!/bin/sh
-while [ ! -S /run/dbus/system_bus_socket ]; do
-    sleep 0.5
-done
-exec NetworkManager --no-daemon

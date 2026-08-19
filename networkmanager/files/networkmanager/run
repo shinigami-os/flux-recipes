@@ -5,4 +5,8 @@ while [ ! -S /var/run/dbus/system_bus_socket ] && [ $i -lt 15 ]; do
     sleep 1
     i=$((i + 1))
 done
+# the socket existing doesn't mean iwd has finished registering its own
+# D-Bus name yet - starting right on its heels leaves wlan0 stuck at
+# "unavailable" forever instead of a normal "disconnected"
+sleep 3
 exec NetworkManager --no-daemon

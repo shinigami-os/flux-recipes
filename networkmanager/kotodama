@@ -1,6 +1,6 @@
 [meta]
 name = networkmanager
-version = 1.50.0.5
+version = 1.50.0.6
 description = "Network connection manager"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 20
@@ -92,6 +92,7 @@ DESTDIR="$DESTDIR" ninja -C build install
 install -Dm644 "$FLUX_RECIPE_DIR/files/NetworkManager.conf" "$DESTDIR/etc/NetworkManager/NetworkManager.conf"
 install -dm755 "$DESTDIR/etc/sv/networkmanager"
 install -Dm755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
+install -Dm755 "$FLUX_RECIPE_DIR/files/networkmanager/log/run" "$DESTDIR/etc/sv/networkmanager/log/run"
 
 %post-install
 # sv up only overrides runsv for the current session - it does not delete

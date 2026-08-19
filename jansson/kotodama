@@ -1,6 +1,6 @@
 [meta]
 name = jansson
-version = 2.15.1
+version = 2.15.1.1
 description = "C library for encoding, decoding, and manipulating JSON"
 license = MIT
 size = 2

@@ -1,6 +1,6 @@
 [meta]
 name = networkmanager
-version = 1.50.0.4
+version = 1.50.0.5
 description = "Network connection manager"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 20
@@ -11,7 +11,7 @@ sha256 = fc03e7388a656cebc454c5d89481626122b1975d7c26babc64dc7e488faa66e3
 
 [deps]
 build = gcc meson ninja pkgconf glib dbus libnl libndp bluez polkit readline
-runtime = glib dbus libnl iwd bluez polkit readline
+runtime = glib dbus libnl libndp iwd bluez polkit readline
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

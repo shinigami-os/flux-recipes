@@ -112,4 +112,6 @@ install -Dm755 "$FLUX_RECIPE_DIR/files/elogind/run" "$DESTDIR/etc/sv/elogind/run
 install -Dm755 "$FLUX_RECIPE_DIR/files/elogind/log/run" "$DESTDIR/etc/sv/elogind/log/run"
 
 %post-install
+# physical power-button presses should go through the desktop's own handling, not an immediate elogind poweroff
+sed -i 's/^#\?HandlePowerKey=.*/HandlePowerKey=ignore/' /etc/elogind/logind.conf
 sv up /etc/sv/elogind 2>/dev/null || true

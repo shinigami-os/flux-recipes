@@ -1,6 +1,6 @@
 [meta]
 name = python3
-version = 3.13.5
+version = 3.13.5.1
 description = "High-level interpreted programming language"
 license = PSF-2.0
 size = 30
@@ -36,3 +36,6 @@ make
 
 %install
 make DESTDIR=$DESTDIR install
+# --enable-shared means libpython3.so is what actually gets linked/loaded;
+# the static archive is a pure build byproduct nothing on Kira embeds
+rm -f "$DESTDIR"/usr/lib/python3.*/config-*/libpython3.*.a

@@ -1,6 +1,6 @@
 [meta]
 name = util-linux
-version = 2.42
+version = 2.42.1
 description = "Linux utility suite: fdisk, mount, lsblk, blkid, libuuid, libblkid, libmount"
 license = GPL-2.0-or-later AND LGPL-2.1-or-later
 size = 7
@@ -17,11 +17,16 @@ runtime =
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# bash lives at /usr/bin/bash here, not /bin/bash (no usrmerge) - these two
+# generate errnos.h/syscalls.h during the build itself, unlike the rest of
+# tools/ and tests/ which are dev-only and never invoked by a plain `make`
+sed -i '1s|^#!/bin/bash|#!/usr/bin/bash|' tools/all_errnos tools/all_syscalls
 
 %build
 ./configure \
     --prefix=/usr \
     --libdir=/usr/lib \
+    --bindir=/usr/bin \
     --sbindir=/usr/bin \
     --localstatedir=/var \
     --without-systemd \

@@ -1,6 +1,6 @@
 [meta]
 name = sudo
-version = 1.9.15p5
+version = 1.9.15p5.1
 description = "Give certain users the ability to run commands as root"
 license = ISC
 size = 3

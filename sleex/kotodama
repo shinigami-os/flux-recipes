@@ -1,13 +1,13 @@
 [meta]
 name = sleex
-version = 1.36.5
+version = 1.36.5.1
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
 
 [source]
 url = git+https://github.com/AxOS-project/Sleex#main
-sha256 = 462135ba2a97c9011f330062ef309756e349a802
+sha256 = 5eed782ad907f5bb2b18af486bcac56cca95249b
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity qt6-5compat qt6-multimedia sleex-ui-kit quickshell rsync
@@ -33,6 +33,14 @@ sed -i 's#^Exec=sleex$#Exec=/usr/bin/kira-start-sleex#' \
 # looks like a silent bounce back to the greeter with no way to tell why
 sed -i 's#start-hyprland -- --config /etc/sleex/hyprland.lua > /dev/null 2>&1#start-hyprland -- --config /etc/sleex/hyprland.lua#' \
     src/bin/sleex
+
+# quickshell's threaded QSG render loop segfaults in libgallium on Intel iGPUs
+# (crashes in its dedicated render thread right on Hyprland's own startup
+# event, well before anything is on screen - the main thread gets as far as
+# activating D-Bus portals fine). Forcing the single-threaded loop avoids the
+# GL-context-across-threads class of bug entirely.
+sed -i 's#QT_QPA_PLATFORM=wayland qs -p /usr/share/sleex#QT_QPA_PLATFORM=wayland QSG_RENDER_LOOP=basic qs -p /usr/share/sleex#' \
+    src/etc/sleex/hyprland/execs.lua
 
 %build
 cd src/share/sleex

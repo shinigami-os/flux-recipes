@@ -1,13 +1,13 @@
 [meta]
 name = sleex
-version = 1.36.5.1
+version = 1.37
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
 
 [source]
 url = git+https://github.com/AxOS-project/Sleex#main
-sha256 = 5eed782ad907f5bb2b18af486bcac56cca95249b
+sha256 = 6892ef4865abe3a86e24a03a92b35f124daa5aed
 
 [deps]
 build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity qt6-5compat qt6-multimedia sleex-ui-kit quickshell rsync

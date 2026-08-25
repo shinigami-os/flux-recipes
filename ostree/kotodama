@@ -1,6 +1,6 @@
 [meta]
 name = ostree
-version = 2026.2.3
+version = 2026.2.4
 description = "Content-addressed filesystem for OS/container binary deployment, used by Flatpak"
 license = LGPL-2.0-or-later
 size = 10
@@ -10,8 +10,8 @@ url = https://github.com/ostreedev/ostree/releases/download/v2026.2/libostree-20
 sha256 = a281f2db631f3721ecd4b9e2779a1eaf56e2d03f2cc47629a9f0117f12016a83
 
 [deps]
-build = gcc make pkgconf bison curl libarchive lz4 gpgme libsoup3 fuse3 e2fsprogs xz zlib
-runtime = curl libarchive lz4 gpgme libsoup3 fuse3 e2fsprogs xz zlib
+build = gcc make pkgconf bison curl libarchive lz4 bzip2 acl attr gpgme libsoup3 fuse3 e2fsprogs xz zlib
+runtime = curl libarchive lz4 bzip2 acl attr gpgme libsoup3 fuse3 e2fsprogs xz zlib
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

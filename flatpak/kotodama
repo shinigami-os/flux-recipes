@@ -1,6 +1,6 @@
 [meta]
 name = flatpak
-version = 1.18.0.3
+version = 1.18.0.4
 description = "Application deployment framework for desktop apps"
 license = LGPL-2.1-or-later
 size = 10
@@ -38,3 +38,6 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+
+%post-install
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo

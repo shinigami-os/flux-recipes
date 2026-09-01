@@ -1,13 +1,13 @@
 [meta]
 name = nvidia-open
-version = 610.43.03
+version = 610.57.04
 description = "NVIDIA open-source GPU kernel modules (nvidia, nvidia-drm, nvidia-modeset, nvidia-uvm)"
 license = MIT-and-GPL-2.0-only
 size = 40
 
 [source]
-url = git+https://github.com/NVIDIA/open-gpu-kernel-modules#610.43.03
-sha256 = 452cec62d827034798072827d3866d1881662b77
+url = git+https://github.com/NVIDIA/open-gpu-kernel-modules#610.57.04
+sha256 = e4a5faa2567f28c8eabe0ebb6422b6d0abcf37eb
 
 [deps]
 build = clang libelf perl bc
@@ -17,18 +17,21 @@ runtime = nvidia-gsp-firmware
 cflags =
 
 %pre-build
-# out-of-tree module needs a configured, modules_prepare'd copy of the exact
-# shinigami kernel this will run against - same commit and .config as the
-# real build, since Module.symvers/generated headers must match precisely
-git clone --depth 1 --branch v7.1.3-shinigami-26.07-6 https://github.com/shinigami-os/shinigami.git kernel-src
+# modules_prepare never produces a real Module.symvers, so one is bundled below
+git clone --depth 1 --branch v7.1.3-shinigami-26.08-4 https://github.com/shinigami-os/shinigami.git kernel-src
 cp "$FLUX_RECIPE_DIR/files/shinigami.config" kernel-src/.config
-make -C kernel-src LLVM=1 CC="clang --target=x86_64-linux-musl" olddefconfig
-make -C kernel-src LLVM=1 CC="clang --target=x86_64-linux-musl" modules_prepare -j$(nproc)
+make -C kernel-src LLVM=1 LOCALVERSION= CC="clang --target=x86_64-linux-musl" HOSTCC="clang --target=x86_64-linux-musl" HOSTLD=ld.lld LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy olddefconfig
+make -C kernel-src LLVM=1 LOCALVERSION= CC="clang --target=x86_64-linux-musl" HOSTCC="clang --target=x86_64-linux-musl" HOSTLD=ld.lld LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy modules_prepare -j$(nproc)
+cp "$FLUX_RECIPE_DIR/files/Module.symvers" kernel-src/Module.symvers
 
 %build
-make modules -j$(nproc) \
+# LOCALVERSION= avoids a stray "+"; CC check false-positives on triple spelling only
+IGNORE_CC_MISMATCH=1 make modules -j$(nproc) \
     SYSSRC="$PWD/kernel-src" \
+    LOCALVERSION= \
     CC="clang --target=x86_64-linux-musl" \
+    HOSTCC="clang --target=x86_64-linux-musl" \
+    HOSTLD=ld.lld \
     LD=ld.lld \
     AR=llvm-ar \
     NM=llvm-nm \
@@ -37,7 +40,7 @@ make modules -j$(nproc) \
 %post-build
 
 %install
-KERNELRELEASE=$(cd kernel-src && make -s kernelrelease LLVM=1 CC="clang --target=x86_64-linux-musl")
+KERNELRELEASE=$(cd kernel-src && make -s kernelrelease LLVM=1 LOCALVERSION= CC="clang --target=x86_64-linux-musl")
 install -dm755 "$DESTDIR/lib/modules/$KERNELRELEASE/extra"
 find kernel-open -name '*.ko' -exec install -Dm644 {} "$DESTDIR/lib/modules/$KERNELRELEASE/extra/" \;
 install -dm755 "$DESTDIR/etc/modules-load.d"
@@ -47,10 +50,9 @@ echo 'options nvidia-drm modeset=1' > "$DESTDIR/etc/modprobe.d/nvidia-drm-modese
 
 %post-install
 depmod -a
+echo "[nvidia-open] Requires ibt=off in the kernel cmdline (GRUB_CMDLINE_LINUX) or nvidia_drm init crashes on IBT."
 echo "[nvidia-open] Kernel modules installed for KERNELRELEASE above."
-echo "This is a first-pass recipe: the shinigami kernel is built with"
-echo "CONFIG_LTO_CLANG full LTO targeting x86_64-linux-musl, which is not a"
-echo "combination NVIDIA tests against. If the build above failed with LTO"
-echo "or symbol-versioning errors, that is the likely cause - report the"
-echo "exact error back before assuming the recipe itself is wrong."
+echo "files/Module.symvers and files/shinigami.config are both snapshots"
+echo "from a local build of the exact kernel commit above - re-capture both"
+echo "after bumping the git branch tag in %pre-build for a new kernel version."
 echo "Reboot for the modules to load, or: modprobe nvidia_drm"

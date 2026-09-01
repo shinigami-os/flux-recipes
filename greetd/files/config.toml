@@ -1,9 +1,0 @@
-[terminal]
-vt = 1
-
-[general]
-runfile = "/run/greetd-tty1.run"
-
-[default_session]
-command = "/usr/bin/kira-greet-launch"
-user = "greetd"

@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=SwayFX
-Comment=SwayFX compositor
-Exec=/usr/bin/kira-start-swayFX
-Type=Application

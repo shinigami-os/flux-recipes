@@ -1,3 +1,0 @@
-#!/bin/sh
-mkdir -p /var/log/greetd
-exec svlogd -tt /var/log/greetd

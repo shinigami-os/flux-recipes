@@ -11,7 +11,7 @@ sha256 =
 
 [deps]
 build =
-runtime = kotlin
+runtime = kira-kotlin
 
 [build]
 cflags =

@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = raleway-fonts jetbrains-mono-nerd-font ttf-dejavu ttf-liberation papirus-icon-theme ttf-material-symbols-variable ttf-material-design-icons-extended ttf-gabarito ttf-readex-pro ttf-rubik-vf ttf-twemoji
+runtime = font-raleway font-jetbrains-mono-nerd font-dejavu ttf-liberation papirus-icon-theme kira-ttf-material-symbols-variable kira-ttf-material-design-icons-extended kira-ttf-gabarito kira-ttf-readex-pro kira-ttf-rubik-vf font-twemoji
 
 [build]
 cflags =

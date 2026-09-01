@@ -10,8 +10,8 @@ url = git+https://github.com/AxOS-project/Sleex#main
 sha256 = 6892ef4865abe3a86e24a03a92b35f124daa5aed
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-connectivity qt6-5compat qt6-multimedia kira-sleex-ui-kit kira-quickshell rsync
-runtime = hyprland kira-quickshell qt6-base qt6-declarative qt6-wayland qt6-connectivity qt6-5compat qt6-multimedia qt6-svg kira-sleex-ui-kit jq sqlite python3 bc
+build = gcc cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev kira-sleex-ui-kit kira-quickshell rsync
+runtime = hyprland kira-quickshell qt6-qtbase qt6-qtdeclarative qt6-qtwayland qt6-qtconnectivity qt6-qt5compat qt6-qtmultimedia qt6-qtsvg kira-sleex-ui-kit jq sqlite python3 bc
 optional = matugen hyprlock hypridle wl-clipboard fuzzel foot howdy ffmpeg imagemagick kdialog
 
 [build]

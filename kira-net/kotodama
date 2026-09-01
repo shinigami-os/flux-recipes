@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = networkmanager iwd libnl openssh
+runtime = networkmanager iwd libnl3 openssh
 
 [build]
 cflags =

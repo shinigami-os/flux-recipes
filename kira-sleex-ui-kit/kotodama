@@ -10,8 +10,8 @@ url = git+https://github.com/AxOS-project/sleex-ui-kit#main
 sha256 = d94411448b1d8a40eae653f7777a0a7153fab7e9
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-base qt6-declarative qt6-tools qt6-wayland
-runtime = qt6-base qt6-declarative qt6-tools qt6-wayland
+build = gcc cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qttools-dev qt6-qtwayland-dev
+runtime = qt6-qtbase qt6-qtdeclarative qt6-qttools qt6-qtwayland
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

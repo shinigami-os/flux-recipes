@@ -1,0 +1,58 @@
+[meta]
+name = kira-libglvnd
+version = 1.7.0
+description = "Vendor-neutral OpenGL dispatch library"
+license = MIT
+size = 2
+
+[source]
+url = https://github.com/NVIDIA/libglvnd/archive/refs/tags/v1.7.0.tar.gz
+sha256 = 073e7292788d4d3eeb45ea6c7bdcce9bfdb3b3eef8d7dbd47f2f30dce046ef98
+
+[deps]
+build = gcc meson ninja pkgconf python3 libX11 libxcb xorgproto
+runtime = libX11 libxcb
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+if [ -n "$FLUX_CROSS_HOST" ]; then
+cat > cross-file.ini << EOF
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+[binaries]
+c = '${CC:-gcc}'
+ar = '${AR:-ar}'
+strip = '${STRIP:-strip}'
+pkg-config = 'pkg-config'
+[properties]
+sys_root = '${FLUX_CROSS_SYSROOT}'
+pkg_config_libdir = ['${FLUX_CROSS_SYSROOT}/usr/lib/pkgconfig', '${FLUX_CROSS_SYSROOT}/usr/share/pkgconfig']
+EOF
+fi
+
+%build
+meson setup build \
+    --prefix=/usr \
+    --buildtype=release \
+    ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
+    -Dx11=enabled \
+    -Dglx=enabled \
+    -Dasm=disabled \
+    -Dentrypoint-patching=disabled \
+    -Dgles1=true \
+    -Dgles2=true \
+    -Degl=true
+ninja -C build
+
+%install
+DESTDIR="$DESTDIR" ninja -C build install
+_EGL=$(basename "$(ls "$DESTDIR/usr/lib"/libEGL.so.*.*.* 2>/dev/null | head -1)")
+if [ -n "$_EGL" ]; then
+    ln -sf "$_EGL" "$DESTDIR/usr/lib/libEGL.so.1"
+    ln -sf "$_EGL" "$DESTDIR/usr/lib/libEGL.so"
+fi

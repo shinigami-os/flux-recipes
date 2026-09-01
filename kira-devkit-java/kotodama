@@ -11,7 +11,7 @@ sha256 =
 
 [deps]
 build =
-runtime = openjdk
+runtime = openjdk21
 
 [build]
 cflags =

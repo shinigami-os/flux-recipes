@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = zsh zsh-plugins
+runtime = zsh kira-zsh-plugins
 
 [build]
 cflags =

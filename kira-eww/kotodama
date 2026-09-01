@@ -1,0 +1,51 @@
+[meta]
+name = kira-eww
+version = 0.6.0
+description = "ElKowars wacky widgets - status bar and widgets in Scheme"
+license = MIT
+size = 20
+
+[source]
+url = https://github.com/elkowar/eww/archive/refs/tags/v0.6.0.tar.gz
+sha256 = cef361946946c566b79f8ddc6208d1a3f16b4ff9961439a3f86935e1cfa174a1
+
+[deps]
+build = pkgconf gtk+3.0-dev gdk-pixbuf pango libdbusmenu-gtk3-dev gtk-layer-shell
+runtime = gtk+3.0 gdk-pixbuf pango libdbusmenu-gtk3 gtk-layer-shell
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+mkdir -p .cargo
+if [ -n "$FLUX_CROSS_HOST" ]; then
+perl -e '
+print "[target.x86_64-unknown-linux-musl]\n";
+print "linker = \"x86_64-linux-musl-gcc\"\n";
+' > .cargo/config.toml
+fi
+
+%build
+for _h in /home/*; do
+    [ -x "$_h/.cargo/bin/cargo" ] && REAL_HOME="$_h" && break
+done
+export PATH="$PATH:$REAL_HOME/.cargo/bin"
+export CARGO_HOME="$REAL_HOME/.cargo"
+export RUSTUP_HOME="$REAL_HOME/.rustup"
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=x86_64-linux-musl-gcc
+    export PKG_CONFIG_SYSROOT_DIR="${FLUX_CROSS_SYSROOT}"
+    export RUSTFLAGS="-C target-feature=-crt-static"
+    cargo build --release --locked --no-default-features --features=wayland --target x86_64-unknown-linux-musl
+else
+    cargo build --release --locked --no-default-features --features=wayland
+fi
+
+%post-build
+
+%install
+if [ -n "$FLUX_CROSS_HOST" ]; then
+    install -Dm755 target/x86_64-unknown-linux-musl/release/eww "$DESTDIR/usr/bin/eww"
+else
+    install -Dm755 target/release/eww "$DESTDIR/usr/bin/eww"
+fi

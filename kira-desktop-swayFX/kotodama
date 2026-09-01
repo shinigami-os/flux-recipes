@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = mesa libglvnd xwayland swayfx eww fuzzel pcmanfm-qt mako hyprlock swaybg flameshot foot yazi qt6-wayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw nm-connection-editor pipewire wireplumber pavucontrol pamixer brightnessctl libgomp greetd kira-desktop-fonts jq swayidle kira-desktop-swayFX-config
+runtime = mesa kira-libglvnd xwayland kira-swayfx kira-eww fuzzel pcmanfm-qt mako kira-hyprlock swaybg flameshot foot yazi qt6-qtwayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw kira-nm-connection-editor pipewire wireplumber pavucontrol pamixer brightnessctl libgomp greetd kira-desktop-fonts jq swayidle kira-desktop-swayFX-config
 
 [build]
 cflags =

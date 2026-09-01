@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = mesa libglvnd xwayland hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk kira-quickshell qt6-base qt6-declarative qt6-wayland qt6-svg kira-matugen hyprlock hypridle wlogout wl-clipboard fuzzel foot pcmanfm-qt grim slurp playerctl brightnessctl pamixer pavucontrol pipewire wireplumber iw nm-connection-editor python3 jq greetd xdg-user-dirs bibata-cursor-theme featherpad flatpak dbus upower networkmanager bluez kira-desktop-fonts kira-sleex kira-desktop-sleex-config
+runtime = mesa kira-libglvnd xwayland hyprland kira-xdg-desktop-portal-hyprland xdg-desktop-portal-gtk kira-quickshell qt6-qtbase qt6-qtdeclarative qt6-qtwayland qt6-qtsvg kira-matugen kira-hyprlock kira-hypridle wlogout wl-clipboard fuzzel foot pcmanfm-qt grim slurp playerctl brightnessctl pamixer pavucontrol pipewire wireplumber iw kira-nm-connection-editor python3 jq greetd xdg-user-dirs kira-bibata-cursor-theme kira-featherpad flatpak dbus upower networkmanager bluez kira-desktop-fonts kira-sleex kira-desktop-sleex-config
 
 [build]
 cflags =

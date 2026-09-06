@@ -1,6 +1,6 @@
 [meta]
 name = kira-hyprlock
-version = 0.9.5
+version = 0.9.5.1
 description = "Hyprland's GPU-accelerated screen locking utility"
 license = BSD-3-Clause
 size = 4
@@ -10,7 +10,7 @@ url = git+https://github.com/hyprwm/hyprlock#v0.9.5
 sha256 =
 
 [deps]
-build = gcc cmake ninja pkgconf hyprwayland-scanner hyprlang hyprutils hyprgraphics sdbus-cpp linux-pam cairo pango libdrm mesa libxkbcommon wayland wayland-protocols
+build = gcc libc-dev cmake ninja pkgconf hyprwayland-scanner hyprlang hyprutils hyprgraphics sdbus-cpp linux-pam cairo pango libdrm mesa libxkbcommon wayland wayland-protocols
 runtime = hyprlang hyprutils hyprgraphics sdbus-cpp linux-pam cairo pango libdrm mesa libxkbcommon wayland
 
 [build]

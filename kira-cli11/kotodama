@@ -1,6 +1,6 @@
 [meta]
 name = kira-cli11
-version = 2.6.2
+version = 2.6.2.1
 description = "Header-only C++ command-line parsing library"
 license = BSD-3-Clause
 size = 1
@@ -10,7 +10,7 @@ url = git+https://github.com/CLIUtils/CLI11#v2.6.2
 sha256 =
 
 [deps]
-build = gcc cmake ninja pkgconf
+build = gcc libc-dev cmake ninja pkgconf
 runtime =
 
 [build]

@@ -1,6 +1,6 @@
 [meta]
 name = kira-matugen
-version = 4.1.0
+version = 4.1.0.1
 description = "Material You color generation tool"
 license = GPL-2.0-only
 size = 20
@@ -10,7 +10,7 @@ url = git+https://github.com/InioX/matugen#v4.1.0
 sha256 =
 
 [deps]
-build = gcc pkgconf
+build = gcc libc-dev pkgconf
 runtime =
 
 [build]

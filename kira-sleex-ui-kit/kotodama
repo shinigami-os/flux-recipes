@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex-ui-kit
-version = 1.0.2
+version = 1.0.2.1
 description = "Qt/QML component library with Sleex's design language, required by sleex"
 license = GPL-3.0-only
 size = 5
@@ -10,7 +10,7 @@ url = git+https://github.com/AxOS-project/sleex-ui-kit#main
 sha256 = d94411448b1d8a40eae653f7777a0a7153fab7e9
 
 [deps]
-build = gcc cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qttools-dev qt6-qtwayland-dev
+build = gcc libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qttools-dev qt6-qtwayland-dev
 runtime = qt6-qtbase qt6-qtdeclarative qt6-qttools qt6-qtwayland
 
 [build]

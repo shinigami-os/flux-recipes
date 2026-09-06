@@ -95,9 +95,6 @@ Key rules:
 - `url` must point directly to a source tarball, a bare single file, or `git+<repo>#<ref>` - never a release page. For a `git+` URL on a floating branch, `sha256` holds a pinned commit hash instead - prefer pinning to a tag when one exists.
 - Hooks must use `$DESTDIR` in `%install`, never install directly to `/`.
 
-## Status
-
-`kira-only` (default branch): 43 recipes, covering Kira's own meta-packages, its desktop environments (SwayFX, Sleex), dev-environment bundles, and the handful of from-source builds Alpine doesn't carry. `flux install`, `remove`, `update`, `list`, and `build` (native and `--cross`) are all fully working against this repo.
 
 ## License
 GPL-2.0

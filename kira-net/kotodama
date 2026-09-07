@@ -1,6 +1,6 @@
 [meta]
 name = kira-net
-version = 1.8
+version = 1.9
 description = "Networking stack: NetworkManager (internal DHCP, manages wifi+ethernet), iwd, libnl plus their runit services"
 license = MIT
 size = 1

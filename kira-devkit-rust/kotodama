@@ -1,6 +1,6 @@
 [meta]
 name = kira-devkit-rust
-version = 1.0
+version = 1.1
 description = "Rust development kit: rustc, cargo, clippy, rustfmt, and cargo-c"
 license = MIT
 size = 0
@@ -11,7 +11,7 @@ sha256 =
 
 [deps]
 build =
-runtime = rust cargo-c
+runtime = rust cargo cargo-c
 
 [build]
 cflags =

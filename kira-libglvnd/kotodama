@@ -1,6 +1,6 @@
 [meta]
 name = kira-libglvnd
-version = 1.7.0.3
+version = 1.7.0.4
 description = "Vendor-neutral OpenGL dispatch library"
 license = MIT
 size = 2
@@ -36,6 +36,9 @@ EOF
 fi
 
 %build
+# the standard EGL/GL/GLES headers this would install are implementation-agnostic
+# and mesa-dev ships the same ones - skip them here so the two don't fight over
+# the same paths, dispatch only needs the .so files and the glvnd/ ABI headers
 meson setup build \
     --prefix=/usr \
     --buildtype=release \
@@ -46,7 +49,8 @@ meson setup build \
     -Dentrypoint-patching=disabled \
     -Dgles1=true \
     -Dgles2=true \
-    -Degl=true
+    -Degl=true \
+    -Dheaders=false
 ninja -C build
 
 %install

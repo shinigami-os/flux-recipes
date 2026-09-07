@@ -1,6 +1,6 @@
 [meta]
 name = kira-net
-version = 1.5
+version = 1.6
 description = "Networking stack: NetworkManager (internal DHCP, manages wifi+ethernet), iwd, libnl plus their runit services"
 license = MIT
 size = 1
@@ -21,13 +21,15 @@ cflags =
 %post-build
 
 %install
-# networkmanager's own service file comes from the networkmanager package itself, not here - a stale duplicate used to live in this recipe and silently clobber the real one on every install
-install -dm755 "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/iwd"
+# Alpine's networkmanager package targets OpenRC/systemd and ships no runit service at all - without one of our own, NetworkManager never starts
+install -dm755 "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/iwd" "$DESTDIR/etc/sv/networkmanager"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/run" "$DESTDIR/etc/sv/sshd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/iwd/run" "$DESTDIR/etc/sv/iwd/run"
-install -dm755 "$DESTDIR/etc/sv/sshd/log" "$DESTDIR/etc/sv/iwd/log"
+install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
+install -dm755 "$DESTDIR/etc/sv/sshd/log" "$DESTDIR/etc/sv/iwd/log" "$DESTDIR/etc/sv/networkmanager/log"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/log/run" "$DESTDIR/etc/sv/sshd/log/run"
 install -m755 "$FLUX_RECIPE_DIR/files/iwd/log/run" "$DESTDIR/etc/sv/iwd/log/run"
+install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/log/run" "$DESTDIR/etc/sv/networkmanager/log/run"
 
 %post-install
 # NetworkManager now manages ethernet directly with its own internal DHCP
@@ -52,7 +54,7 @@ chmod 711 /var/empty
 # sv up alone doesn't delete a down file, only overrides runsv for the
 # current session - clear it for real so a stray down file (however it
 # got there) can't silently disable any of these again on the next boot
-for svc in iwd sshd; do
+for svc in iwd sshd networkmanager; do
     rm -f /etc/sv/$svc/down
     sv up /etc/sv/$svc 2>/dev/null || true
 done

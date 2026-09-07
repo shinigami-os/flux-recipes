@@ -1,6 +1,6 @@
 [meta]
 name = kira-xdg-desktop-portal-hyprland
-version = 1.3.12.1
+version = 1.3.12.2
 description = "xdg-desktop-portal backend for Hyprland"
 license = BSD-3-Clause
 size = 4
@@ -10,7 +10,7 @@ url = git+https://github.com/hyprwm/xdg-desktop-portal-hyprland#v1.3.12
 sha256 =
 
 [deps]
-build = gcc libc-dev cmake ninja pkgconf hyprwayland-scanner hyprland-protocols hyprlang hyprutils sdbus-cpp qt6-qtbase-dev pipewire wayland wayland-protocols libdrm mesa xdg-desktop-portal
+build = gcc libc-dev cmake ninja pkgconf hyprwayland-scanner hyprland-protocols hyprlang-dev hyprutils-dev sdbus-cpp-dev qt6-qtbase-dev pipewire-dev wayland-dev wayland-protocols libdrm-dev mesa-dev xdg-desktop-portal-dev
 runtime = hyprlang hyprutils sdbus-cpp qt6-qtbase pipewire wayland libdrm mesa xdg-desktop-portal
 
 [build]

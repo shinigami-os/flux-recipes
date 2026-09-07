@@ -1,6 +1,6 @@
 [meta]
 name = kira-eww
-version = 0.6.0
+version = 0.6.0.1
 description = "ElKowars wacky widgets - status bar and widgets in Scheme"
 license = MIT
 size = 20
@@ -10,7 +10,7 @@ url = https://github.com/elkowar/eww/archive/refs/tags/v0.6.0.tar.gz
 sha256 = cef361946946c566b79f8ddc6208d1a3f16b4ff9961439a3f86935e1cfa174a1
 
 [deps]
-build = pkgconf gtk+3.0-dev gdk-pixbuf pango libdbusmenu-gtk3-dev gtk-layer-shell
+build = pkgconf gtk+3.0-dev gdk-pixbuf-dev pango-dev libdbusmenu-gtk3-dev gtk-layer-shell-dev
 runtime = gtk+3.0 gdk-pixbuf pango libdbusmenu-gtk3 gtk-layer-shell
 
 [build]

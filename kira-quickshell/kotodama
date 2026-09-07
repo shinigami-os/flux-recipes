@@ -1,6 +1,6 @@
 [meta]
 name = kira-quickshell
-version = 0.3.0.6
+version = 0.3.0.7
 description = "Flexible QtQuick-based desktop shell toolkit"
 license = LGPL-3.0-only
 size = 15
@@ -27,7 +27,8 @@ cmake -S . -B build -G Ninja \
     -DUSE_JEMALLOC=OFF \
     -DCRASH_HANDLER=OFF \
     -DX11=OFF \
-    -DBUILD_TESTING=OFF
+    -DBUILD_TESTING=OFF \
+    -DSERVICE_PAM=OFF
 cmake --build build
 
 %post-build

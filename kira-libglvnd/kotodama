@@ -1,6 +1,6 @@
 [meta]
 name = kira-libglvnd
-version = 1.7.0.4
+version = 1.7.0.5
 description = "Vendor-neutral OpenGL dispatch library"
 license = MIT
 size = 2
@@ -60,3 +60,8 @@ if [ -n "$_EGL" ]; then
     ln -sf "$_EGL" "$DESTDIR/usr/lib/libEGL.so.1"
     ln -sf "$_EGL" "$DESTDIR/usr/lib/libEGL.so"
 fi
+# pkg.generate() in each API's own meson.build runs unconditionally, not gated by
+# -Dheaders=false above - mesa-dev ships the same filebases, defer to those too
+rm -f "$DESTDIR/usr/lib/pkgconfig/egl.pc" "$DESTDIR/usr/lib/pkgconfig/gl.pc" \
+    "$DESTDIR/usr/lib/pkgconfig/glesv1_cm.pc" "$DESTDIR/usr/lib/pkgconfig/glesv2.pc" \
+    "$DESTDIR/usr/lib/pkgconfig/glx.pc"

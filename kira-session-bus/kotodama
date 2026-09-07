@@ -1,6 +1,6 @@
 [meta]
 name = kira-session-bus
-version = 1.1
+version = 1.2
 description = "System message bus and policy daemon: dbus and polkit plus their runit services"
 license = MIT
 size = 1
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = dbus polkit-elogind-libs polkit
+runtime = dbus polkit-elogind
 
 [build]
 cflags =

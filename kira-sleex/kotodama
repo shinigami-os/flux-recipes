@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.4
+version = 1.37.5
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -10,8 +10,8 @@ url = git+https://github.com/AxOS-project/Sleex#main
 sha256 = 02be0a8bb466595630e8b5b763be4cf5f78d5cf4
 
 [deps]
-build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev kira-sleex-ui-kit kira-quickshell rsync
-runtime = hyprland kira-quickshell qt6-qtbase qt6-qtdeclarative qt6-qtwayland qt6-qtconnectivity qt6-qt5compat qt6-qtmultimedia qt6-qtsvg kira-sleex-ui-kit jq sqlite python3 bc
+build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev networkmanager-dev kira-sleex-ui-kit kira-quickshell rsync
+runtime = hyprland kira-quickshell qt6-qtbase qt6-qtdeclarative qt6-qtwayland qt6-qtconnectivity qt6-qt5compat qt6-qtmultimedia qt6-qtsvg kira-sleex-ui-kit jq sqlite python3 bc networkmanager
 optional = matugen hyprlock hypridle wl-clipboard fuzzel foot howdy ffmpeg imagemagick kdialog
 
 [build]

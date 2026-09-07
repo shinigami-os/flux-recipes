@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex-ui-kit
-version = 1.0.2.3
+version = 1.0.2.4
 description = "Qt/QML component library with Sleex's design language, required by sleex"
 license = GPL-3.0-only
 size = 5
@@ -29,7 +29,7 @@ cd src
 # unlike Sleex's own CMakeLists, this one never sets CMAKE_INSTALL_PREFIX, so it
 # defaults to /usr/local while the QML plugins that dlopen these libs carry a
 # rpath expecting /usr/lib64 - force the prefix so both paths actually match
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib
 cmake --build build
 
 %post-build

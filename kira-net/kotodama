@@ -1,6 +1,6 @@
 [meta]
 name = kira-net
-version = 1.7
+version = 1.8
 description = "Networking stack: NetworkManager (internal DHCP, manages wifi+ethernet), iwd, libnl plus their runit services"
 license = MIT
 size = 1
@@ -21,6 +21,12 @@ cflags =
 %post-build
 
 %install
+# Alpine's networkmanager package ships empty etc/NetworkManager/* directories and expects the
+# distro integrator to supply the main config - without one, NM has no plugin declared and leaves
+# every device "strictly unmanaged"
+install -dm755 "$DESTDIR/etc/NetworkManager"
+install -m644 "$FLUX_RECIPE_DIR/files/NetworkManager.conf" "$DESTDIR/etc/NetworkManager/NetworkManager.conf"
+
 # Alpine's networkmanager package targets OpenRC/systemd and ships no runit service at all - without one of our own, NetworkManager never starts
 install -dm755 "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/iwd" "$DESTDIR/etc/sv/networkmanager"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/run" "$DESTDIR/etc/sv/sshd/run"

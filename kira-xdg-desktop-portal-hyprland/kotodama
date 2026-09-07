@@ -1,6 +1,6 @@
 [meta]
 name = kira-xdg-desktop-portal-hyprland
-version = 1.3.12.4
+version = 1.3.12.5
 description = "xdg-desktop-portal backend for Hyprland"
 license = BSD-3-Clause
 size = 4
@@ -10,7 +10,7 @@ url = git+https://github.com/hyprwm/xdg-desktop-portal-hyprland#v1.3.12
 sha256 =
 
 [deps]
-build = gcc libc-dev cmake ninja pkgconf hyprwayland-scanner hyprland-protocols hyprlang-dev hyprutils-dev sdbus-cpp-dev qt6-qtbase-dev pipewire-dev wayland-dev wayland-protocols libdrm-dev mesa-dev xdg-desktop-portal-dev
+build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner hyprland-protocols hyprlang-dev hyprutils-dev sdbus-cpp-dev qt6-qtbase-dev pipewire-dev wayland-dev wayland-protocols libdrm-dev mesa-dev xdg-desktop-portal-dev
 runtime = hyprlang hyprutils sdbus-cpp qt6-qtbase pipewire wayland libdrm mesa xdg-desktop-portal
 
 [build]
@@ -25,7 +25,7 @@ sed -i '/add_subdirectory(hyprland-share-picker)/d;/install(TARGETS hyprland-sha
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
-set(CMAKE_C_COMPILER ${CC:-x86_64-linux-musl-gcc})
+set(CMAKE_C_COMPILER ${CC:-x86_64-linux-musl-gcc g++})
 set(CMAKE_CXX_COMPILER ${CXX:-x86_64-linux-musl-g++})
 set(CMAKE_SYSROOT ${FLUX_CROSS_SYSROOT})
 set(CMAKE_FIND_ROOT_PATH ${FLUX_CROSS_SYSROOT})

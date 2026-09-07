@@ -1,6 +1,6 @@
 [meta]
 name = kira-hypridle
-version = 0.1.7.2
+version = 0.1.7.3
 description = "Hyprland's idle daemon"
 license = BSD-3-Clause
 size = 2
@@ -10,7 +10,7 @@ url = git+https://github.com/hyprwm/hypridle#v0.1.7
 sha256 =
 
 [deps]
-build = gcc libc-dev cmake ninja pkgconf hyprwayland-scanner hyprlang-dev hyprutils-dev hyprland-protocols sdbus-cpp-dev wayland-dev wayland-protocols
+build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner hyprlang-dev hyprutils-dev hyprland-protocols sdbus-cpp-dev wayland-dev wayland-protocols
 runtime = hyprlang hyprutils sdbus-cpp wayland
 
 [build]

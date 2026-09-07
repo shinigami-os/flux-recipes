@@ -1,6 +1,6 @@
 [meta]
 name = kira-featherpad
-version = 1.6.4.2
+version = 1.6.4.3
 description = "Lightweight Qt6 plain-text editor"
 license = GPL-3.0-only
 size = 3
@@ -10,7 +10,7 @@ url = https://github.com/tsujan/FeatherPad/releases/download/V1.6.4/FeatherPad-1
 sha256 = 369c39059ff8978e8ce3b8575601e8ac805595cbabf1704601e829b3a745ca8a
 
 [deps]
-build = gcc libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtsvg-dev hunspell-dev
+build = gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtsvg-dev hunspell-dev
 runtime = qt6-qtbase qt6-qtsvg hunspell
 
 [build]

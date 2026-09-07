@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/zsh
 export HOME=/root
 export USER=root
 export LOGNAME=root
@@ -17,4 +17,4 @@ if [ "$(tty)" = "/dev/tty1" ]; then
     fi
 fi
 
-exec -a -zsh /usr/bin/zsh
+exec -a -zsh /bin/zsh

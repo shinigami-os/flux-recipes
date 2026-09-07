@@ -1,6 +1,6 @@
 [meta]
 name = kira-xdg-desktop-portal-hyprland
-version = 1.3.12.3
+version = 1.3.12.4
 description = "xdg-desktop-portal backend for Hyprland"
 license = BSD-3-Clause
 size = 4
@@ -18,6 +18,10 @@ cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
 if [ -n "$FLUX_CROSS_HOST" ]; then
+# hyprland-share-picker is a standalone Qt Widgets GUI the portal launches as a subprocess at
+# runtime, not linked into the portal daemon itself - cross-building it needs the host and target
+# Qt6 versions to match exactly for moc/uic, which they don't here (6.8.2 host vs 6.8.3 target)
+sed -i '/add_subdirectory(hyprland-share-picker)/d;/install(TARGETS hyprland-share-picker)/d' CMakeLists.txt
 cat > toolchain.cmake << EOF
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)

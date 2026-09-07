@@ -1,6 +1,6 @@
 [meta]
 name = kira-net
-version = 1.6
+version = 1.7
 description = "Networking stack: NetworkManager (internal DHCP, manages wifi+ethernet), iwd, libnl plus their runit services"
 license = MIT
 size = 1
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = networkmanager iwd libnl3 openssh
+runtime = networkmanager networkmanager-cli iwd libnl3 openssh
 
 [build]
 cflags =

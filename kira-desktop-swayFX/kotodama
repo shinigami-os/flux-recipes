@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-swayFX
-version = 26.07-2
+version = 26.07-3
 description = "SwayFX desktop environment meta-package"
 license = MIT
 size = 1
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = mesa kira-libglvnd xwayland kira-swayfx kira-eww fuzzel pcmanfm-qt mako kira-hyprlock swaybg flameshot foot yazi qt6-qtwayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw network-manager-applet pipewire wireplumber pavucontrol pamixer brightnessctl libgomp greetd kira-desktop-fonts jq swayidle kira-desktop-swayFX-config
+runtime = mesa mesa-egl mesa-gl mesa-gles mesa-dri-gallium xwayland kira-swayfx kira-eww fuzzel pcmanfm-qt mako kira-hyprlock swaybg flameshot foot yazi qt6-qtwayland xdg-desktop-portal-wlr xdg-desktop-portal-gtk playerctl python3 iw network-manager-applet pipewire wireplumber pavucontrol pamixer brightnessctl libgomp greetd kira-desktop-fonts jq swayidle kira-desktop-swayFX-config
 
 [build]
 cflags =

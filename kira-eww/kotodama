@@ -1,6 +1,6 @@
 [meta]
 name = kira-eww
-version = 0.6.0.2
+version = 0.6.0.3
 description = "ElKowars wacky widgets - status bar and widgets in Scheme"
 license = MIT
 size = 20
@@ -29,7 +29,7 @@ fi
 # eww's own Cargo.lock pins time 0.3.34, which fails to compile under Alpine's
 # current rustc (a stricter Box<_> inference check landed after that release) -
 # bump just that crate within its semver range instead of the whole lock file
-cargo update -p time
+cargo update -p time@0.3.34
 if [ -n "$FLUX_CROSS_HOST" ]; then
     export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=x86_64-linux-musl-gcc
     export PKG_CONFIG_SYSROOT_DIR="${FLUX_CROSS_SYSROOT}"

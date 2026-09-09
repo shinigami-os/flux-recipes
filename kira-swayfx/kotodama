@@ -1,13 +1,13 @@
 [meta]
 name = kira-swayfx
-version = 0.5.2.2
+version = 0.6.1
 description = "SwayFX: a glamorous Sway fork with eye candy"
 license = MIT
 size = 20
 
 [source]
-url = https://github.com/WillPower3309/swayfx/archive/refs/tags/0.5.2.tar.gz
-sha256 = 075e1a9577f96a71154c61997355dce569816fff05a2c535ec15b252a9acbbe1
+url = https://github.com/WillPower3309/swayfx/archive/refs/tags/0.6.tar.gz
+sha256 = 854f9d1468b8706718210e026d0bb0ddbc8370f750345fbbdd163f130c1b922d
 
 [deps]
 build = gcc libc-dev meson ninja pkgconf wayland-dev wayland-protocols libxkbcommon-dev cairo-dev pango-dev json-c-dev libinput-dev libdrm-dev seatd basu-dev wlroots0.20-dev scenefx-dev

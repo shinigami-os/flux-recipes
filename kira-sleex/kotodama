@@ -1,13 +1,13 @@
 [meta]
 name = kira-sleex
-version = 1.37.6
+version = 1.37.7
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
 
 [source]
 url = git+https://github.com/AxOS-project/Sleex#main
-sha256 = e73ad69ce984d9818b951478b92051dce05677aa
+sha256 = 9af3351e7416dfe3d90bfd93c1644e45ce2f85bc
 
 [deps]
 build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev networkmanager-dev kira-sleex-ui-kit kira-quickshell rsync

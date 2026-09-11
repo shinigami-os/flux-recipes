@@ -4,4 +4,11 @@ while [ ! -S /run/seatd.sock ] && [ $i -lt 15 ]; do
     sleep 1
     i=$((i + 1))
 done
+
+# /run is tmpfs, recreated every boot - the greeter (cage) needs a valid XDG_RUNTIME_DIR
+# for its own user, which nothing else sets up this early (no session manager has run yet)
+mkdir -p /run/greetd
+chown greetd:greetd /run/greetd
+chmod 700 /run/greetd
+
 exec /usr/sbin/greetd

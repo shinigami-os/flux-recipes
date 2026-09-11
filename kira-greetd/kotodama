@@ -1,6 +1,6 @@
 [meta]
 name = kira-greetd
-version = 1.0
+version = 1.1
 description = "Graphical login greeter: greetd + cage + regreet, with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = greetd greetd-regreet cage
+runtime = greetd greetd-regreet cage dbus-x11
 
 [build]
 cflags =
@@ -21,8 +21,12 @@ cflags =
 %post-build
 
 %install
-install -dm755 "$DESTDIR/etc/greetd" "$DESTDIR/etc/sv/greetd" "$DESTDIR/etc/sv/greetd/log"
+install -dm755 "$DESTDIR/etc/greetd" "$DESTDIR/etc/sv/greetd" "$DESTDIR/etc/sv/greetd/log" "$DESTDIR/etc/pam.d"
 install -m644 "$FLUX_RECIPE_DIR/files/config.toml" "$DESTDIR/etc/greetd/config.toml"
+# Alpine's own greetd package ships a PAM config that includes base-auth/base-account/base-password/
+# base-session, none of which exist anywhere on Kira - replace it with the same pam_unix.so +
+# pam_elogind.so stack /etc/pam.d/login already uses successfully
+install -m644 "$FLUX_RECIPE_DIR/files/pam-greetd" "$DESTDIR/etc/pam.d/greetd"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/log/run"
 
@@ -31,6 +35,13 @@ install -m755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/lo
 # the same VT, and Hyprland itself refuses to launch as root anyway
 touch /etc/sv/getty-tty1/down
 sv down /etc/sv/getty-tty1 2>/dev/null || true
+
+# Alpine's greetd .pre-install creates the "greetd" system user with home /var/lib/greetd, but
+# never actually creates or owns that directory - regreet needs it writable for its shader/font
+# caches, and without it the greeter silently exits before ever creating a session
+mkdir -p /var/lib/greetd
+chown greetd:greetd /var/lib/greetd
+chmod 750 /var/lib/greetd
 
 rm -f /etc/sv/greetd/down
 sv up /etc/sv/greetd 2>/dev/null || true

@@ -1,0 +1,36 @@
+[meta]
+name = kira-greetd
+version = 1.0
+description = "Graphical login greeter: greetd + cage + regreet, with the runit service Alpine's own package never ships"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = greetd greetd-regreet cage
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/etc/greetd" "$DESTDIR/etc/sv/greetd" "$DESTDIR/etc/sv/greetd/log"
+install -m644 "$FLUX_RECIPE_DIR/files/config.toml" "$DESTDIR/etc/greetd/config.toml"
+install -m755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
+install -m755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/log/run"
+
+%post-install
+# greetd now owns tty1 - the old auto-login-as-root getty (kira-login) must not race it for
+# the same VT, and Hyprland itself refuses to launch as root anyway
+touch /etc/sv/getty-tty1/down
+sv down /etc/sv/getty-tty1 2>/dev/null || true
+
+rm -f /etc/sv/greetd/down
+sv up /etc/sv/greetd 2>/dev/null || true

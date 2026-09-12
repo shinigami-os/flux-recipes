@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-sleex
-version = 1.0.9
+version = 1.0.10
 description = "Sleex desktop environment meta-package (Hyprland + quickshell)"
 license = MIT
 size = 1
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = icu-data-full mesa mesa-egl mesa-gl mesa-gles mesa-dri-gallium xwayland hyprland kira-xdg-desktop-portal-hyprland xdg-desktop-portal-gtk kira-quickshell qt6-qtbase qt6-qtdeclarative qt6-qtwayland qt6-qtsvg kira-matugen kira-hyprlock kira-hypridle wlogout wl-clipboard fuzzel foot pcmanfm-qt grim slurp playerctl brightnessctl pamixer pavucontrol pipewire wireplumber iw network-manager-applet python3 jq kira-greetd xdg-user-dirs kira-bibata-cursor-theme kira-featherpad flatpak dbus upower networkmanager bluez kira-desktop-fonts kira-sleex kira-desktop-sleex-config
+runtime = icu-data-full mesa mesa-egl mesa-gl mesa-gles mesa-dri-gallium xwayland hyprland kira-xdg-desktop-portal-hyprland xdg-desktop-portal-gtk kira-quickshell qt6-qtbase qt6-qtdeclarative qt6-qtwayland qt6-qtsvg kira-matugen kira-hyprlock kira-hypridle wlogout wl-clipboard fuzzel foot pcmanfm-qt grim slurp playerctl brightnessctl pamixer pavucontrol pipewire wireplumber iw network-manager-applet python3 jq kira-greetd xdg-user-dirs kira-bibata-cursor-theme kira-featherpad flatpak dbus upower networkmanager bluez kira-desktop-fonts kira-gdk-pixbuf kira-sleex kira-desktop-sleex-config
 
 [build]
 cflags =

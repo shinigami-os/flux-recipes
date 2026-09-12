@@ -1,7 +1,7 @@
 [meta]
 name = kira-gdk-pixbuf
-version = 2.44.7.1
-description = "gdk-pixbuf rebuilt with traditional linked png/jpeg/gif/tiff loaders instead of Alpine's glycin-only build, which cannot recognize any image format at all on this system"
+version = 2.44.7.2
+description = "gdk-pixbuf rebuilt with traditional linked png/jpeg/gif/tiff loaders instead of glycin, plus the shared-mime-info database Alpine's package never actually generates"
 license = LGPL-2.1-or-later
 size = 5
 
@@ -21,14 +21,21 @@ cflags = -O2 -pipe -march=x86-64-v2
 %pre-build
 
 %build
-# Alpine's own gdk-pixbuf ships built with -Dpng=disabled -Djpeg=disabled etc,
-# routing every format through glycin exclusively - and glycin's byte-signature
-# detection fails outright on this system (reproduced with a standalone C
-# program calling gdk_pixbuf_get_file_info() directly: it fails even for a
-# hand-written XPM file, despite the format being correctly registered, so
-# this isn't a PNG-specific or eww-specific bug). Build with the traditional
-# loaders compiled directly in and glycin off entirely, bypassing whatever is
-# broken in the sandboxed path.
+# The actual root cause of "Couldn't recognize the image file format" (every
+# format, every loader backend, confirmed with a standalone C program) is
+# gdk-pixbuf's gio_sniffing option: instead of its own byte-signature check,
+# it asks GIO's g_content_type_guess() to identify the file, which reads
+# shared-mime-info's compiled mime.cache - and that file never gets built
+# because shared-mime-info's Alpine package relies on a post-install trigger
+# (update-mime-database) to generate it, and flux doesn't run Alpine triggers
+# (same gap as install_if). With no mime.cache, g_content_type_guess() always
+# falls back to application/octet-stream, which matches nothing.
+#
+# Fixed below by running update-mime-database directly. Built with the
+# traditional loaders instead of Alpine's glycin-only config anyway, since
+# glycin's extra sandboxing (bubblewrap + a spawned decoder subprocess per
+# image) is more moving parts than this needs and isn't Alpine's default
+# elsewhere - not required for the fix, just less to go wrong.
 meson setup builddir --prefix=/usr --libdir=/usr/lib \
     -Dpng=enabled -Djpeg=enabled -Dgif=enabled -Dtiff=enabled \
     -Dglycin=disabled -Dothers=disabled -Dandroid=disabled \
@@ -49,7 +56,11 @@ DESTDIR="$DESTDIR" meson install -C builddir
 # matter what), so this is the only way to make the fix apply system-wide.
 # known fragile: a future update or fresh install of gdk-pixbuf will silently
 # revert this until kira-gdk-pixbuf happens to reinstall after it.
-#
+
+# the real fix: shared-mime-info's mime.cache is never generated because its
+# Alpine package expects a post-install trigger flux never runs
+update-mime-database /usr/share/mime 2>/dev/null || true
+
 # -Dbuiltin_loaders=all bakes every format directly into the library, so
 # nothing here actually depends on loaders.cache - regenerated anyway for
 # any legacy consumer (like XPM's gdk_pixbuf_new_from_xpm_data) that expects it

@@ -1,6 +1,6 @@
 [meta]
 name = kira-greetd
-version = 1.17
+version = 1.18
 description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
@@ -29,6 +29,11 @@ install -m644 "$FLUX_RECIPE_DIR/files/config.toml" "$DESTDIR/etc/greetd/config.t
 # base-session, none of which exist anywhere on Kira - replace it with the same pam_unix.so +
 # pam_elogind.so stack /etc/pam.d/login already uses successfully
 install -m644 "$FLUX_RECIPE_DIR/files/pam-greetd" "$DESTDIR/etc/pam.d/greetd"
+# pam_elogind.so doesn't reliably create /run/user/$UID when greetd (rather than
+# a normal getty/login) is the one opening the session, so every desktop session
+# greetd launches was failing at its own "mkdir /run/user/$UID" (root-owned 0755
+# parent, no write permission for the target user) - do it ourselves via pam_exec
+install -m755 "$FLUX_RECIPE_DIR/files/xdg-runtime-dir.sh" "$DESTDIR/etc/greetd/xdg-runtime-dir.sh"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/log/run"
 

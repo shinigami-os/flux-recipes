@@ -1,13 +1,13 @@
 [meta]
 name = kira-greetd
-version = 1.10
+version = 1.11
 description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
 
 [source]
-url = git+https://github.com/shinigami-os/kira-desktop#v26.09-8
-sha256 = 7131744c050c8d8ec6a67c410b9b00b1f2be09af
+url = git+https://github.com/shinigami-os/kira-desktop#v26.09-9
+sha256 = 296c503019fc10aa6f67169cd4cb98810f0127d2
 
 [deps]
 build =

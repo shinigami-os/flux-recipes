@@ -1,0 +1,22 @@
+diff --git a/crates/eww/src/display_backend.rs b/crates/eww/src/display_backend.rs
+index d416166..d78513a 100644
+--- a/crates/eww/src/display_backend.rs
++++ b/crates/eww/src/display_backend.rs
+@@ -37,6 +37,17 @@ mod platform_wayland {
+
+         fn initialize_window(window_init: &WindowInitiator, monitor: gdk::Rectangle, x: i32, y: i32) -> Option<Window> {
+             let window = Window::new(gtk::WindowType::Toplevel, x, y);
++
++            if !gtk_layer_shell::is_supported() {
++                // Compositor has no wlr-layer-shell (e.g. cage). gtk-layer-shell's own
++                // fallback silently no-ops every anchor/margin/exclusive-zone call below
++                // and never gives the window a real size, which wlroots then rejects as
++                // an invalid 0x0 surface commit - skip it entirely and let GTK size the
++                // plain toplevel from its content instead, same as NoBackend does.
++                window.set_resizable(window_init.resizable);
++                return Some(window);
++            }
++
+             // Initialising a layer shell surface
+             gtk_layer_shell::init_for_window(&window);
+             // Sets the monitor where the surface is shown

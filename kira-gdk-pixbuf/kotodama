@@ -1,0 +1,56 @@
+[meta]
+name = kira-gdk-pixbuf
+version = 2.44.7.1
+description = "gdk-pixbuf rebuilt with traditional linked png/jpeg/gif/tiff loaders instead of Alpine's glycin-only build, which cannot recognize any image format at all on this system"
+license = LGPL-2.1-or-later
+size = 5
+
+[source]
+url = https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-2.44.7.tar.xz
+sha256 = 172f80e3626ec31520a970400f1a3694e04718f6c2cd2885f75250fb5a6995a4
+
+[deps]
+build = meson samurai pkgconf glib-dev libpng-dev libjpeg-turbo-dev giflib-dev tiff-dev
+# gdk-pixbuf must already be on the system before this package's %post-install
+# overwrites its files - it's a real runtime dep here, not just a build-time header source
+runtime = glib libpng libjpeg-turbo giflib tiff shared-mime-info gdk-pixbuf
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+# Alpine's own gdk-pixbuf ships built with -Dpng=disabled -Djpeg=disabled etc,
+# routing every format through glycin exclusively - and glycin's byte-signature
+# detection fails outright on this system (reproduced with a standalone C
+# program calling gdk_pixbuf_get_file_info() directly: it fails even for a
+# hand-written XPM file, despite the format being correctly registered, so
+# this isn't a PNG-specific or eww-specific bug). Build with the traditional
+# loaders compiled directly in and glycin off entirely, bypassing whatever is
+# broken in the sandboxed path.
+meson setup builddir --prefix=/usr --libdir=/usr/lib \
+    -Dpng=enabled -Djpeg=enabled -Dgif=enabled -Dtiff=enabled \
+    -Dglycin=disabled -Dothers=disabled -Dandroid=disabled \
+    -Dbuiltin_loaders=all \
+    -Dintrospection=disabled -Ddocumentation=false -Dman=false \
+    -Dtests=false -Dinstalled_tests=false
+meson compile -C builddir
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" meson install -C builddir
+
+%post-install
+# deliberately overwrites files owned by the plain "gdk-pixbuf" Alpine package
+# at the exact same paths - flux has no provides/override mechanism for
+# Alpine-transitive dependencies (gtk+3.0 etc pull in bare gdk-pixbuf no
+# matter what), so this is the only way to make the fix apply system-wide.
+# known fragile: a future update or fresh install of gdk-pixbuf will silently
+# revert this until kira-gdk-pixbuf happens to reinstall after it.
+#
+# -Dbuiltin_loaders=all bakes every format directly into the library, so
+# nothing here actually depends on loaders.cache - regenerated anyway for
+# any legacy consumer (like XPM's gdk_pixbuf_new_from_xpm_data) that expects it
+gdk-pixbuf-query-loaders --update-cache 2>/dev/null || true

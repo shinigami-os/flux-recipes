@@ -2,5 +2,5 @@
 vt = 1
 
 [default_session]
-command = "/bin/sh -c 'export XDG_RUNTIME_DIR=/run/greetd; cage -s -- /etc/greetd/kira-login/launch-kira-login.sh'"
+command = "/etc/greetd/start-greeter.sh"
 user = "greetd"

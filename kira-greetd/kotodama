@@ -11,7 +11,7 @@ sha256 = e520aebd788239f4877911834eab46ad7de4c9f2
 
 [deps]
 build =
-runtime = greetd cage dbus-x11 eww python3 jq font-raleway font-jetbrains-mono-nerd
+runtime = greetd cage dbus-x11 kira-eww python3 jq font-raleway font-jetbrains-mono-nerd
 
 [build]
 cflags =

@@ -1,6 +1,6 @@
 [meta]
 name = kira-eww
-version = 0.6.0.4
+version = 0.6.0.5
 description = "ElKowars wacky widgets - status bar and widgets in Scheme"
 license = MIT
 size = 20

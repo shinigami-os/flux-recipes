@@ -1,13 +1,13 @@
 [meta]
 name = kira-greetd
-version = 1.18
+version = 1.19
 description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
 
 [source]
-url = git+https://github.com/shinigami-os/kira-desktop#v26.09-15
-sha256 = 4196a45d07da14acaf19daa7f9e199d09fc706a8
+url = git+https://github.com/shinigami-os/kira-desktop#v26.09-16
+sha256 = 68ac90d15dce336be39455f3f2ce845d3eb6b2ec
 
 [deps]
 build =
@@ -34,6 +34,11 @@ install -m644 "$FLUX_RECIPE_DIR/files/pam-greetd" "$DESTDIR/etc/pam.d/greetd"
 # greetd launches was failing at its own "mkdir /run/user/$UID" (root-owned 0755
 # parent, no write permission for the target user) - do it ourselves via pam_exec
 install -m755 "$FLUX_RECIPE_DIR/files/xdg-runtime-dir.sh" "$DESTDIR/etc/greetd/xdg-runtime-dir.sh"
+# resolves the keyboard layout from /etc/keymaps and exports it before exec'ing
+# cage - has to happen here, not in cage's own client, since cage (the Wayland
+# compositor) is what resolves keycodes to keysyms, and it does that once at
+# its own startup, before its client (the eww greeter) ever runs
+install -m755 "$FLUX_RECIPE_DIR/files/start-greeter.sh" "$DESTDIR/etc/greetd/start-greeter.sh"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/log/run"
 

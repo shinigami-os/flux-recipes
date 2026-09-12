@@ -1,15 +1,17 @@
 [meta]
 name = kira-greetd
-version = 1.1
-description = "Graphical login greeter: greetd + cage + regreet, with the runit service Alpine's own package never ships"
+version = 1.2
+description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
 
 [source]
+url = git+https://github.com/shinigami-os/kira-desktop#v26.09
+sha256 = e520aebd788239f4877911834eab46ad7de4c9f2
 
 [deps]
 build =
-runtime = greetd greetd-regreet cage dbus-x11
+runtime = greetd cage dbus-x11 eww python3 jq font-raleway font-jetbrains-mono-nerd
 
 [build]
 cflags =
@@ -30,6 +32,12 @@ install -m644 "$FLUX_RECIPE_DIR/files/pam-greetd" "$DESTDIR/etc/pam.d/greetd"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/log/run"
 
+# Kira Login: the custom eww greeter from kira-desktop, replacing regreet so the
+# design handoff's exact floating layout is achievable (GTK CSS on regreet's own
+# fixed widget tree can't move things around, only recolor them)
+install -dm755 "$DESTDIR/etc/greetd/kira-login"
+cp -a "login/." "$DESTDIR/etc/greetd/kira-login/"
+
 %post-install
 # greetd now owns tty1 - the old auto-login-as-root getty (kira-login) must not race it for
 # the same VT, and Hyprland itself refuses to launch as root anyway
@@ -37,8 +45,8 @@ touch /etc/sv/getty-tty1/down
 sv down /etc/sv/getty-tty1 2>/dev/null || true
 
 # Alpine's greetd .pre-install creates the "greetd" system user with home /var/lib/greetd, but
-# never actually creates or owns that directory - regreet needs it writable for its shader/font
-# caches, and without it the greeter silently exits before ever creating a session
+# never actually creates or owns that directory - eww needs it writable for its own cache dir,
+# and without it the greeter silently exits before ever creating a session
 mkdir -p /var/lib/greetd
 chown greetd:greetd /var/lib/greetd
 chmod 750 /var/lib/greetd

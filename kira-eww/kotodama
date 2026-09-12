@@ -1,6 +1,6 @@
 [meta]
 name = kira-eww
-version = 0.6.0.3
+version = 0.6.0.4
 description = "ElKowars wacky widgets - status bar and widgets in Scheme"
 license = MIT
 size = 20
@@ -24,6 +24,13 @@ print "[target.x86_64-unknown-linux-musl]\n";
 print "linker = \"x86_64-linux-musl-gcc\"\n";
 ' > .cargo/config.toml
 fi
+# eww always calls gtk_layer_shell::init_for_window() unconditionally on wayland,
+# with no yuck-level opt-out - fine under sway/Hyprland, but cage (Kira Login's
+# greeter compositor) has no wlr-layer-shell at all, and gtk-layer-shell's own
+# fallback silently no-ops every anchor/margin/exclusive-zone call and never
+# gives the window a real size, so wlroots rejects it as an invalid 0x0 surface.
+# Skip layer-shell entirely when unsupported instead.
+patch -p1 < "$FLUX_RECIPE_DIR/files/skip-layer-shell-if-unsupported.patch"
 
 %build
 # eww's own Cargo.lock pins time 0.3.34, which fails to compile under Alpine's

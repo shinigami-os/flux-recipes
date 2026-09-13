@@ -1,6 +1,6 @@
 [meta]
 name = kira-quickshell
-version = 0.3.0.8
+version = 0.3.0.9
 description = "Flexible QtQuick-based desktop shell toolkit"
 license = LGPL-3.0-only
 size = 15
@@ -10,8 +10,8 @@ url = git+https://github.com/quickshell-mirror/quickshell#v0.3.0
 sha256 =
 
 [deps]
-build = gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtwayland-dev kira-cli11 vulkan-headers wayland-dev wayland-protocols pipewire-dev libdrm-dev mesa-dev polkit-dev icu-data-full
-runtime = qt6-qtbase qt6-qtdeclarative qt6-qtwayland wayland pipewire libdrm mesa polkit-elogind-libs icu-data-full
+build = gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtwayland-dev kira-cli11 vulkan-headers wayland-dev wayland-protocols pipewire-dev libdrm-dev mesa-dev polkit-dev linux-pam-dev icu-data-full
+runtime = qt6-qtbase qt6-qtdeclarative qt6-qtwayland wayland pipewire libdrm mesa polkit-elogind-libs linux-pam icu-data-full
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
@@ -28,7 +28,7 @@ cmake -S . -B build -G Ninja \
     -DCRASH_HANDLER=OFF \
     -DX11=OFF \
     -DBUILD_TESTING=OFF \
-    -DSERVICE_PAM=OFF
+    -DSERVICE_PAM=ON
 cmake --build build
 
 %post-build

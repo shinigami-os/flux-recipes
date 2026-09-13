@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-swayFX
-version = 26.07-6
+version = 26.07-7
 description = "SwayFX desktop environment meta-package"
 license = MIT
 size = 1
@@ -25,3 +25,7 @@ install -Dm644 "$FLUX_RECIPE_DIR/files/swayFX.desktop-env" "$DESTDIR/usr/share/k
 install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/kira/wallpapers/default.png"
 
 %post-install
+# same gap as kira-desktop-sleex: flux doesn't run Alpine's package
+# triggers, so xdg-desktop-portal-gtk's GSettings lookups abort with
+# no schemas ever compiled - see that recipe's %post-install for detail
+glib-compile-schemas /usr/share/glib-2.0/schemas 2>/dev/null || true

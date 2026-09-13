@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-sleex
-version = 1.0.11
+version = 1.0.12
 description = "Sleex desktop environment meta-package (Hyprland + quickshell)"
 license = MIT
 size = 1
@@ -34,5 +34,14 @@ install -Dm755 "$FLUX_RECIPE_DIR/files/kira-start-sleex" "$DESTDIR/usr/bin/kira-
 install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/backgrounds/sleex/SleexOne.png"
 
 %post-install
+# flux doesn't run Alpine's package triggers, so the .gschema.xml files
+# shipped by GTK/GNOME-schema packages (pulled in transitively by
+# xdg-desktop-portal-gtk and friends) never get compiled into
+# gschemas.compiled - every GSettings lookup then aborts the process
+# outright (SIGABRT, "No GSettings schemas are installed on the
+# system"), which is why xdg-desktop-portal-gtk crash-looped on every
+# single portal call and quickshell's own session died shortly after
+glib-compile-schemas /usr/share/glib-2.0/schemas 2>/dev/null || true
+
 echo "[kira-desktop-sleex] Sleex installed. Set it active with:"
 echo "  echo sleex > ~/.config/kira-desktop/active-de"

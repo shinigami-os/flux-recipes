@@ -1,6 +1,6 @@
 [meta]
 name = kira-elogind
-version = 252.39.9
+version = 252.39.10
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -10,17 +10,17 @@ url = https://github.com/elogind/elogind/archive/refs/tags/v252.39.tar.gz
 sha256 = 5789c9d483dc236fbf72143dc9989329c399b6a507892c160b3c5852913123d5
 
 [deps]
-build = gcc g++ libc-dev meson ninja pkgconf glib-dev linux-pam-dev eudev-dev libcap-dev gperf python3 polkit-dev
+build = gcc g++ libc-dev meson ninja pkgconf glib-dev linux-pam-dev eudev-dev libcap-dev gperf python3 py3-jinja2 polkit-dev
 runtime = glib linux-pam eudev libcap dbus polkit-elogind
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
-# needed by meson.build for code generation, not available as a system
-# package here - bootstrap pip (bundled offline in cpython) then install it
-python3 -m ensurepip --default-pip >/dev/null 2>&1 || true
-python3 -m pip install --quiet jinja2
+# needed by meson.build for code generation - Alpine's python3 package ships
+# with no bundled pip/ensurepip wheels (unlike the pre-migration source
+# this recipe came from), so pull the real Alpine py3-jinja2 package instead
+# of trying to bootstrap pip
 # busybox's realpath has no --relative-to (a GNU coreutils extension); meson.build
 # only uses it for a cosmetic path string, so swap the call (lines 35-38 of this
 # pinned tarball) for a python3 one-liner instead - kotodama hook bodies strip

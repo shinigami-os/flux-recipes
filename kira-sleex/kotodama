@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.10
+version = 1.37.11
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -47,25 +47,19 @@ sed -i 's#QT_QPA_PLATFORM=wayland qs -p /usr/share/sleex#QT_QPA_PLATFORM=wayland
 # sourceComponent and closing brace, so the parser folds it straight into
 # the second Loader - a hard QML parse error that keeps the whole shell from
 # loading at all, not just this one widget
+# flux's kotodama parser left-trims every line inside a hook body and drops
+# blank lines outright, so this can't be a literal indentation/blank-line
+# sensitive string - match structurally with a whitespace-tolerant regex
+# instead and let QML's brace-delimited grammar not care about indentation
 python3 -c "
+import re
 path = 'src/share/sleex/modules/dashboard/home/HomeGithubWidget.qml'
-broken = '''        Loader {
-        asynchronous: true
-            active: root.connected
-            anchors.horizontalCenter: parent.horizontalCenter
-
-        Loader {'''
-fixed = '''        Loader {
-            asynchronous: true
-            active: root.connected
-            anchors.horizontalCenter: parent.horizontalCenter
-            sourceComponent: GhCalendar {}
-        }
-
-        Loader {'''
 data = open(path).read()
-assert broken in data, 'HomeGithubWidget.qml broken Loader block not found - upstream may have fixed or reshaped this file'
-open(path, 'w').write(data.replace(broken, fixed))
+pattern = re.compile(r'Loader \{\s*asynchronous: true\s*active: root\.connected\s*anchors\.horizontalCenter: parent\.horizontalCenter\s*\n\s*Loader \{')
+fixed = 'Loader {\nasynchronous: true\nactive: root.connected\nanchors.horizontalCenter: parent.horizontalCenter\nsourceComponent: GhCalendar {}\n}\n\nLoader {'
+new_data, n = pattern.subn(fixed, data)
+assert n == 1, 'expected exactly one match, got ' + str(n)
+open(path, 'w').write(new_data)
 "
 
 %build

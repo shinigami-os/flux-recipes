@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.11
+version = 1.37.12
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -61,6 +61,16 @@ new_data, n = pattern.subn(fixed, data)
 assert n == 1, 'expected exactly one match, got ' + str(n)
 open(path, 'w').write(new_data)
 "
+
+# every other apps.* default is a .desktop filename resolved through normal
+# desktop-entry lookup, but apps.terminal is the one exception - the three
+# call sites that read it (BackgroundContextMenu.qml, DesktopIconContextMenu.qml,
+# SearchWidget.qml) all pass it straight to Quickshell.execDetached() as a raw
+# argv[0] (plus a --working-directory flag only a real terminal binary
+# understands), so the upstream default of "foot.desktop" is guaranteed ENOENT -
+# it needs to be the actual binary name
+sed -i 's/property string terminal: "foot\.desktop"/property string terminal: "foot"/' \
+    src/share/sleex/modules/common/Config.qml
 
 %build
 cd src/share/sleex

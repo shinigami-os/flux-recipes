@@ -1,6 +1,6 @@
 [meta]
 name = kira-greetd
-version = 1.20
+version = 1.21
 description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
@@ -11,7 +11,7 @@ sha256 = 32ea510f4bc30226c389b2c03991b6c4f0b54ca3
 
 [deps]
 build =
-runtime = greetd cage dbus-x11 kira-eww python3 jq font-raleway font-jetbrains-mono-nerd
+runtime = greetd cage dbus-x11 kira-eww kira-elogind python3 jq font-raleway font-jetbrains-mono-nerd
 
 [build]
 cflags =

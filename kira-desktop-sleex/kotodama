@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-sleex
-version = 1.0.12
+version = 1.0.13
 description = "Sleex desktop environment meta-package (Hyprland + quickshell)"
 license = MIT
 size = 1
@@ -30,8 +30,10 @@ description = Sleex desktop: Hyprland compositor with a quickshell bar and Mater
 EOF
 install -Dm755 "$FLUX_RECIPE_DIR/files/kira-start-sleex" "$DESTDIR/usr/bin/kira-start-sleex"
 
-# Sleex hardcodes this wallpaper path; ship Kira's default there so matugen themes from it
-install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/backgrounds/sleex/SleexOne.png"
+# Sleex's own Config.qml hardcodes this exact path as wallpaperPath's default
+# (modules/common/Config.qml) - a previous attempt at this shipped the file as
+# SleexOne.png instead, which doesn't match and left the wallpaper broken
+install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/backgrounds/sleex/twentySix.jpg"
 
 %post-install
 # flux doesn't run Alpine's package triggers, so the .gschema.xml files

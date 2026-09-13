@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.8
+version = 1.37.9
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -47,7 +47,7 @@ cd src/share/sleex
 cmake -S . -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DDISTRIBUTOR="Kira Linux" \
-    -DINSTALL_QMLDIR=usr/qml
+    -DINSTALL_QMLDIR=usr/lib/qt6/qml
 cmake --build build
 
 %post-build

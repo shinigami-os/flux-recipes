@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.9
+version = 1.37.10
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -41,6 +41,32 @@ sed -i 's#start-hyprland -- --config /etc/sleex/hyprland.lua > /dev/null 2>&1#st
 # GL-context-across-threads class of bug entirely.
 sed -i 's#QT_QPA_PLATFORM=wayland qs -p /usr/share/sleex#QT_QPA_PLATFORM=wayland QSG_RENDER_LOOP=basic qs -p /usr/share/sleex#' \
     src/etc/sleex/hyprland/execs.lua
+
+# upstream bug (genuinely present at this commit, not something our pipeline
+# broke): the first Loader block in HomeGithubWidget.qml is missing its
+# sourceComponent and closing brace, so the parser folds it straight into
+# the second Loader - a hard QML parse error that keeps the whole shell from
+# loading at all, not just this one widget
+python3 -c "
+path = 'src/share/sleex/modules/dashboard/home/HomeGithubWidget.qml'
+broken = '''        Loader {
+        asynchronous: true
+            active: root.connected
+            anchors.horizontalCenter: parent.horizontalCenter
+
+        Loader {'''
+fixed = '''        Loader {
+            asynchronous: true
+            active: root.connected
+            anchors.horizontalCenter: parent.horizontalCenter
+            sourceComponent: GhCalendar {}
+        }
+
+        Loader {'''
+data = open(path).read()
+assert broken in data, 'HomeGithubWidget.qml broken Loader block not found - upstream may have fixed or reshaped this file'
+open(path, 'w').write(data.replace(broken, fixed))
+"
 
 %build
 cd src/share/sleex

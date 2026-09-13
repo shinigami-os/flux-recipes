@@ -1,6 +1,6 @@
 [meta]
 name = kira-elogind
-version = 252.39.10
+version = 252.39.11
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -10,7 +10,7 @@ url = https://github.com/elogind/elogind/archive/refs/tags/v252.39.tar.gz
 sha256 = 5789c9d483dc236fbf72143dc9989329c399b6a507892c160b3c5852913123d5
 
 [deps]
-build = gcc g++ libc-dev meson ninja pkgconf glib-dev linux-pam-dev eudev-dev libcap-dev gperf python3 py3-jinja2 polkit-dev
+build = gcc g++ libc-dev meson ninja pkgconf glib-dev linux-pam-dev eudev-dev libcap-dev gperf python3 py3-jinja2 polkit-dev bash
 runtime = glib linux-pam eudev libcap dbus polkit-elogind
 
 [build]

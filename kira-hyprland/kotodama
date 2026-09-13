@@ -10,7 +10,7 @@ url = git+https://github.com/hyprwm/Hyprland#v0.55.4
 sha256 =
 
 [deps]
-build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner aquamarine-dev hyprlang-dev hyprutils-dev hyprcursor-dev hyprgraphics-dev hyprland-protocols hyprwire-dev wayland-dev wayland-protocols libxkbcommon-dev libdrm-dev pixman-dev cairo-dev pango-dev libinput-dev mesa-dev glib-dev re2-dev muparser-dev lcms2-dev libxcursor-dev util-linux-dev kira-lua55 glslang-dev libxcb-dev xcb-util-wm-dev xcb-util-errors-dev
+build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner aquamarine-dev hyprlang-dev hyprutils-dev hyprcursor-dev hyprgraphics-dev hyprland-protocols hyprwire-dev wayland-dev wayland-protocols libxkbcommon-dev libdrm-dev pixman-dev cairo-dev pango-dev libinput-dev mesa-dev glib-dev re2-dev muparser-dev lcms2-dev libxcursor-dev util-linux-dev kira-lua55 glslang-dev spirv-tools-dev libxcb-dev xcb-util-wm-dev xcb-util-errors-dev
 runtime = libstdc++ libgcc aquamarine hyprlang hyprutils hyprcursor hyprgraphics hyprwire wayland libxkbcommon libdrm pixman cairo pango libinput mesa glib re2 muparser lcms2 libxcursor util-linux kira-lua55 glslang libxcb xcb-util-wm xcb-util-errors
 
 [build]

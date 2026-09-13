@@ -1,6 +1,6 @@
 [meta]
 name = kira-elogind
-version = 252.39.11
+version = 252.39.12
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -17,6 +17,16 @@ runtime = glib linux-pam eudev libcap dbus polkit-elogind
 cflags = -O2 -pipe -march=x86-64-v2
 
 %pre-build
+# Kira's own musl toolchain never creates the libc.musl-x86_64.so.1 alias
+# next to the real loader (ld-musl-x86_64.so.1) that Alpine's own musl
+# package normally ships - ld's default search path finds it fine at
+# runtime via the loader itself, but several Alpine-built .so files (e.g.
+# libcap.so.2) carry a literal DT_NEEDED on that exact filename, and with
+# -Wl,--fatal-warnings (elogind's own linker flags) the "not found" warning
+# escalates into a hard link failure. This is a system-wide gap, not
+# specific to elogind - if it recurs elsewhere, it belongs in kira-base.
+ln -sf ld-musl-x86_64.so.1 /lib/libc.musl-x86_64.so.1
+
 # needed by meson.build for code generation - Alpine's python3 package ships
 # with no bundled pip/ensurepip wheels (unlike the pre-migration source
 # this recipe came from), so pull the real Alpine py3-jinja2 package instead

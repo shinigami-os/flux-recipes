@@ -1,6 +1,6 @@
 [meta]
 name = kira-zsh-plugins
-version = 1.0
+version = 1.1
 description = "zsh-autosuggestions, zsh-syntax-highlighting, powerlevel10k and oh-my-zsh git plugin"
 license = MIT
 size = 4
@@ -28,6 +28,17 @@ mv zsh-syntax-highlighting-0.8.0 zsh-syntax-highlighting
 curl -fsSL -o powerlevel10k.tar.gz https://github.com/romkatv/powerlevel10k/archive/refs/tags/v1.20.0.tar.gz
 tar xzf powerlevel10k.tar.gz
 mv powerlevel10k-1.20.0 powerlevel10k
+
+# GitHub's archive tarball doesn't populate git submodules, so gitstatus/usrbin
+# ships empty and the bundled gitstatus/install script would otherwise try to
+# download this same file itself on the user's first shell startup - doing it
+# here means no network dependency (or gcc, for a from-source fallback) on
+# the target machine at all, ever
+curl -fsSL -o gitstatusd.tar.gz https://github.com/romkatv/gitstatus/releases/download/v1.5.4/gitstatusd-linux-x86_64.tar.gz
+mkdir -p powerlevel10k/gitstatus/usrbin
+tar xzf gitstatusd.tar.gz -C powerlevel10k/gitstatus/usrbin
+chmod +x powerlevel10k/gitstatus/usrbin/gitstatusd-linux-x86_64
+mv powerlevel10k/gitstatus/usrbin/gitstatusd-linux-x86_64 powerlevel10k/gitstatus/usrbin/gitstatusd
 
 mkdir -p git
 curl -fsSL -o git/git.plugin.zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git/git.plugin.zsh

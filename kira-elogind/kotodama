@@ -1,6 +1,6 @@
 [meta]
 name = kira-elogind
-version = 252.39.13
+version = 252.39.14
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -121,6 +121,7 @@ DESTDIR="$DESTDIR" ninja -C build install
 # headers and let elogind-dev be the one and only header source.
 rm -rf "$DESTDIR/usr/include/elogind"
 rm -f "$DESTDIR"/usr/include/sd-*.h "$DESTDIR/usr/include/_sd-common.h"
+rm -f "$DESTDIR/usr/lib/pkgconfig/libelogind.pc"
 install -dm755 "$DESTDIR/etc/sv/elogind"
 install -Dm755 "$FLUX_RECIPE_DIR/files/elogind/run" "$DESTDIR/etc/sv/elogind/run"
 # without this, elogind's own startup banner (device/seat enumeration)

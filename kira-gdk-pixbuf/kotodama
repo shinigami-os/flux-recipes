@@ -1,6 +1,6 @@
 [meta]
 name = kira-gdk-pixbuf
-version = 2.44.7.2
+version = 2.44.7.3
 description = "gdk-pixbuf rebuilt with traditional linked png/jpeg/gif/tiff loaders instead of glycin, plus the shared-mime-info database Alpine's package never actually generates"
 license = LGPL-2.1-or-later
 size = 5
@@ -48,6 +48,14 @@ meson compile -C builddir
 
 %install
 DESTDIR="$DESTDIR" meson install -C builddir
+# nothing in Kira builds against gdk-pixbuf's C API directly - swayFX's own
+# build chain pulls Alpine's gdk-pixbuf-dev transitively (via wlroots/glycin
+# deps), which conflicts outright with these same paths since both packages
+# try to own them. Kira only needs the shared lib/loaders/query tool, so drop
+# the headers and pkgconfig file and let gdk-pixbuf-dev be the one and only
+# header source.
+rm -rf "$DESTDIR/usr/include/gdk-pixbuf-2.0"
+rm -f "$DESTDIR/usr/lib/pkgconfig/gdk-pixbuf-2.0.pc"
 
 %post-install
 # deliberately overwrites files owned by the plain "gdk-pixbuf" Alpine package

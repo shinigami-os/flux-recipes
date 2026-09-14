@@ -1,6 +1,6 @@
 [meta]
 name = kira-elogind
-version = 252.39.12
+version = 252.39.13
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
@@ -114,6 +114,13 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
+# nothing in Kira builds against elogind's C API directly - swayFX's own
+# build chain pulls Alpine's elogind-dev transitively (via wlroots), which
+# conflicts outright with these same paths since both packages try to own
+# them. Kira only needs the daemon/loginctl/pam module/libs, so drop the
+# headers and let elogind-dev be the one and only header source.
+rm -rf "$DESTDIR/usr/include/elogind"
+rm -f "$DESTDIR"/usr/include/sd-*.h "$DESTDIR/usr/include/_sd-common.h"
 install -dm755 "$DESTDIR/etc/sv/elogind"
 install -Dm755 "$FLUX_RECIPE_DIR/files/elogind/run" "$DESTDIR/etc/sv/elogind/run"
 # without this, elogind's own startup banner (device/seat enumeration)

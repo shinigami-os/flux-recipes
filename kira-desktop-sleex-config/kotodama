@@ -1,13 +1,13 @@
 [meta]
 name = kira-desktop-sleex-config
-version = 26.08-2
+version = 26.09-18
 description = "Default Sleex desktop user configuration (skel, dotfiles)"
 license = GPL-3.0-only
 size = 3
 
 [source]
-url = git+https://github.com/shinigami-os/kira-desktop#v26.08-2
-sha256 = 0c42989b76b7e6a28d665295fd52850fea34b44a
+url = git+https://github.com/shinigami-os/kira-desktop#v26.09-18
+sha256 = d9610f08401a9dcfdb8313240cd233acf7ae6f68
 
 [deps]
 build =

@@ -1,6 +1,6 @@
 [meta]
 name = kira-zsh-plugins
-version = 1.0
+version = 1.1
 description = "zsh-autosuggestions, zsh-syntax-highlighting, powerlevel10k and oh-my-zsh git plugin"
 license = MIT
 size = 4
@@ -8,8 +8,8 @@ size = 4
 [source]
 
 [deps]
-build = curl
-runtime = zsh
+build = curl g++ make libgit2-dev
+runtime = zsh libgit2
 
 [build]
 cflags =
@@ -28,6 +28,12 @@ mv zsh-syntax-highlighting-0.8.0 zsh-syntax-highlighting
 curl -fsSL -o powerlevel10k.tar.gz https://github.com/romkatv/powerlevel10k/archive/refs/tags/v1.20.0.tar.gz
 tar xzf powerlevel10k.tar.gz
 mv powerlevel10k-1.20.0 powerlevel10k
+
+# GitHub's archive tarball doesn't populate git submodules, so gitstatus/usrbin
+# ships empty - build gitstatusd here instead of leaving it to a first-run
+# build on the target machine (which would need gcc/g++/make just installed
+# for this one binary, then never again)
+make -C powerlevel10k/gitstatus CXX=g++
 
 mkdir -p git
 curl -fsSL -o git/git.plugin.zsh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git/git.plugin.zsh

@@ -96,8 +96,7 @@ meson setup build \
     --localstatedir=/var \
     --buildtype=release \
     ${FLUX_CROSS_HOST:+--cross-file=cross-file.ini} \
-    -Drootprefix=/usr \
-    -Drootlibdir=/usr/lib \
+    --libdir=/usr/lib \
     -Dpkgconfiglibdir=/usr/lib/pkgconfig \
     -Dpamlibdir=/usr/lib/security \
     -Dpamconfdir=/etc/pam.d \

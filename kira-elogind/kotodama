@@ -1,13 +1,20 @@
 [meta]
 name = kira-elogind
-version = 252.39.15
+version = 255.24.1
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3
 
 [source]
-url = https://github.com/elogind/elogind/archive/refs/tags/v252.39.tar.gz
-sha256 = 5789c9d483dc236fbf72143dc9989329c399b6a507892c160b3c5852913123d5
+# bumped from v252.39: Alpine's polkit is linked against sd_pidfd_get_session/
+# sd_pidfd_get_owner_uid, which don't exist before elogind v255.24ish - v252
+# left polkitd unable to even start ("symbol not found"), breaking every
+# polkit-gated action (NetworkManager wifi connect included). 255.24 is also
+# exactly the version Alpine's own elogind package ships, so it's guaranteed
+# ABI-compatible with everything else pulled from Alpine rather than a shot in
+# the dark at a newer release.
+url = https://github.com/elogind/elogind/archive/refs/tags/v255.24.tar.gz
+sha256 = 7737e13f409bdf6041bd1a1f5580ab197790f6641e26faf93e09c19c68f5dab8
 
 [deps]
 build = gcc g++ libc-dev meson ninja pkgconf glib-dev linux-pam-dev eudev-dev libcap-dev gperf python3 py3-jinja2 polkit-dev bash
@@ -47,7 +54,6 @@ done
 grep -rl '\bbasename\b\|\bdirname\b' src/ | grep '\.c$\|\.h$' | while read f; do
     grep -q '#include <libgen.h>' "$f" || sed -i '1s|^|#include <libgen.h>\n|' "$f"
 done
-sed -i 's/(uintmax_t)rl\.rlim_cur/(unsigned long long)rl.rlim_cur/g' src/basic/rlimit-util.c
 sed -i '/x25_hdlc_proto/d' src/basic/linux/if.h
 # musl has no gshadow.h - provide a stub (glibc-only header)
 # trailing semicolon in strerror_r macro breaks expression-context use

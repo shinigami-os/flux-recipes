@@ -55,7 +55,7 @@ sed -i 's|#include <linux/prctl.h>|#ifndef _SYS_PRCTL_H\n#include <linux/prctl.h
 # files that include it directly; pull it into errno-util.h too so every
 # transitive consumer (bus-error.c, journal-send.c, ...) gets the same shim
 # instead of patching each call site as it turns up
-sed -i '0,/#include "macro.h"/s||#include "musl_missing.h"\n#include "macro.h"|' src/basic/errno-util.h
+sed -i 's|#include "macro.h"|#include "musl_missing.h"\n#include "macro.h"|' src/basic/errno-util.h
 # musl does not provide transitive includes that glibc does
 grep -rl 'sigfillset\|pthread_sigmask\|SIG_BLOCK\|SIG_SETMASK\|sigprocmask\|sigaction\|sigemptyset' src/ | grep '\.c$\|\.h$' | while read f; do
     grep -q '#include <signal.h>' "$f" || sed -i '1s|^|#include <signal.h>\n|' "$f"

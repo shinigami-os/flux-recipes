@@ -49,6 +49,13 @@ sed -i "35,38c relative_source_path = run_command('python3', '-c', 'import os,sy
 # kernel header for the same struct, which is a hard redefinition error when
 # both end up included in the same translation unit
 sed -i 's|#include <linux/prctl.h>|#ifndef _SYS_PRCTL_H\n#include <linux/prctl.h>\n#endif|' src/basic/missing_prctl.h
+# musl's strerror_r is the POSIX variant (returns int), not glibc's GNU variant
+# (returns char*) - errno-util.h's STRERROR() macro and every file that includes
+# it assume the GNU one. musl_missing.h already shims strerror_r via a macro for
+# files that include it directly; pull it into errno-util.h too so every
+# transitive consumer (bus-error.c, journal-send.c, ...) gets the same shim
+# instead of patching each call site as it turns up
+sed -i '0,/#include "macro.h"/s||#include "musl_missing.h"\n#include "macro.h"|' src/basic/errno-util.h
 # musl does not provide transitive includes that glibc does
 grep -rl 'sigfillset\|pthread_sigmask\|SIG_BLOCK\|SIG_SETMASK\|sigprocmask\|sigaction\|sigemptyset' src/ | grep '\.c$\|\.h$' | while read f; do
     grep -q '#include <signal.h>' "$f" || sed -i '1s|^|#include <signal.h>\n|' "$f"

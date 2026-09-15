@@ -44,6 +44,11 @@ ln -sf ld-musl-x86_64.so.1 /lib/libc.musl-x86_64.so.1
 # leading whitespace and would mangle indented multi-line python pasted in directly
 grep -q "run_command('realpath'," meson.build
 sed -i "35,38c relative_source_path = run_command('python3', '-c', 'import os,sys; print(os.path.relpath(sys.argv[1], sys.argv[2]))', project_source_root, project_build_root, check : true).stdout().strip()" meson.build
+# unlike glibc, musl's own sys/prctl.h already defines struct prctl_mm_map (and
+# most PR_* constants) - missing_prctl.h unconditionally also pulls the raw
+# kernel header for the same struct, which is a hard redefinition error when
+# both end up included in the same translation unit
+sed -i 's|#include <linux/prctl.h>|#ifndef _SYS_PRCTL_H\n#include <linux/prctl.h>\n#endif|' src/basic/missing_prctl.h
 # musl does not provide transitive includes that glibc does
 grep -rl 'sigfillset\|pthread_sigmask\|SIG_BLOCK\|SIG_SETMASK\|sigprocmask\|sigaction\|sigemptyset' src/ | grep '\.c$\|\.h$' | while read f; do
     grep -q '#include <signal.h>' "$f" || sed -i '1s|^|#include <signal.h>\n|' "$f"

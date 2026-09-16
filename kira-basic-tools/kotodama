@@ -1,0 +1,25 @@
+[meta]
+name = kira-basic-tools
+version = 1.0
+description = "Real coreutils/findutils/grep/sed/gawk/diffutils/procps-ng/lsblk/findmnt - BusyBox's own applets for these are either missing entirely (findmnt) or too limited for regular use (lsblk with no options at all, sed with no GNU extensions, etc)"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+# util-linux itself is a near-empty metapackage on Alpine - lsblk/findmnt are
+# each their own separate subpackage, so they're listed explicitly too
+runtime = coreutils findutils grep sed gawk diffutils procps-ng util-linux lsblk findmnt
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

@@ -5,6 +5,17 @@ while [ ! -S /run/seatd.sock ] && [ $i -lt 15 ]; do
     i=$((i + 1))
 done
 
+# pam_elogind (session optional in /etc/pam.d/greetd) needs elogind already
+# registered on D-Bus to create a tracked login session - it fails silently
+# ("session optional" swallows the error) if greetd logs someone in before
+# elogind gets there first, leaving every polkit "active session" check with
+# no session to find, no matter how many times you log in afterward
+i=0
+while ! busctl list 2>/dev/null | grep -q org.freedesktop.login1 && [ $i -lt 15 ]; do
+    sleep 1
+    i=$((i + 1))
+done
+
 # /run is tmpfs, recreated every boot - the greeter (cage) needs a valid XDG_RUNTIME_DIR
 # for its own user, which nothing else sets up this early (no session manager has run yet)
 mkdir -p /run/greetd

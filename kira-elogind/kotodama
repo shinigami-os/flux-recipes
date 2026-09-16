@@ -1,6 +1,6 @@
 [meta]
 name = kira-elogind
-version = 255.24.1
+version = 255.24.2
 description = "systemd's logind extracted to a standalone daemon for non-systemd systems"
 license = LGPL-2.1-or-later
 size = 3

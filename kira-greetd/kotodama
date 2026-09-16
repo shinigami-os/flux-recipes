@@ -1,6 +1,6 @@
 [meta]
 name = kira-greetd
-version = 1.21
+version = 1.22
 description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1

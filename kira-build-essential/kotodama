@@ -1,17 +1,15 @@
 [meta]
 name = kira-build-essential
-version = 1.1
-description = "Meta-package: essential tools for building software from source"
+version = 1.0
+description = "A basic C/C++ build toolchain (gcc, g++, make, libc headers) - Alpine has no package literally named build-essential like Debian does"
 license = MIT
-size = 0
+size = 1
 
 [source]
-url =
-sha256 =
 
 [deps]
 build =
-runtime = gcc libc-dev binutils make pkgconf flex bison patch gdb unzip git
+runtime = gcc g++ make libc-dev
 
 [build]
 cflags =

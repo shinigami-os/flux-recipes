@@ -1,6 +1,6 @@
 [meta]
 name = kira-installer-tools
-version = 1.0
+version = 1.1
 description = "Tools required only inside the installer environment: partitioning, filesystem creation, bootloader, EFI boot management, networking, user/group tools"
 license = MIT
 size = 1
@@ -9,7 +9,11 @@ size = 1
 
 [deps]
 build =
-runtime = efivar efibootmgr grub parted e2fsprogs dosfstools shadow wpa_supplicant util-linux git
+# BusyBox's own applets for these are either missing entirely (findmnt) or too
+# limited for real use (lsblk with no options at all, sed with no GNU
+# extensions, etc) - util-linux itself is a near-empty metapackage on Alpine,
+# lsblk/findmnt are each their own separate subpackage
+runtime = efivar efibootmgr grub parted e2fsprogs dosfstools shadow wpa_supplicant util-linux git coreutils findutils grep sed gawk diffutils procps-ng lsblk findmnt
 
 [build]
 cflags =

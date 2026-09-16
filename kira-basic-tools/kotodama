@@ -1,6 +1,6 @@
 [meta]
 name = kira-basic-tools
-version = 1.1
+version = 1.2
 description = "Real, complete versions of common tools BusyBox either lacks entirely (findmnt, file, lsof, rsync, zip/unzip) or limits too far for regular use (lsblk/sed/ip with no real options)"
 license = MIT
 size = 1
@@ -24,3 +24,26 @@ cflags =
 %post-build
 
 %install
+
+%post-install
+# BusyBox symlinks its applets into every standard bin dir (/bin, /sbin,
+# /usr/bin, /usr/sbin) regardless of which single one Alpine's own package for
+# the same tool actually installs to, and PATH search order doesn't always
+# favor the real one - lsblk is a real case: BusyBox owns /usr/bin/lsblk,
+# Alpine's package only replaces /bin/lsblk, and /usr/bin comes first in
+# PATH, so plain "lsblk" silently kept running BusyBox's version.
+# Sweep every file this package's own dependencies installed and clear out
+# any BusyBox symlink still shadowing it from one of the other bin dirs.
+BB=$(readlink -f /bin/busybox)
+for pkg in coreutils findutils grep sed gawk diffutils procps-ng util-linux lsblk findmnt less file psmisc xz tree lsof rsync zip unzip bind-tools net-tools iproute2 usbutils pciutils; do
+    [ -f "/var/lib/flux/installed/$pkg/files" ] || continue
+    while read -r f; do
+        name=$(basename "$f")
+        for dir in /bin /sbin /usr/bin /usr/sbin; do
+            candidate="$dir/$name"
+            [ "$candidate" = "$f" ] && continue
+            [ -L "$candidate" ] || continue
+            [ "$(readlink -f "$candidate")" = "$BB" ] && rm -f "$candidate"
+        done
+    done < "/var/lib/flux/installed/$pkg/files"
+done

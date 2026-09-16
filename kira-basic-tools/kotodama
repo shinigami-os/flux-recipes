@@ -1,6 +1,6 @@
 [meta]
 name = kira-basic-tools
-version = 1.2
+version = 1.3
 description = "Real, complete versions of common tools BusyBox either lacks entirely (findmnt, file, lsof, rsync, zip/unzip) or limits too far for regular use (lsblk/sed/ip with no real options)"
 license = MIT
 size = 1
@@ -12,7 +12,7 @@ build =
 # util-linux itself is a near-empty metapackage on Alpine - lsblk/findmnt are
 # each their own separate subpackage, so they're listed explicitly too.
 # iproute2 replaces busybox's own much more limited "ip" applet.
-runtime = coreutils findutils grep sed gawk diffutils procps-ng util-linux lsblk findmnt less file psmisc xz tree lsof rsync zip unzip bind-tools net-tools iproute2 usbutils pciutils
+runtime = coreutils findutils grep sed gawk diffutils procps-ng util-linux util-linux-misc mount umount lsblk findmnt less file psmisc xz tree lsof rsync zip unzip bind-tools net-tools iproute2 usbutils pciutils
 
 [build]
 cflags =
@@ -35,7 +35,7 @@ cflags =
 # Sweep every file this package's own dependencies installed and clear out
 # any BusyBox symlink still shadowing it from one of the other bin dirs.
 BB=$(readlink -f /bin/busybox)
-for pkg in coreutils findutils grep sed gawk diffutils procps-ng util-linux lsblk findmnt less file psmisc xz tree lsof rsync zip unzip bind-tools net-tools iproute2 usbutils pciutils; do
+for pkg in coreutils findutils grep sed gawk diffutils procps-ng util-linux util-linux-misc mount umount lsblk findmnt less file psmisc xz tree lsof rsync zip unzip bind-tools net-tools iproute2 usbutils pciutils; do
     [ -f "/var/lib/flux/installed/$pkg/files" ] || continue
     while read -r f; do
         name=$(basename "$f")

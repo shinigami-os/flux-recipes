@@ -1,6 +1,6 @@
 [meta]
 name = kira-installer-tools
-version = 1.2
+version = 1.3
 description = "Tools required only inside the installer environment: partitioning, filesystem creation, bootloader, EFI boot management, networking, user/group tools"
 license = MIT
 size = 1
@@ -9,7 +9,9 @@ size = 1
 
 [deps]
 build =
-runtime = efivar efibootmgr grub parted e2fsprogs dosfstools shadow wpa_supplicant git kira-basic-tools
+# su/login/sg/newgrp/nologin are a separate subpackage from shadow itself on
+# Alpine - without it BusyBox's own su (deliberately not suid) is all there is
+runtime = efivar efibootmgr grub parted e2fsprogs dosfstools shadow shadow-login wpa_supplicant git kira-basic-tools
 
 [build]
 cflags =

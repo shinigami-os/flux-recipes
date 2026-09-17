@@ -1,0 +1,26 @@
+[meta]
+name = kira-flatpak
+version = 1.0
+description = "Flatpak with the Flathub remote already added - Alpine's own package sets up the sandboxing/portal machinery but adds no app source at all, so flatpak works but has nothing to install until you add one yourself"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = flatpak
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+
+%post-install
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo

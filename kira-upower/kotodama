@@ -1,0 +1,37 @@
+[meta]
+name = kira-upower
+version = 1.0
+description = "upower plus the runit service Alpine's own package never ships"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = upower
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# Alpine's upower ships org.freedesktop.UPower.service with User=root, meant to be
+# D-Bus-activated - but Alpine's dbus package is built without the setuid
+# dbus-daemon-launch-helper that root-activation requires (confirmed: the stock
+# dbus .apk carries no launch-helper binary at all), so dbus-daemon (running
+# unprivileged as messagebus) can never spawn it and every call fails with
+# "Failed to execute program org.freedesktop.UPower: No such file or directory".
+# Same class of gap as bluetoothd/NetworkManager in kira-net - give it its own
+# runit service instead so it registers its bus name on its own at boot.
+install -dm755 "$DESTDIR/etc/sv/upower" "$DESTDIR/etc/sv/upower/log"
+install -m755 "$FLUX_RECIPE_DIR/files/upower/run" "$DESTDIR/etc/sv/upower/run"
+install -m755 "$FLUX_RECIPE_DIR/files/upower/log/run" "$DESTDIR/etc/sv/upower/log/run"
+
+%post-install
+sv up /etc/sv/upower 2>/dev/null || true

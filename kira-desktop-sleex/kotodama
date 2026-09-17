@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-sleex
-version = 1.0.15
+version = 1.0.16
 description = "Sleex desktop environment meta-package (Hyprland + quickshell)"
 license = MIT
 size = 1
@@ -31,9 +31,10 @@ EOF
 install -Dm755 "$FLUX_RECIPE_DIR/files/kira-start-sleex" "$DESTDIR/usr/bin/kira-start-sleex"
 
 # Sleex's own Config.qml hardcodes this exact path as wallpaperPath's default
-# (modules/common/Config.qml) - a previous attempt at this shipped the file as
-# SleexOne.png instead, which doesn't match and left the wallpaper broken
-install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/backgrounds/sleex/twentySix.jpg"
+# (modules/common/Config.qml) - upstream has renamed this file before, so if
+# the wallpaper goes blank again after a kira-sleex bump, check this filename
+# against Config.qml's current default first
+install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/backgrounds/sleex/SleexOne.png"
 
 # same story for Config.qml's dashboard.avatarPath default - upstream hardcodes
 # this exact path but no package (Kira's or upstream's own PKGBUILD) has ever

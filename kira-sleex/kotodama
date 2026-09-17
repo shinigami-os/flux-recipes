@@ -1,13 +1,15 @@
 [meta]
 name = kira-sleex
-version = 1.37.12
+version = 1.37.12-kira1
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
 
 [source]
-url = git+https://github.com/AxOS-project/Sleex#main
-sha256 = 43e817951cf357cfd56d2acad914eaafda6e279b
+# TEMPORARY: testing the Kira runit-adaptation branch before it's PR'd upstream -
+# revert to AxOS-project/Sleex#main once the PR lands
+url = git+https://github.com/shinigami-os/Sleex_runit#adaptation-for-kira-linux
+sha256 = c40a311e8992b0241dac0705d3ceb028755687dd
 
 [deps]
 build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev networkmanager-dev kira-sleex-ui-kit kira-quickshell rsync
@@ -42,26 +44,6 @@ sed -i 's#start-hyprland -- --config /etc/sleex/hyprland.lua > /dev/null 2>&1#st
 sed -i 's#QT_QPA_PLATFORM=wayland qs -p /usr/share/sleex#QT_QPA_PLATFORM=wayland QSG_RENDER_LOOP=basic qs -p /usr/share/sleex#' \
     src/etc/sleex/hyprland/execs.lua
 
-# upstream bug (genuinely present at this commit, not something our pipeline
-# broke): the first Loader block in HomeGithubWidget.qml is missing its
-# sourceComponent and closing brace, so the parser folds it straight into
-# the second Loader - a hard QML parse error that keeps the whole shell from
-# loading at all, not just this one widget
-# flux's kotodama parser left-trims every line inside a hook body and drops
-# blank lines outright, so this can't be a literal indentation/blank-line
-# sensitive string - match structurally with a whitespace-tolerant regex
-# instead and let QML's brace-delimited grammar not care about indentation
-python3 -c "
-import re
-path = 'src/share/sleex/modules/dashboard/home/HomeGithubWidget.qml'
-data = open(path).read()
-pattern = re.compile(r'Loader \{\s*asynchronous: true\s*active: root\.connected\s*anchors\.horizontalCenter: parent\.horizontalCenter\s*\n\s*Loader \{')
-fixed = 'Loader {\nasynchronous: true\nactive: root.connected\nanchors.horizontalCenter: parent.horizontalCenter\nsourceComponent: GhCalendar {}\n}\n\nLoader {'
-new_data, n = pattern.subn(fixed, data)
-assert n == 1, 'expected exactly one match, got ' + str(n)
-open(path, 'w').write(new_data)
-"
-
 # every other apps.* default is a .desktop filename resolved through normal
 # desktop-entry lookup, but apps.terminal is the one exception - the three
 # call sites that read it (BackgroundContextMenu.qml, DesktopIconContextMenu.qml,
@@ -70,6 +52,13 @@ open(path, 'w').write(new_data)
 # understands), so the upstream default of "foot.desktop" is guaranteed ENOENT -
 # it needs to be the actual binary name
 sed -i 's/property string terminal: "foot\.desktop"/property string terminal: "foot"/' \
+    src/share/sleex/modules/common/Config.qml
+
+# Kira-only branding defaults - kept out of the upstream-bound fork branch so
+# a PR from it stays invisible to non-Kira users
+sed -i 's/property string ghUsername: "levraiardox"/property string ghUsername: "oxoghost01"/' \
+    src/share/sleex/modules/common/Config.qml
+sed -i 's/property string userDesc: "Today is a good day to have a good day!"/property string userDesc: "A Linux distribution you actually understand"/' \
     src/share/sleex/modules/common/Config.qml
 
 %build

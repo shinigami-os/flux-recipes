@@ -53,8 +53,17 @@ fi
 # QtMultimedia finding no backend). The stale-lock cleanup a few lines up
 # already anticipated pipewire running here; it just never actually got
 # started.
-pipewire &
-wireplumber &
-pipewire-pulse &
-
-exec dbus-run-session -- /usr/bin/sleex
+#
+# They have to be started from inside dbus-run-session, not backgrounded
+# here and left for it to exec over - a process backgrounded before that
+# exec keeps the dbus-less environment it was forked with, so pipewire and
+# wireplumber never saw DBUS_SESSION_BUS_ADDRESS at all ("Unable to
+# autolaunch a dbus-daemon without a $DISPLAY for X11" on every RTKit and
+# portal call), and wireplumber silently skipped loading its MPRIS module
+# as a result, which is why now-playing media never showed up anywhere.
+exec dbus-run-session -- sh -c '
+    pipewire &
+    wireplumber &
+    pipewire-pulse &
+    exec /usr/bin/sleex
+'

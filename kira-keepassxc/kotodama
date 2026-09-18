@@ -1,0 +1,25 @@
+[meta]
+name = kira-keepassxc
+version = 1.0
+description = "KeePassXC plus the Qt5 Wayland platform plugin Alpine's own package never pulls in"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = keepassxc qt5-qtwayland
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+
+%post-install

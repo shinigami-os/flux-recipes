@@ -10,6 +10,11 @@ export XDG_CURRENT_DESKTOP=Hyprland:sleex
 export XDG_SESSION_TYPE=wayland
 export QT_QPA_PLATFORM=wayland
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+# Alpine has no qt5ct/qt6ct package to drive Kvantum through a platform theme
+# plugin, so without this every Qt app (pcmanfm-qt included) fell back to the
+# stock unthemed Fusion style regardless of the theme already selected in
+# ~/.config/Kvantum/kvantum.kvconfig
+export QT_STYLE_OVERRIDE=kvantum
 export MOZ_ENABLE_WAYLAND=1
 export SDL_VIDEODRIVER=wayland
 export _JAVA_AWT_WM_NONREPARENTING=1

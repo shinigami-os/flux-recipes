@@ -1,8 +1,14 @@
 #!/bin/sh
+# timing: correlated against greetd-auth.py's own log to isolate how much of
+# the login-to-desktop gap is greetd's own session handoff (PAM, VT switch,
+# killing cage) versus this script and everything after it
+echo "$(date +%s.%N) kira-start-sleex began" >> /tmp/kira-login-timing.log
+
 # debug: trace every step to a fixed, always-writable location - do not
 # rely on XDG_RUNTIME_DIR for this log since a failure to set that dir up
 # is one of the things we're trying to catch
 exec > "/tmp/kira-start-sleex-debug-$(id -u).log" 2>&1
+export PS4='+[$(date +%s.%N)] '
 set -x
 set -e
 

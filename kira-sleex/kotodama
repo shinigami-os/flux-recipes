@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira2
+version = 1.37.12-kira3
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -9,7 +9,7 @@ size = 20
 # TEMPORARY: testing the Kira runit-adaptation branch before it's PR'd upstream -
 # revert to AxOS-project/Sleex#main once the PR lands
 url = git+https://github.com/shinigami-os/Sleex_runit#adaptation-for-kira-linux
-sha256 = e9903eaf6d5948cc3174bded4fa43416d6cf5383
+sha256 = 8705d1b2d92281590beb5f9bd7c9a3f869fdef42
 
 [deps]
 build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev networkmanager-dev kira-sleex-ui-kit kira-quickshell rsync

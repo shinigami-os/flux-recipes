@@ -19,4 +19,21 @@ if [ -n "$keymap_file" ]; then
     [ "$variant" != "$keymap_name" ] && export XKB_DEFAULT_VARIANT="$variant"
 fi
 
-exec cage -s -- /etc/greetd/kira-login/launch-kira-login.sh
+cage -s -- /etc/greetd/kira-login/launch-kira-login.sh &
+cage_pid=$!
+
+# cage's own shutdown just stops its Wayland event loop and then blocks
+# indefinitely waiting for its client to notice the dead socket and exit on
+# its own (cleanup_primary_client() in cage.c never actually kills it) -
+# that's what made every login handoff take 5-6 seconds, not anything in
+# our own scripts. Kill the client ourselves the moment greetd asks this
+# session to end, instead of waiting on cage to notice.
+cleanup() {
+    echo "$(date +%s.%N) start-greeter.sh got TERM, killing client directly" >> /tmp/kira-login-timing.log
+    pkill -TERM -f launch-kira-login.sh 2>/dev/null
+    pkill -TERM -x eww 2>/dev/null
+    kill -TERM "$cage_pid" 2>/dev/null
+}
+trap cleanup TERM INT
+
+wait "$cage_pid"

@@ -10,8 +10,8 @@ url = git+https://github.com/davisking/dlib#v20.0.1
 sha256 = 9b09738b26276eb50cb9c3e8b7731ac68f146ed0
 
 [deps]
-build = gcc g++ make cmake python3-dev py3-setuptools py3-packaging openblas-dev lapack-dev libjpeg-turbo-dev libpng-dev curl
-runtime = python3 py3-numpy openblas lapack libjpeg-turbo libpng
+build = gcc g++ make cmake python3-dev py3-setuptools py3-packaging openblas-dev libjpeg-turbo-dev libpng-dev curl
+runtime = python3 py3-numpy openblas liblapack libjpeg-turbo libpng
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

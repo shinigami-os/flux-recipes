@@ -1,0 +1,49 @@
+[meta]
+name = kira-dlib
+version = 20.0.1
+description = "dlib machine learning toolkit with Python bindings (face landmarks), built for howdy - Alpine has no dlib package"
+license = BSL-1.0
+size = 60
+
+[source]
+url = git+https://github.com/davisking/dlib#v20.0.1
+sha256 = 9b09738b26276eb50cb9c3e8b7731ac68f146ed0
+
+[deps]
+build = gcc g++ make cmake python3-dev py3-setuptools py3-packaging openblas-dev lapack-dev libjpeg-turbo-dev libpng-dev curl
+runtime = python3 py3-numpy openblas lapack libjpeg-turbo libpng
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+# dlib 20.0.1 bundles pybind11 2.12, which predates Python 3.14 support (added in
+# pybind11 3.0) - Alpine's python3 is 3.14, so swap in a 3.x copy under the exact
+# path dlib's tools/python/CMakeLists.txt add_subdirectory()s
+curl -sL -o pybind11.tar.gz https://github.com/pybind/pybind11/archive/refs/tags/v3.0.4.tar.gz
+echo "74b6a2c2b4573a400cafb6ecbf60c98df300cd3d0041296b913d02b2cbbb2676  pybind11.tar.gz" | sha256sum -c -
+rm -rf dlib/external/pybind11
+mkdir -p dlib/external/pybind11
+tar -xzf pybind11.tar.gz -C dlib/external/pybind11 --strip-components=1
+
+%build
+export CFLAGS="-O2 -pipe -march=x86-64-v2"
+export CXXFLAGS="-O2 -pipe -march=x86-64-v2"
+# setup.py picks its own -j from cores and RAM but each dlib python translation unit
+# can use 1-2GB, so cap it explicitly rather than trust that on a laptop without swap
+export CMAKE_BUILD_PARALLEL_LEVEL=4
+# no X11 GUI toolkit wanted, and the DLIB_ prefix is the only way setup.py forwards
+# an option to cmake on modern setuptools (its own --set/--no flags are rejected)
+export DLIB_NO_GUI_SUPPORT=ON
+python3 setup.py build
+
+%post-build
+
+%install
+# setup.py install is deprecated in current setuptools, so copy the built tree
+# instead - build/lib.* already holds the dlib package plus _dlib_pybind11*.so
+site=$(python3 -c 'import sysconfig; print(sysconfig.get_path("platlib"))')
+install -dm755 "$DESTDIR$site"
+for d in build/lib*; do
+    cp -a "$d/." "$DESTDIR$site/"
+done

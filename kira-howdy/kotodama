@@ -1,0 +1,80 @@
+[meta]
+name = kira-howdy
+version = 3.0.0-beta1
+description = "Windows Hello-style face authentication for PAM (howdy 3.0 with its native pam_howdy module, no python2 or pam-python)"
+license = MIT
+size = 60
+
+[source]
+# master is the 3.0 rewrite: a native C++ pam_howdy.so instead of the python2-only
+# pam-python bridge the old dev branch needed, plus the --plain / -U / add <label>
+# CLI Sleex's Settings > Security page relies on
+url = git+https://github.com/boltgolt/howdy#master
+sha256 = d3ab99382f88f043d15f15c1450ab69433892a1c
+
+[deps]
+build = gcc g++ meson samurai pkgconf linux-pam-dev inih-dev inih-inireader-dev libevdev-dev gettext gettext-dev python3 curl bzip2
+runtime = python3 py3-opencv py3-numpy kira-dlib linux-pam inih inih-inireader libevdev
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+# the 3 dlib face models aren't in howdy's own repo - fetch them from
+# davisking/dlib-models like the archlinux/howdy PKGBUILD does, verifying
+# against the same checksums it pins
+fetch_model() {
+    name="$1"
+    sha="$2"
+    curl -sL -o "$name.bz2" "https://github.com/davisking/dlib-models/raw/master/$name.bz2"
+    echo "$sha  $name.bz2" | sha256sum -c -
+    bunzip2 -f "$name.bz2"
+}
+fetch_model dlib_face_recognition_resnet_model_v1.dat abb1f61041e434465855ce81c2bd546e830d28bcbed8d27ffbe5bb408b11553a
+fetch_model mmod_human_face_detector.dat db9e9e40f092c118d5eb3e643935b216838170793559515541c56a2b50d9fc84
+fetch_model shape_predictor_5_face_landmarks.dat 6e787bbebf5c9efdb793f6cd1f023230c4413306605f24f299f12869f95aa472
+
+%build
+meson setup builddir --prefix=/usr --libdir=lib --buildtype=release \
+    -Dconfig_dir=/etc/howdy \
+    -Dpython_path=/usr/bin/python3
+meson compile -C builddir
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" meson install -C builddir
+install -Dm644 LICENSE "$DESTDIR/usr/share/licenses/kira-howdy/LICENSE"
+install -dm755 "$DESTDIR/usr/share/dlib-data"
+install -m644 dlib_face_recognition_resnet_model_v1.dat mmod_human_face_detector.dat shape_predictor_5_face_landmarks.dat "$DESTDIR/usr/share/dlib-data/"
+install -dm755 "$DESTDIR/var/log/howdy"
+install -dm755 "$DESTDIR/etc/howdy/models"
+
+%post-install
+# only sudo gets wired here - the sudo package itself must never hard-reference
+# pam_howdy.so, since that would make sudo warn on every install without howdy.
+# pam_howdy returns "no data" (and PAM falls through to the password) whenever
+# the user has no face model enrolled or the camera isn't usable.
+if [ -f /etc/pam.d/sudo ] && ! grep -q 'pam_howdy.so' /etc/pam.d/sudo; then
+    { echo 'auth	sufficient	/usr/lib/security/pam_howdy.so'; cat /etc/pam.d/sudo; } > /etc/pam.d/sudo.new
+    mv /etc/pam.d/sudo.new /etc/pam.d/sudo
+fi
+# howdy ships config.ini with "device_path = none" and video_capture.py has zero
+# auto-detection of its own, so it always fails until this runs. Probe
+# /dev/video* with opencv and pick the first one that opens and returns a frame.
+# Kept as its own files/ script: kotodama's hook-body left-trim would mangle
+# indentation-sensitive Python pasted inline.
+if grep -q '^device_path = none$' /etc/howdy/config.ini; then
+    found=$(python3 "$FLUX_RECIPE_DIR/files/detect_camera.py")
+    if [ -n "$found" ]; then
+        sed -i "s#^device_path = none\$#device_path = $found#" /etc/howdy/config.ini
+        echo "[howdy] camera auto-detected: $found"
+    else
+        echo "[howdy] no working camera found under /dev/video* - set"
+        echo "[howdy] device_path manually in /etc/howdy/config.ini"
+    fi
+fi
+echo "[howdy] installed. Add a face model with: sudo howdy add"
+echo "[howdy] sudo now tries face auth first, falling back to password."
+echo "[howdy] to also use it for the Sleex lock screen, enable Face Auth in"
+echo "[howdy] Settings > Security (SwayFX has no equivalent integration)."

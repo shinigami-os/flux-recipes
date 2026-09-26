@@ -1,6 +1,6 @@
 [meta]
 name = kira-greetd
-version = 1.29
+version = 1.30
 description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
@@ -41,6 +41,11 @@ install -m755 "$FLUX_RECIPE_DIR/files/xdg-runtime-dir.sh" "$DESTDIR/etc/greetd/x
 install -m755 "$FLUX_RECIPE_DIR/files/start-greeter.sh" "$DESTDIR/etc/greetd/start-greeter.sh"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/run" "$DESTDIR/etc/sv/greetd/run"
 install -m755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/log/run"
+
+# the greeter runs as the greetd user with no active logind session, so polkit answers
+# "challenge" for every power action and the greeter has no auth agent to answer it. Goes in
+# /usr/share, not /etc: /etc/polkit-1/rules.d ends up root:root 0750 here, which polkitd cannot read
+install -Dm644 "$FLUX_RECIPE_DIR/files/50-kira-greetd-power.rules" "$DESTDIR/usr/share/polkit-1/rules.d/50-kira-greetd-power.rules"
 
 # Kira Login: the custom eww greeter from kira-desktop, replacing regreet so the
 # design handoff's exact floating layout is achievable (GTK CSS on regreet's own

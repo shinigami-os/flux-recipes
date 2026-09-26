@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=SwayFX
+Comment=SwayFX compositor with eww bar, fuzzel launcher and Mako notifications
+Exec=/usr/bin/kira-start-swayFX
+Type=Application
+DesktopNames=swayFX

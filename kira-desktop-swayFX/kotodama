@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-swayFX
-version = 26.07-8
+version = 26.07-9
 description = "SwayFX desktop environment meta-package"
 license = MIT
 size = 1
@@ -22,6 +22,9 @@ cflags =
 
 %install
 install -Dm644 "$FLUX_RECIPE_DIR/files/swayFX.desktop-env" "$DESTDIR/usr/share/kira-desktop/swayFX.desktop-env"
+# the greeter's session list is built from wayland-sessions, and kira-swayfx deletes
+# sway's own entry, so without this one SwayFX never shows up in the dropdown
+install -Dm644 "$FLUX_RECIPE_DIR/files/swayFX.desktop" "$DESTDIR/usr/share/wayland-sessions/swayFX.desktop"
 install -Dm644 "$FLUX_RECIPE_DIR/files/default.png" "$DESTDIR/usr/share/kira/wallpapers/default.png"
 
 %post-install

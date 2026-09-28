@@ -1,6 +1,6 @@
 [meta]
 name = kira-desktop-apps
-version = 1.0
+version = 1.1
 description = "Kira's shared default GUI apps: browser, PDF/image/media viewers, calculator, archiver, editors - shared by every desktop meta-package instead of each one drifting its own list"
 license = MIT
 size = 1
@@ -21,6 +21,13 @@ cflags =
 %post-build
 
 %install
+# flatpak install never puts a "code" binary on PATH, and Sleex's own Super+C
+# keybind calls bare "code" - give it one
+install -Dm755 "$FLUX_RECIPE_DIR/files/code" "$DESTDIR/usr/bin/code"
+# mupdf-gl ships with no .desktop file at all (confirmed: no launcher entry
+# anywhere in the package) - without this it's unreachable from fuzzel and
+# unusable as a mimeapps.list default, since that needs a real .desktop id
+install -Dm644 "$FLUX_RECIPE_DIR/files/mupdf-gl.desktop" "$DESTDIR/usr/share/applications/mupdf-gl.desktop"
 
 %post-install
 # VS Code isn't in Alpine's own repo (proprietary MS build) - kira-flatpak (a

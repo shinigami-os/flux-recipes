@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira5
+version = 1.37.12-kira6
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -9,7 +9,7 @@ size = 20
 # TEMPORARY: testing the Kira runit-adaptation branch before it's PR'd upstream -
 # revert to AxOS-project/Sleex#main once the PR lands
 url = git+https://github.com/shinigami-os/Sleex_runit#adaptation-for-kira-linux
-sha256 = d4594bbed6b2b0df53122a28ecd346006bbd2707
+sha256 = 42df002351b033c5c18cddd915c8336afab175d6
 
 [deps]
 build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev networkmanager-dev sdbus-cpp-dev kira-sleex-ui-kit kira-quickshell rsync
@@ -60,6 +60,15 @@ sed -i 's/property string ghUsername: "levraiardox"/property string ghUsername: 
     src/share/sleex/modules/common/Config.qml
 sed -i 's/property string userDesc: "Today is a good day to have a good day!"/property string userDesc: "A Linux distribution you actually understand"/' \
     src/share/sleex/modules/common/Config.qml
+
+# flameshot as the default interactive screenshot tool (kira-desktop-apps installs
+# it everywhere) - a packaging-level default, not something upstream/AxOS users
+# should get, so this stays a build-time patch here rather than a commit on the
+# fork branch itself
+sed -i "s#hl.dsp.exec_cmd('grim -g \"\$(slurp)\" - | swappy -f -')#hl.dsp.exec_cmd(\"flameshot gui\")#" \
+    src/etc/sleex/hyprland/keybinds.lua
+sed -i 's#hl.dsp.exec_cmd("/usr/share/sleex/scripts/grimblast.sh --freeze copy area")#hl.dsp.exec_cmd("flameshot gui")#' \
+    src/etc/sleex/hyprland/keybinds.lua
 
 %build
 cd src/share/sleex

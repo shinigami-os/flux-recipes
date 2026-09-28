@@ -1,0 +1,6 @@
+#!/bin/sh
+# /proc/acpi/event doesn't exist on modern kernels - busybox's acpid falls back
+# to the kernel's ACPI netlink socket on its own when that file is missing,
+# confirmed working on Kira's own kernel, no extra flag needed for that
+mkdir -p /etc/acpi/events
+exec acpid -f

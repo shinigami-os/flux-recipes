@@ -1,0 +1,3 @@
+#!/bin/sh
+mkdir -p /var/log/acpid
+exec svlogd -tt /var/log/acpid

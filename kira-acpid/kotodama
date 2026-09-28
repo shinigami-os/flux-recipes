@@ -1,0 +1,31 @@
+[meta]
+name = kira-acpid
+version = 1.0
+description = "ACPI event daemon plus the runit service Alpine's own busybox build never ships - listens for physical hardware events (power button, lid, ...) that don't otherwise reach userspace"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# acpid itself is a busybox applet already on every Kira system (/sbin/acpid),
+# not a separate package - what's actually missing is a runit service for it
+install -dm755 "$DESTDIR/etc/sv/acpid" "$DESTDIR/etc/sv/acpid/log" "$DESTDIR/etc/acpi/events"
+install -m755 "$FLUX_RECIPE_DIR/files/acpid/run" "$DESTDIR/etc/sv/acpid/run"
+install -m755 "$FLUX_RECIPE_DIR/files/acpid/log/run" "$DESTDIR/etc/sv/acpid/log/run"
+
+%post-install
+sv up /etc/sv/acpid 2>/dev/null || true

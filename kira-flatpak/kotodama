@@ -1,6 +1,6 @@
 [meta]
 name = kira-flatpak
-version = 1.1
+version = 1.2
 description = "Flatpak with the Flathub remote already added - Alpine's own package sets up the sandboxing/portal machinery but adds no app source at all, so flatpak works but has nothing to install until you add one yourself"
 license = MIT
 size = 1
@@ -29,3 +29,10 @@ cflags =
 
 %post-install
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+# xdg-document-portal's fuse mount (/run/user/$UID/doc, what sandboxed file
+# pickers actually read/write through) goes through libfuse3, which reads and
+# writes /etc/mtab to track its own mounts - kira-base's own runit stage 1
+# creates this symlink on every boot, but an existing system won't have it
+# until its next reboot, so make sure it's there the moment flatpak lands too
+[ -L /etc/mtab ] || ln -sf /proc/self/mounts /etc/mtab

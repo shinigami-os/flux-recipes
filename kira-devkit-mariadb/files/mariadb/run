@@ -1,2 +1,7 @@
 #!/bin/sh
+# /run is a fresh tmpfs every boot, and flux never ran the Alpine package's own
+# trigger that would normally create this - same gap chronyd's /run/chrony hit
+mkdir -p /run/mysqld
+chown mysql:mysql /run/mysqld
+
 exec /usr/bin/mariadbd --user=mysql --datadir=/var/lib/mysql

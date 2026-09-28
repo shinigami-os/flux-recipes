@@ -30,6 +30,15 @@ install -m755 "$FLUX_RECIPE_DIR/files/postgresql/run" "$DESTDIR/etc/sv/postgresq
 install -m755 "$FLUX_RECIPE_DIR/files/postgresql/log/run" "$DESTDIR/etc/sv/postgresql/log/run"
 
 %post-install
+# kira-base's runit stage 1 creates /etc/hosts on every boot going forward, but an
+# already-installed system won't have it until its next reboot - postgres refuses
+# to start at all without "localhost" resolving (its default listen_addresses),
+# so make sure it's there right away rather than leaving this package half-broken
+# until the next reboot
+if [ ! -s /etc/hosts ]; then
+    printf '127.0.0.1   localhost localhost.localdomain\n::1         localhost localhost.localdomain\n' > /etc/hosts
+fi
+
 # a bare `postgres -D` refuses to start against an uninitialized data dir -
 # initdb has to run once, as the postgres user, before the service ever comes up.
 # /var/lib/postgresql exists and is postgres:postgres already (Alpine's own

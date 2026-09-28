@@ -12,8 +12,8 @@ url = git+https://github.com/shinigami-os/Sleex_runit#adaptation-for-kira-linux
 sha256 = d4594bbed6b2b0df53122a28ecd346006bbd2707
 
 [deps]
-build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev networkmanager-dev kira-sleex-ui-kit kira-quickshell rsync
-runtime = kira-hyprland kira-quickshell qt6-qtbase qt6-qtbase-sqlite qt6-qtdeclarative qt6-qtwayland qt6-qtconnectivity qt6-qt5compat qt6-qtmultimedia qt6-qtsvg kira-sleex-ui-kit jq sqlite python3 bc networkmanager
+build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev networkmanager-dev sdbus-cpp-dev kira-sleex-ui-kit kira-quickshell rsync
+runtime = kira-hyprland kira-quickshell qt6-qtbase qt6-qtbase-sqlite qt6-qtdeclarative qt6-qtwayland qt6-qtconnectivity qt6-qt5compat qt6-qtmultimedia qt6-qtsvg kira-sleex-ui-kit jq sqlite python3 bc networkmanager sdbus-cpp
 optional = matugen hyprlock hypridle wl-clipboard fuzzel foot kira-howdy ffmpeg imagemagick kdialog
 
 [build]

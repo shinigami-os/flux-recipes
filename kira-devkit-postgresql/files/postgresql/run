@@ -1,4 +1,10 @@
 #!/bin/sh
+# /run is a fresh tmpfs every boot, and flux never ran the Alpine package's own
+# trigger that would normally create this - same gap chronyd's /run/chrony hit.
+# postgres uses this for its Unix socket + lock file, on top of the TCP ports.
+mkdir -p /run/postgresql
+chown postgres:postgres /run/postgresql
+
 # postgres itself refuses to run as root at all (hard-fails on startup), so it has to be
 # launched already-dropped rather than started as root and told to drop privileges
 exec chpst -u postgres:postgres /usr/libexec/postgresql17/postgres -D /var/lib/postgresql/17/data

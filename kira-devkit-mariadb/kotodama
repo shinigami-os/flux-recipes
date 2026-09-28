@@ -1,6 +1,6 @@
 [meta]
 name = kira-devkit-mariadb
-version = 1.0
+version = 1.1
 description = "MariaDB development kit: server and client, initialized and running out of the box"
 license = MIT
 size = 0

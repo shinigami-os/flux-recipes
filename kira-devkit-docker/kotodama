@@ -1,0 +1,39 @@
+[meta]
+name = kira-devkit-docker
+version = 1.0
+description = "Docker development kit: docker, docker-cli, dockerd plus the runit service Alpine's own package never ships"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = docker docker-cli docker-engine git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# same class of gap as kira-upower/kira-net: Alpine's docker-engine ships dockerd
+# itself but no runit service to actually run it - give it one
+install -dm755 "$DESTDIR/etc/sv/docker" "$DESTDIR/etc/sv/docker/log"
+install -m755 "$FLUX_RECIPE_DIR/files/docker/run" "$DESTDIR/etc/sv/docker/run"
+install -m755 "$FLUX_RECIPE_DIR/files/docker/log/run" "$DESTDIR/etc/sv/docker/log/run"
+
+%post-install
+# Alpine's docker package creates the "docker" group but doesn't add anyone to it -
+# without membership every docker command needs sudo, which defeats the point of a
+# quick local dev setup. The installer's real user is the lowest UID in 1000-59999,
+# same convention kira-desktop's greeter login script already uses to find it.
+real_user=$(awk -F: '$3 >= 1000 && $3 < 60000 { print $1; exit }' /etc/passwd)
+[ -n "$real_user" ] && addgroup "$real_user" docker 2>/dev/null || true
+sv up /etc/sv/docker 2>/dev/null || true

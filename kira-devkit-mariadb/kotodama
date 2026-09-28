@@ -1,0 +1,41 @@
+[meta]
+name = kira-devkit-mariadb
+version = 1.0
+description = "MariaDB development kit: server and client, initialized and running out of the box"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = mariadb mariadb-client git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# same class of gap as kira-upower/kira-net: Alpine's mariadb ships mariadbd
+# but no runit service to actually run it - give it one
+install -dm755 "$DESTDIR/etc/sv/mariadb" "$DESTDIR/etc/sv/mariadb/log"
+install -m755 "$FLUX_RECIPE_DIR/files/mariadb/run" "$DESTDIR/etc/sv/mariadb/run"
+install -m755 "$FLUX_RECIPE_DIR/files/mariadb/log/run" "$DESTDIR/etc/sv/mariadb/log/run"
+
+%post-install
+# Alpine's mariadb .pre-install creates the mysql user but leaves /var/lib/mysql
+# owned by root - same gap kira-greetd hit with /var/lib/greetd. mariadb-install-db
+# has to run once, before the service ever comes up, to actually create the
+# system tables mariadbd expects to find.
+chown -R mysql:mysql /var/lib/mysql
+if [ ! -d /var/lib/mysql/mysql ]; then
+    mariadb-install-db --user=mysql --datadir=/var/lib/mysql
+fi
+sv up /etc/sv/mariadb 2>/dev/null || true

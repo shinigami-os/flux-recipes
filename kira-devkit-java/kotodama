@@ -1,7 +1,7 @@
 [meta]
 name = kira-devkit-java
-version = 1.0
-description = "Java development kit (OpenJDK/Temurin)"
+version = 1.1
+description = "Java development kit: OpenJDK plus the Maven and Gradle build tools"
 license = MIT
 size = 0
 
@@ -11,7 +11,7 @@ sha256 =
 
 [deps]
 build =
-runtime = openjdk21
+runtime = openjdk21 maven gradle git
 
 [build]
 cflags =

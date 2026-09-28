@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-dotnet
+version = 1.0
+description = ".NET development kit: the .NET 8 (LTS) SDK"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = dotnet8-sdk git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-elixir
+version = 1.0
+description = "Elixir development kit: the elixir package pulls in Erlang/OTP and ships mix itself, nothing else needed"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = elixir git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

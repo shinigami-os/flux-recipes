@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-erlang
+version = 1.0
+description = "Erlang development kit: OTP runtime, headers, and the rebar3 build tool"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = erlang27 erlang27-dev rebar3 git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

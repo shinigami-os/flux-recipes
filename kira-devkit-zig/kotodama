@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-zig
+version = 1.0
+description = "Zig development kit: compiler and build system (bundled in the zig binary itself)"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = zig git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

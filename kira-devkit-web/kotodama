@@ -1,7 +1,7 @@
 [meta]
 name = kira-devkit-web
-version = 1.0
-description = "Web development kit: Node.js and npm"
+version = 1.1
+description = "Web development kit: Node.js, npm, and TypeScript"
 license = MIT
 size = 0
 
@@ -11,7 +11,10 @@ sha256 =
 
 [deps]
 build =
-runtime = nodejs
+# npm was never actually a runtime dep despite the description above - Alpine
+# ships it as a genuinely separate package from nodejs itself
+runtime = nodejs npm typescript git
+optional = pnpm yarn
 
 [build]
 cflags =

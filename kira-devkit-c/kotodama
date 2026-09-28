@@ -1,6 +1,6 @@
 [meta]
 name = kira-devkit-c
-version = 1.1
+version = 1.2
 description = "C/C++ development kit: compiler, debugger, build systems, and tracing tools"
 license = MIT
 size = 0
@@ -11,7 +11,7 @@ sha256 =
 
 [deps]
 build =
-runtime = gcc libc-dev gdb make cmake ninja meson pkgconf binutils strace valgrind
+runtime = gcc libc-dev gdb make cmake ninja meson pkgconf binutils strace valgrind git
 
 [build]
 cflags =

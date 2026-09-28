@@ -1,0 +1,3 @@
+#!/bin/sh
+mkdir -p /var/log/docker
+exec svlogd -tt /var/log/docker

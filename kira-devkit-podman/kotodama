@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-podman
+version = 1.0
+description = "Podman development kit: daemonless, rootless-friendly containers - podman, podman-compose, buildah, skopeo"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = podman podman-compose buildah skopeo git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

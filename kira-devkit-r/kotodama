@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-r
+version = 1.0
+description = "R development kit: the R language and environment for statistical computing"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = R git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

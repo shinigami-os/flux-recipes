@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-clang
+version = 1.0
+description = "Clang/LLVM development kit: clang, clang-tidy and friends, alongside (not instead of) kira-devkit-c's gcc"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = clang20 clang20-dev clang20-extra-tools git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-php
+version = 1.0
+description = "PHP development kit: PHP 8.4, Composer, and the extensions most PHP apps assume are present"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = php84 php84-phar php84-mbstring php84-openssl php84-curl php84-pdo_mysql php84-pdo_sqlite composer git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

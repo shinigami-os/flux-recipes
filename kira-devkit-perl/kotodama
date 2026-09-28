@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-perl
+version = 1.0
+description = "Perl development kit: interpreter and documentation"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = perl perl-doc git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

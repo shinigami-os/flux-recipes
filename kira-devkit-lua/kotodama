@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-lua
+version = 1.0
+description = "Lua development kit: interpreter, LuaRocks package manager"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = lua5.4 luarocks git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

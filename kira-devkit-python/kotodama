@@ -1,7 +1,7 @@
 [meta]
 name = kira-devkit-python
-version = 1.0
-description = "Python development kit"
+version = 1.1
+description = "Python development kit: interpreter, pip, and virtualenv"
 license = MIT
 size = 0
 
@@ -11,7 +11,7 @@ sha256 =
 
 [deps]
 build =
-runtime = python3
+runtime = python3 py3-pip py3-virtualenv git
 
 [build]
 cflags =

@@ -1,0 +1,25 @@
+[meta]
+name = kira-devkit-haskell
+version = 1.0
+description = "Haskell development kit: GHC and the Stack build tool"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = ghc stack git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install

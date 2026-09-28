@@ -1,0 +1,43 @@
+[meta]
+name = kira-devkit-postgresql
+version = 1.0
+description = "PostgreSQL development kit: server, contrib extensions, and client, initialized and running out of the box"
+license = MIT
+size = 0
+
+[source]
+url =
+sha256 =
+
+[deps]
+build =
+runtime = postgresql17 postgresql17-contrib postgresql17-client git
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# same class of gap as kira-upower/kira-net: Alpine's postgresql17 ships the
+# server binary but no runit service to actually run it - give it one
+install -dm755 "$DESTDIR/etc/sv/postgresql" "$DESTDIR/etc/sv/postgresql/log"
+install -m755 "$FLUX_RECIPE_DIR/files/postgresql/run" "$DESTDIR/etc/sv/postgresql/run"
+install -m755 "$FLUX_RECIPE_DIR/files/postgresql/log/run" "$DESTDIR/etc/sv/postgresql/log/run"
+
+%post-install
+# a bare `postgres -D` refuses to start against an uninitialized data dir -
+# initdb has to run once, as the postgres user, before the service ever comes up.
+# /var/lib/postgresql exists and is postgres:postgres already (Alpine's own
+# .pre-install trigger creates the user with that as its home), but the
+# versioned data dir underneath it is still ours to create
+if [ ! -d /var/lib/postgresql/17/data ]; then
+    mkdir -p /var/lib/postgresql/17/data
+    chown -R postgres:postgres /var/lib/postgresql
+    chpst -u postgres:postgres /usr/libexec/postgresql17/initdb -D /var/lib/postgresql/17/data
+fi
+sv up /etc/sv/postgresql 2>/dev/null || true

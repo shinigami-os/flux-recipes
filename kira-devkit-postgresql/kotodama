@@ -50,3 +50,13 @@ if [ ! -d /var/lib/postgresql/17/data ]; then
     chpst -u postgres:postgres /usr/libexec/postgresql17/initdb -D /var/lib/postgresql/17/data
 fi
 sv up /etc/sv/postgresql 2>/dev/null || true
+
+# Alpine's postgresql17 keeps every binary (psql, pg_dump, initdb, ...) under its
+# own versioned /usr/libexec/postgresql17/ - normally symlinked onto PATH by an
+# update-alternatives trigger flux never runs, so without this psql et al. are
+# unreachable even though the package installed fine
+for bin in /usr/libexec/postgresql17/*; do
+    name=$(basename "$bin")
+    [ "$name" = "PG_VERSION" ] && continue
+    ln -sf "$bin" "/usr/bin/$name"
+done

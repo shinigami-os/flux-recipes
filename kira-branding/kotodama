@@ -1,6 +1,6 @@
 [meta]
 name = kira-branding
-version = 1.0
+version = 1.1
 description = "Kira Linux shell branding: zshrc, powerlevel10k theme, fetch script, keymaps"
 license = MIT
 size = 1
@@ -21,10 +21,16 @@ cflags =
 %post-build
 
 %install
-install -dm755 "$DESTDIR/root" "$DESTDIR/etc/skel" "$DESTDIR/usr/bin" "$DESTDIR/etc/keymaps"
+install -dm755 "$DESTDIR/root" "$DESTDIR/etc/skel" "$DESTDIR/usr/bin" "$DESTDIR/etc/keymaps" "$DESTDIR/usr/share/kira-keymaps"
 install -m644 "$FLUX_RECIPE_DIR/files/zshrc" "$DESTDIR/root/.zshrc"
 install -m644 "$FLUX_RECIPE_DIR/files/p10k.zsh" "$DESTDIR/root/.p10k.zsh"
 install -m644 "$FLUX_RECIPE_DIR/files/zshrc" "$DESTDIR/etc/skel/.zshrc"
 install -m644 "$FLUX_RECIPE_DIR/files/p10k.zsh" "$DESTDIR/etc/skel/.p10k.zsh"
 install -m755 "$FLUX_RECIPE_DIR/files/fetch" "$DESTDIR/usr/bin/fetch"
-cp -r "$FLUX_RECIPE_DIR/files/keymaps/." "$DESTDIR/etc/keymaps/"
+# the full layout library - kira-installer lists and copies from here, both live
+# on the ISO and in the target chroot after this package lands there
+cp -r "$FLUX_RECIPE_DIR/files/keymaps/available/." "$DESTDIR/usr/share/kira-keymaps/"
+# active console/greeter keymap: exactly one file, kira-base's runit stage 1
+# and kira-greetd's start-greeter.sh both just grab whatever's here - QWERTY
+# (us) by default, kira-installer swaps this for whatever the user picked
+install -m644 "$FLUX_RECIPE_DIR/files/keymaps/available/us.bmap" "$DESTDIR/etc/keymaps/us.bmap"

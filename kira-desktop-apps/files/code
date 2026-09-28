@@ -1,0 +1,4 @@
+#!/bin/sh
+# flatpak install never puts a "code" binary on PATH - Sleex's own Super+C keybind
+# (kira-desktop/sleex/hypr/apps.conf) calls bare "code" though, so give it one
+exec flatpak run com.visualstudio.code "$@"

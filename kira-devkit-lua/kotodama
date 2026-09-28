@@ -1,7 +1,7 @@
 [meta]
 name = kira-devkit-lua
 version = 1.0
-description = "Lua development kit: interpreter, LuaRocks package manager"
+description = "Lua development kit: interpreter"
 license = MIT
 size = 0
 
@@ -11,7 +11,11 @@ sha256 =
 
 [deps]
 build =
-runtime = lua5.4 luarocks git
+# luarocks is in Alpine's index but flux currently "installs" it with zero
+# actual files (no binary lands anywhere) - looks like a flux-side extraction
+# bug on this specific apk, not a naming issue here. Left out until that's
+# fixed rather than shipping a devkit component that silently doesn't work.
+runtime = lua5.4 git
 
 [build]
 cflags =

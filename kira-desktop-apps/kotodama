@@ -1,0 +1,31 @@
+[meta]
+name = kira-desktop-apps
+version = 1.0
+description = "Kira's shared default GUI apps: browser, PDF/image/media viewers, calculator, archiver, editors - shared by every desktop meta-package instead of each one drifting its own list"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = firefox mupdf-gl nomacs mpv galculator lxqt-archiver kira-featherpad btop neovim kira-flatpak
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+
+%post-install
+# VS Code isn't in Alpine's own repo (proprietary MS build) - kira-flatpak (a
+# runtime dep above) already lands Flathub before this runs, so pull it from
+# there. Guarded so a reinstall/upgrade of this package doesn't redownload it.
+if ! flatpak info com.visualstudio.code >/dev/null 2>&1; then
+    flatpak install -y flathub com.visualstudio.code || true
+fi

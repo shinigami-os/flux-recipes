@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira7
+version = 1.37.12-kira8
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -53,6 +53,12 @@ sed -i 's#QT_QPA_PLATFORM=wayland qs -p /usr/share/sleex#QT_QPA_PLATFORM=wayland
 # it needs to be the actual binary name
 sed -i 's/property string terminal: "foot\.desktop"/property string terminal: "foot"/' \
     src/share/sleex/modules/common/Config.qml
+
+# Arch merges /usr, so /bin/fuzzel-emoji and /usr/bin/fuzzel-emoji are the same file
+# there - Kira keeps /bin and /usr/bin separate, and Alpine's fuzzel only ships the
+# real one at /usr/bin, so the emoji picker's hardcoded /bin path was just ENOENT
+sed -i 's#/bin/fuzzel-emoji#/usr/bin/fuzzel-emoji#' \
+    src/share/sleex/services/Emojis.qml
 
 # Kira-only branding defaults - kept out of the upstream-bound fork branch so
 # a PR from it stays invisible to non-Kira users

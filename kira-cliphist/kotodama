@@ -1,0 +1,28 @@
+[meta]
+name = kira-cliphist
+version = 0.1.0
+description = "Clipboard history manager for Wayland - not in Alpine's index, Sleex's own clipboard history (Super+V) depends on it"
+license = MIT
+size = 5
+
+[source]
+url = git+https://github.com/sentriz/cliphist#master
+sha256 = daa99daef3ed37dc37013b1fae381fe626025a13
+
+[deps]
+build = go git
+runtime = wl-clipboard xdg-utils
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+export CGO_ENABLED=0
+go build -o cliphist .
+
+%post-build
+
+%install
+install -Dm755 cliphist "$DESTDIR/usr/bin/cliphist"

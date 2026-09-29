@@ -21,7 +21,6 @@ setopt EXTENDED_HISTORY
 
 # ─── Options ─────────────────────────────────────────────────────────────────
 setopt AUTO_CD
-setopt CORRECT
 setopt NO_BEEP
 setopt INTERACTIVE_COMMENTS
 
@@ -43,8 +42,9 @@ zstyle ':completion:*:warnings' format '%F{red}no matches for: %d%f'
 bindkey -e
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
-bindkey '^[[1;5C' forward-word
 bindkey '^[[1;5D' backward-word
+bindkey '^H' backward-kill-word
+bindkey '^[[3;5~' kill-word
 
 # ─── Plugins ─────────────────────────────────────────────────────────────────
 PLUGIN_DIR=/usr/share/zsh/plugins
@@ -55,6 +55,18 @@ source $PLUGIN_DIR/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 bindkey '^ ' autosuggest-accept
+
+# Ctrl+Right: accept the current suggestion if one is showing, otherwise just
+# move a word forward - matches the VSCode integrated terminal's own binding
+accept-suggestion-or-forward-word() {
+  if [[ -n $POSTDISPLAY ]]; then
+    zle autosuggest-accept
+  else
+    zle forward-word
+  fi
+}
+zle -N accept-suggestion-or-forward-word
+bindkey '^[[1;5C' accept-suggestion-or-forward-word
 
 source $PLUGIN_DIR/git/git.plugin.zsh
 
@@ -68,7 +80,6 @@ alias la='ls -lah --color=auto'
 alias l='ls -CF --color=auto'
 alias cp='cp -i'
 alias mv='mv -i'
-alias rm='rm -i'
 alias gs='git status'
 alias ga='git add'
 alias gc='git commit'

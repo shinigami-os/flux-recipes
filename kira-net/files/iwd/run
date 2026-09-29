@@ -4,4 +4,17 @@ while [ ! -S /var/run/dbus/system_bus_socket ] && [ $i -lt 15 ]; do
     sleep 1
     i=$((i + 1))
 done
+
+# iwd reports each interface by name; NetworkManager later resolves that name with
+# if_nametoindex(). The wifi interface is created as wlan0 in stage 1 (modprobe) and only
+# renamed to wlp0s20f3 by udev once eudev-trigger has run - if iwd starts before that, NM
+# looks up "wlan0", fails, and the wifi device stays "unavailable" forever. eudev-trigger
+# touches its own down file when the trigger+settle is finished (stage 2 clears it each boot),
+# so wait for that, with a timeout so a udev failure can never block wifi entirely.
+i=0
+while [ ! -e /etc/sv/eudev-trigger/down ] && [ $i -lt 40 ]; do
+    sleep 1
+    i=$((i + 1))
+done
+
 exec /usr/libexec/iwd

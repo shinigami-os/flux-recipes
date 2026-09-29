@@ -97,6 +97,9 @@ alias grep='grep --color=auto'
 export EDITOR=vi
 export VISUAL=vi
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+# runit's own sv/chpst resolve a bare service name against this - without it
+# every "sv" call needs the full /etc/sv/<name> path spelled out
+export SVDIR=/etc/sv
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 

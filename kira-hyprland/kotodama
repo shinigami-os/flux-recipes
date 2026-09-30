@@ -7,7 +7,7 @@ size = 120
 
 [source]
 url = git+https://github.com/hyprwm/Hyprland#v0.55.4
-sha256 =
+sha256 = a0136d8c04687bb36eb8a28eb9d1ff92aea99704
 
 [deps]
 build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner aquamarine-dev hyprlang-dev hyprutils-dev hyprcursor-dev hyprgraphics-dev hyprland-protocols hyprwire-dev wayland-dev wayland-protocols libxkbcommon-dev libdrm-dev pixman-dev cairo-dev pango-dev libinput-dev mesa-dev glib-dev re2-dev muparser-dev lcms2-dev libxcursor-dev util-linux-dev kira-lua55 glslang-dev spirv-tools-dev tomlplusplus-dev libxcb-dev xcb-util-wm-dev xcb-util-errors-dev

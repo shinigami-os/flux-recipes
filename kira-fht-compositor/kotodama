@@ -10,10 +10,10 @@ url = git+https://github.com/nferhat/fht-compositor#main
 sha256 = f20a44701430d29acb6153400d80172829c109cf
 
 [deps]
-build = gcc g++ libc-dev rust cargo pkgconf clang20-libclang wayland-dev libxkbcommon-dev mesa-dev libinput-dev libseat-dev libdrm-dev libdisplay-info-dev eudev-dev pipewire-dev dbus-dev git
+build = gcc g++ libc-dev rust cargo pkgconf clang20-libclang wayland-dev libxkbcommon-dev mesa-dev libinput-dev libseat-dev libdrm-dev libdisplay-info-dev eudev-dev git
 # fht-compositor has no XWayland support at all (confirmed against its own source) -
 # Wayland-native clients only, unlike Hyprland
-runtime = wayland libxkbcommon mesa mesa-egl mesa-gl mesa-gles mesa-dri-gallium libinput libseat libdrm libdisplay-info eudev-libs pipewire dbus mesa-vulkan-intel mesa-vulkan-swrast
+runtime = wayland libxkbcommon mesa mesa-egl mesa-gl mesa-gles mesa-dri-gallium libinput libseat libdrm libdisplay-info eudev-libs dbus mesa-vulkan-intel mesa-vulkan-swrast
 
 [build]
 cflags =
@@ -21,12 +21,14 @@ cflags =
 %pre-build
 
 %build
-# libspa-sys's own build script uses bindgen against pipewire/spa's headers - this system
-# has llvm20/21/23 all installed side by side (pulled in by unrelated packages), and
-# without pinning this, bindgen's own libclang lookup picks up a mismatched libLLVM.so at
-# runtime and segfaults inside it before ever reaching spa's headers
+# bindgen (pulled in by libspa-sys, itself only needed by the xdg-screencast-portal
+# feature) reliably segfaults inside libLLVM on this system - there are 3 unrelated
+# LLVM versions installed side by side (pulled in transitively by other packages),
+# and no combination of LIBCLANG_PATH/a clean target dir avoided it, pointing at a
+# deeper bindgen/concurrent-build issue rather than a simple path mismatch. Screencast
+# support is dropped for now rather than blocking the compositor itself on it - it
+# needs real investigation as a follow-up, not a guess-and-check fix at 2am.
 export LIBCLANG_PATH=/usr/lib/llvm20/lib
-echo "DEBUG: LIBCLANG_PATH=$LIBCLANG_PATH"
 
 # matches default.nix's own linker flags exactly - without them the linker's default
 # --as-needed drops EGL/wayland-client since nothing references them at link time, but
@@ -35,17 +37,12 @@ export RUSTFLAGS="-C link-arg=-Wl,--push-state,--no-as-needed -C link-arg=-lEGL 
 # headless-backend is dev/test-only per its own doc comment in Cargo.toml, and the
 # systemd feature is meaningless on runit - winit-backend is kept for a quick nested
 # debug session, udev-backend is the one that actually matters for real hardware
-cargo build --profile opt -p fht-compositor --no-default-features --features winit-backend,udev-backend,xdg-screencast-portal
+cargo build --profile opt -p fht-compositor --no-default-features --features winit-backend,udev-backend
 
 %post-build
 
 %install
 install -Dm755 target/opt/fht-compositor "$DESTDIR/usr/bin/fht-compositor"
-
-# fht-compositor's own screencast portal is built into the binary itself, unlike
-# Hyprland's separate xdg-desktop-portal-hyprland package
-install -Dm644 res/fht-compositor.portal "$DESTDIR/usr/share/xdg-desktop-portal/portals/fht-compositor.portal"
-install -Dm644 res/fht-compositor-portals.conf "$DESTDIR/usr/share/xdg-desktop-portal/fht-compositor-portals.conf"
 
 # upstream's own res/systemd/fht-compositor.desktop points Exec at a systemd-only
 # session script that hard-refuses to run without systemctl - Kira needs its own,

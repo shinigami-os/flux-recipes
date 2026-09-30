@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira8
+version = 1.37.12-kira9
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -9,11 +9,11 @@ size = 20
 # TEMPORARY: testing the Kira runit-adaptation branch before it's PR'd upstream -
 # revert to AxOS-project/Sleex#main once the PR lands
 url = git+https://github.com/shinigami-os/Sleex_runit#adaptation-for-kira-linux
-sha256 = 5e92ad1a69f91da7ab52087158dfecd31973a81c
+sha256 = 99a550db5b060af35b721dcff02529e33e2584f1
 
 [deps]
 build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev networkmanager-dev sdbus-cpp-dev kira-sleex-ui-kit kira-quickshell rsync
-runtime = kira-hyprland kira-quickshell qt6-qtbase qt6-qtbase-sqlite qt6-qtdeclarative qt6-qtwayland qt6-qtconnectivity qt6-qt5compat qt6-qtmultimedia qt6-qtsvg kira-sleex-ui-kit jq sqlite python3 bc networkmanager sdbus-cpp
+runtime = kira-hyprland kira-quickshell qt6-qtbase qt6-qtbase-sqlite qt6-qtdeclarative qt6-qtwayland qt6-qtconnectivity qt6-qt5compat qt6-qtmultimedia qt6-qtsvg kira-sleex-ui-kit jq sqlite python3 py3-pillow bc networkmanager sdbus-cpp
 optional = matugen hyprlock hypridle wl-clipboard fuzzel foot kira-howdy ffmpeg imagemagick kdialog
 
 [build]

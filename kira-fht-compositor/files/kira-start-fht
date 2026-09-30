@@ -1,0 +1,45 @@
+#!/bin/sh
+# debug: trace every step to a fixed, always-writable location, same convention
+# kira-start-sleex uses - do not rely on XDG_RUNTIME_DIR for this log since a
+# failure to set that dir up is one of the things we're trying to catch
+exec > "/tmp/kira-start-fht-debug-$(id -u).log" 2>&1
+export PS4='+[$(date +%s.%N)] '
+set -x
+set -e
+
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+
+# without this, fuzzel (and anything else scanning .desktop files) never sees
+# Flatpak-installed apps, and their launchers/CLI wrappers stay invisible
+export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+export PATH="/var/lib/flatpak/exports/bin:$PATH"
+
+# glib 2.82+ defaults to /run/dbus/... but the real socket is /var/run/dbus/...
+export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
+
+mkdir -p "$XDG_RUNTIME_DIR" || { echo "kira-start-fht: failed to create XDG_RUNTIME_DIR" >&2; exit 1; }
+chmod 700 "$XDG_RUNTIME_DIR" || { echo "kira-start-fht: failed to chmod XDG_RUNTIME_DIR" >&2; exit 1; }
+
+rm -f "$XDG_RUNTIME_DIR/pipewire-0.lock" \
+      "$XDG_RUNTIME_DIR/pipewire-0-manager.lock" \
+      "$XDG_RUNTIME_DIR/pulse/native" 2>/dev/null
+
+i=0
+while [ ! -S /var/run/dbus/system_bus_socket ] && [ $i -lt 15 ]; do
+    sleep 1
+    i=$((i + 1))
+done
+
+if [ ! -S /var/run/dbus/system_bus_socket ]; then
+    echo "kira-start-fht: system dbus socket never appeared after 15s, continuing anyway" >&2
+fi
+
+# fht-compositor's own --session mode already runs dbus-update-activation-environment
+# internally, but that needs a session bus to actually talk to in the first place -
+# same reason kira-start-sleex wraps everything in dbus-run-session too
+exec dbus-run-session -- sh -c '
+    pipewire &
+    wireplumber &
+    pipewire-pulse &
+    exec /usr/bin/fht-compositor --session
+'

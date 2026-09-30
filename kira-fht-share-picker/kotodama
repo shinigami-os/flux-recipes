@@ -1,0 +1,27 @@
+[meta]
+name = kira-fht-share-picker
+version = 26.09.0
+description = "fht-compositor's screen/window picker for its own xdg-desktop-portal ScreenCast implementation"
+license = GPL-3.0-only
+size = 10
+
+[source]
+url = git+https://github.com/nferhat/fht-compositor#main
+sha256 = f20a44701430d29acb6153400d80172829c109cf
+
+[deps]
+build = gcc g++ libc-dev rust cargo pkgconf gtk4.0-dev libadwaita-dev git
+runtime = gtk4.0 libadwaita kira-fht-compositor
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+cargo build --release -p fht-share-picker
+
+%post-build
+
+%install
+install -Dm755 target/release/fht-share-picker "$DESTDIR/usr/bin/fht-share-picker"

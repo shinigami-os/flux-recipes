@@ -26,6 +26,7 @@ cflags =
 # without pinning this, bindgen's own libclang lookup picks up a mismatched libLLVM.so at
 # runtime and segfaults inside it before ever reaching spa's headers
 export LIBCLANG_PATH=/usr/lib/llvm20/lib
+echo "DEBUG: LIBCLANG_PATH=$LIBCLANG_PATH"
 
 # matches default.nix's own linker flags exactly - without them the linker's default
 # --as-needed drops EGL/wayland-client since nothing references them at link time, but

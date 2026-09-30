@@ -7,7 +7,7 @@ size = 2
 
 [source]
 url = git+https://github.com/hyprwm/hypridle#v0.1.7
-sha256 =
+sha256 = 5430b73ddf148651bcf35fa39ed4d757c7534028
 
 [deps]
 build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner hyprlang-dev hyprutils-dev hyprland-protocols sdbus-cpp-dev wayland-dev wayland-protocols

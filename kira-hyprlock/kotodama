@@ -7,7 +7,7 @@ size = 4
 
 [source]
 url = git+https://github.com/hyprwm/hyprlock#v0.9.5
-sha256 =
+sha256 = d75e93f8ee1721d70549d96f4d14bf2948aab70c
 
 [deps]
 build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner hyprlang-dev hyprutils-dev hyprgraphics-dev sdbus-cpp-dev linux-pam-dev cairo-dev pango-dev libdrm-dev mesa-dev libxkbcommon-dev wayland-dev wayland-protocols

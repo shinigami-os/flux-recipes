@@ -7,7 +7,7 @@ size = 15
 
 [source]
 url = git+https://github.com/quickshell-mirror/quickshell#v0.3.0
-sha256 =
+sha256 = 59e9c47b0eb48a9e4bcf9631fa062ee939bd2e83
 
 [deps]
 build = gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtwayland-dev kira-cli11 vulkan-headers wayland-dev wayland-protocols pipewire-dev libdrm-dev mesa-dev polkit-dev linux-pam-dev icu-data-full

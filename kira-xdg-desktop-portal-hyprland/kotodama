@@ -7,7 +7,7 @@ size = 4
 
 [source]
 url = git+https://github.com/hyprwm/xdg-desktop-portal-hyprland#v1.3.12
-sha256 =
+sha256 = 01e13c0a027a2d177df4dead76ac9d069e2cc8e6
 
 [deps]
 build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner hyprland-protocols hyprlang-dev hyprutils-dev sdbus-cpp-dev qt6-qtbase-dev pipewire-dev wayland-dev wayland-protocols libdrm-dev mesa-dev xdg-desktop-portal-dev

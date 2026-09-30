@@ -7,7 +7,7 @@ size = 20
 
 [source]
 url = git+https://github.com/InioX/matugen#v4.1.0
-sha256 =
+sha256 = 4112d352914742ba69f6380fd07984adba02d376
 
 [deps]
 build = gcc libc-dev pkgconf rust cargo

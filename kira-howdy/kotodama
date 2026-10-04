@@ -1,6 +1,6 @@
 [meta]
 name = kira-howdy
-version = 3.0.0-beta1
+version = 3.0.0-beta1-kira1
 description = "Windows Hello-style face authentication for PAM (howdy 3.0 with its native pam_howdy module, no python2 or pam-python)"
 license = MIT
 size = 60
@@ -13,7 +13,7 @@ url = git+https://github.com/boltgolt/howdy#master
 sha256 = d3ab99382f88f043d15f15c1450ab69433892a1c
 
 [deps]
-build = gcc g++ meson samurai pkgconf linux-pam-dev inih-dev inih-inireader-dev libevdev-dev gettext gettext-dev python3 curl bzip2
+build = gcc g++ meson samurai pkgconf linux-pam-dev inih-dev inih-inireader-dev libevdev-dev gettext gettext-dev python3 python3-dev curl bzip2
 runtime = python3 py3-opencv py3-numpy kira-dlib linux-pam inih inih-inireader libevdev
 
 [build]

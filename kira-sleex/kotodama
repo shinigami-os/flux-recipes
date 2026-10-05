@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira14
+version = 1.37.12-kira15
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -88,7 +88,7 @@ sed -i '1s|^.*$|#!/usr/bin/env python3|' src/share/sleex/scripts/colors/generate
 # errors out instead of asking - so colors.json never regenerates on a wallpaper
 # change. the fix lives on the fork's matugen-fix branch, which Kira doesn't track
 # yet, so it's applied here until that reaches upstream main
-sed -i -e '/type_flag" \]\] && matugen_args+=/a\    matugen_args+=(--prefer saturation)' src/share/sleex/scripts/colors/switchwall.sh
+sh "$FLUX_RECIPE_DIR/files/patch-matugen-prefer.sh" src/share/sleex/scripts/colors/switchwall.sh
 
 %build
 cd src/share/sleex

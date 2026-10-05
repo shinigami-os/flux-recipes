@@ -1,6 +1,6 @@
 [meta]
 name = kira-howdy
-version = 3.0.0-beta1-kira2
+version = 3.0.0-beta1-kira3
 description = "Windows Hello-style face authentication for PAM (howdy 3.0 with its native pam_howdy module, no python2 or pam-python)"
 license = MIT
 size = 60
@@ -65,7 +65,7 @@ fi
 # Kept as its own files/ script: kotodama's hook-body left-trim would mangle
 # indentation-sensitive Python pasted inline.
 if grep -q '^device_path = none$' /etc/howdy/config.ini; then
-    found=$(python3 "$FLUX_RECIPE_DIR/files/detect_camera.py")
+    found=$(python3 "$FLUX_RECIPE_DIR/files/detect_camera.py" || true)
     if [ -n "$found" ]; then
         sed -i "s#^device_path = none\$#device_path = $found#" /etc/howdy/config.ini
         echo "[howdy] camera auto-detected: $found"

@@ -10,7 +10,7 @@ url = https://files.pythonhosted.org/packages/eb/23/2e63e7bdfcc1aa7ba955386ad09e
 sha256 = 30b8dde034dce180845b0eaf52f72c5b22cd5b60bd7aff96804febae4e266276
 
 [deps]
-build = gcc g++ libc-dev python3-dev py3-setuptools py3-pybind11
+build = gcc g++ libc-dev python3-dev py3-setuptools py3-pybind11 py3-pybind11-dev
 runtime = python3 py3-pillow
 
 [build]

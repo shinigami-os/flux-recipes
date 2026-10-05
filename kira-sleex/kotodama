@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira15
+version = 1.37.12-kira16
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -109,6 +109,7 @@ cp -a src/etc/. "$DESTDIR/etc/"
 # CMakeLists sets prefix "/" for the compiled quickshell plugin
 ( cd src/share/sleex && DESTDIR="$DESTDIR" cmake --install build )
 install -dm755 "$DESTDIR/usr/share/sleex"
+echo "install: prefer=$(grep -c 'prefer saturation' src/share/sleex/scripts/colors/switchwall.sh) pwd=$(pwd)" >> /tmp/matugen-patch.log
 rsync -a \
     --exclude 'build/' \
     --exclude 'CMakeLists.txt' \

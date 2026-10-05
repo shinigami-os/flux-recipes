@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira12
+version = 1.37.12-kira13
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -82,6 +82,14 @@ sed -i 's#hl.dsp.exec_cmd("/usr/share/sleex/scripts/grimblast.sh --freeze copy a
 # upstream installer creates - Kira never does, so the script just dies on its first
 # import. the system python3 has everything it needs from kira-materialyoucolor + py3-pillow
 sed -i '1s|^.*$|#!/usr/bin/env python3|' src/share/sleex/scripts/colors/generate_colors_material.py
+
+# matugen refuses to pick a source color from a wallpaper with several strong
+# competing colors unless told how to choose, and with no terminal attached it
+# errors out instead of asking - so colors.json never regenerates on a wallpaper
+# change. the fix lives on the fork's matugen-fix branch, which Kira doesn't track
+# yet, so it's applied here until that reaches upstream main
+sed -i '/^    \[\[ -n "\$type_flag" \]\] && matugen_args/a\
+    matugen_args+=(--prefer saturation)' src/share/sleex/scripts/colors/switchwall.sh
 
 %build
 cd src/share/sleex

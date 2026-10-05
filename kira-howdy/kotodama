@@ -1,6 +1,6 @@
 [meta]
 name = kira-howdy
-version = 3.0.0-beta1-kira1
+version = 3.0.0-beta1-kira2
 description = "Windows Hello-style face authentication for PAM (howdy 3.0 with its native pam_howdy module, no python2 or pam-python)"
 license = MIT
 size = 60
@@ -35,7 +35,7 @@ fetch_model mmod_human_face_detector.dat db9e9e40f092c118d5eb3e643935b2168381707
 fetch_model shape_predictor_5_face_landmarks.dat 6e787bbebf5c9efdb793f6cd1f023230c4413306605f24f299f12869f95aa472
 
 %build
-meson setup builddir --prefix=/usr --libdir=lib --buildtype=release \
+LDFLAGS=-lintl meson setup builddir --prefix=/usr --libdir=lib --buildtype=release \
     -Dconfig_dir=/etc/howdy \
     -Dpython_path=/usr/bin/python3
 meson compile -C builddir

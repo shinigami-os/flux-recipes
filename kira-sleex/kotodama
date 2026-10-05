@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira18
+version = 1.37.12-kira19
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -77,6 +77,11 @@ sed -i "s#hl.dsp.exec_cmd('grim -g \"\$(slurp)\" - | swappy -f -')#hl.dsp.exec_c
     src/etc/sleex/hyprland/keybinds.lua
 sed -i 's#hl.dsp.exec_cmd("/usr/share/sleex/scripts/grimblast.sh --freeze copy area")#hl.dsp.exec_cmd("flameshot gui")#' \
     src/etc/sleex/hyprland/keybinds.lua
+
+# colors.json is written first, the palette and terminal work runs in the background - the
+# same change as the matugen-fix PR on the fork, applied here until it reaches upstream main
+grep -q 'update_wallpaper_config "$actual_wallpaper_path" &' src/share/sleex/scripts/colors/switchwall.sh \
+    || patch -p1 < "$FLUX_RECIPE_DIR/files/switchwall-speed.patch"
 
 sh "$FLUX_RECIPE_DIR/files/patch-palette.sh" src/share/sleex/scripts/colors
 

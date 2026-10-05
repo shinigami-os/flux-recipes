@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira11
+version = 1.37.12-kira12
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -15,7 +15,7 @@ sha256 =
 
 [deps]
 build = icu-data-full gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtconnectivity-dev qt6-qt5compat-dev qt6-qtmultimedia-dev networkmanager-dev sdbus-cpp-dev kira-sleex-ui-kit kira-quickshell rsync
-runtime = kira-hyprland kira-quickshell qt6-qtbase qt6-qtbase-sqlite qt6-qtdeclarative qt6-qtwayland qt6-qtconnectivity qt6-qt5compat qt6-qtmultimedia qt6-qtsvg kira-sleex-ui-kit jq sqlite python3 py3-pillow bc networkmanager sdbus-cpp kdialog
+runtime = kira-hyprland kira-quickshell qt6-qtbase qt6-qtbase-sqlite qt6-qtdeclarative qt6-qtwayland qt6-qtconnectivity qt6-qt5compat qt6-qtmultimedia qt6-qtsvg kira-sleex-ui-kit jq sqlite python3 py3-pillow kira-materialyoucolor bc networkmanager sdbus-cpp kdialog
 optional = matugen hyprlock hypridle wl-clipboard fuzzel foot kira-howdy ffmpeg imagemagick
 
 [build]
@@ -77,6 +77,11 @@ sed -i "s#hl.dsp.exec_cmd('grim -g \"\$(slurp)\" - | swappy -f -')#hl.dsp.exec_c
     src/etc/sleex/hyprland/keybinds.lua
 sed -i 's#hl.dsp.exec_cmd("/usr/share/sleex/scripts/grimblast.sh --freeze copy area")#hl.dsp.exec_cmd("flameshot gui")#' \
     src/etc/sleex/hyprland/keybinds.lua
+
+# the palette script's shebang re-activates a $SLEEX_VIRTUAL_ENV venv that only the
+# upstream installer creates - Kira never does, so the script just dies on its first
+# import. the system python3 has everything it needs from kira-materialyoucolor + py3-pillow
+sed -i '1s|^.*$|#!/usr/bin/env python3|' src/share/sleex/scripts/colors/generate_colors_material.py
 
 %build
 cd src/share/sleex

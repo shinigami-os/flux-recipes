@@ -1,6 +1,6 @@
 [meta]
 name = kira-swayfx
-version = 0.6.2
+version = 0.6
 description = "SwayFX: a glamorous Sway fork with eye candy"
 license = MIT
 size = 20

@@ -6,7 +6,7 @@ license = GPL-3.0-only
 size = 20
 
 [source]
-url = git+https://github.com/nferhat/fht-compositor#main
+url = git+https://github.com/nferhat/fht-compositor#26.09
 sha256 = f20a44701430d29acb6153400d80172829c109cf
 
 [deps]

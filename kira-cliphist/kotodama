@@ -1,13 +1,16 @@
 [meta]
 name = kira-cliphist
-version = 0.1.0
+version = 0.7.0
 description = "Clipboard history manager for Wayland - not in Alpine's index, Sleex's own clipboard history (Super+V) depends on it"
 license = MIT
 size = 5
 
 [source]
-url = git+https://github.com/sentriz/cliphist#master
-sha256 = daa99daef3ed37dc37013b1fae381fe626025a13
+# was pinned to #master (a branch, not a tag) - that commit aged out and stopped
+# matching the pinned sha256 the moment master moved on, aborting every fresh
+# build. real version tags exist upstream, pin to one of those instead
+url = git+https://github.com/sentriz/cliphist#v0.7.0
+sha256 = efb61cb5b5a28d896c05a24ac83b9c39c96575f2
 
 [deps]
 build = go git

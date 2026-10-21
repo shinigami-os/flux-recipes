@@ -1,13 +1,17 @@
 [meta]
 name = kira-sleex-ui-kit
-version = 1.0.2.5
+version = 1.0.2.6
 description = "Qt/QML component library with Sleex's design language, required by sleex"
 license = GPL-3.0-only
 size = 5
 
 [source]
+# no release tags exist upstream, and kira-sleex itself already floats on Sleex's
+# own #main - pinning this one to a fixed commit just meant it silently went stale
+# the moment the ui-kit moved past whatever Sleex's QML happened to need when this
+# was last pinned, aborting the build with a commit mismatch. floats the same way.
 url = git+https://github.com/AxOS-project/sleex-ui-kit#main
-sha256 = f2d0125d575a250426a1b0ed5f6893b294af999e
+sha256 =
 
 [deps]
 build = gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qttools-dev qt6-qtwayland-dev

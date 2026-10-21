@@ -1,6 +1,6 @@
 [meta]
 name = kira-howdy
-version = 3.0.0-beta1-kira3
+version = 3.0.0-beta1-kira4
 description = "Windows Hello-style face authentication for PAM (howdy 3.0 with its native pam_howdy module, no python2 or pam-python)"
 license = MIT
 size = 60
@@ -8,9 +8,11 @@ size = 60
 [source]
 # master is the 3.0 rewrite: a native C++ pam_howdy.so instead of the python2-only
 # pam-python bridge the old dev branch needed, plus the --plain / -U / add <label>
-# CLI Sleex's Settings > Security page relies on
+# CLI Sleex's Settings > Security page relies on. no release tag exists for it yet,
+# so a fixed pin just goes stale and aborts the build the moment master moves past
+# it (as happened to kira-cliphist and kira-sleex-ui-kit) - float instead
 url = git+https://github.com/boltgolt/howdy#master
-sha256 = d3ab99382f88f043d15f15c1450ab69433892a1c
+sha256 =
 
 [deps]
 build = gcc g++ meson samurai pkgconf linux-pam-dev inih-dev inih-inireader-dev libevdev-dev gettext gettext-dev python3 python3-dev curl bzip2

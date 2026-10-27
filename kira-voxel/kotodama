@@ -1,0 +1,47 @@
+[meta]
+name = kira-voxel
+version = 0.1.0
+description = "Customizable Qt/QML file manager built for Sleex"
+license = GPL-3.0-only
+size = 5
+
+[source]
+# no release tags exist upstream - Cargo.toml's own version (0.1.0) is the only version
+# marker there is. Floats on main the same way kira-sleex-ui-kit and kira-sleex do
+url = git+https://github.com/AxOS-project/Voxel#main
+sha256 =
+
+[deps]
+build = gcc g++ libc-dev pkgconf rust cargo qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtsvg-dev
+runtime = qt6-qtbase qt6-qtdeclarative qt6-qtsvg hicolor-icon-theme kira-sleex-ui-kit
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+# upstream's own PKGBUILD lists Qt5 and disables LTO - Qt5 looks stale against the
+# rest of the Sleex stack (sleex-ui-kit itself is Qt6), and Alpine only ships qt6's
+# qmake as /usr/bin/qmake6 anyway, so point qttypes (qmetaobject's build dep) at
+# that directly rather than relying on its own qmake6-then-qmake PATH probing.
+# -fno-lto is kept from upstream: qmetaobject's C++ bridge code and the Rust side
+# fight over LTO otherwise.
+export QMAKE=/usr/bin/qmake6
+export CFLAGS="-fno-lto"
+export CXXFLAGS="-fno-lto"
+cargo build --release --locked
+
+%post-build
+
+%install
+install -Dm755 target/release/voxel "$DESTDIR/usr/bin/voxel"
+install -Dm644 assets/voxel.desktop "$DESTDIR/usr/share/applications/voxel.desktop"
+install -Dm644 assets/voxel.svg "$DESTDIR/usr/share/icons/hicolor/scalable/apps/voxel.svg"
+install -Dm644 assets/voxel.portal "$DESTDIR/usr/share/xdg-desktop-portal/portals/voxel.portal"
+# upstream's dbus service file also ships a systemd user unit (voxel-portal.service) for
+# the portal backend - Kira runs runit, not systemd, so that unit is dead weight here.
+# SystemdService= in the .service file below is only a hint dbus-daemon uses *if* systemd
+# is managing the session; Exec= is the portable D-Bus-activation fallback and is what
+# actually starts "voxel --portal" on demand on Kira
+install -Dm644 assets/org.freedesktop.impl.portal.desktop.voxel.service "$DESTDIR/usr/share/dbus-1/services/org.freedesktop.impl.portal.desktop.voxel.service"

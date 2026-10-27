@@ -4,4 +4,17 @@ while [ ! -S /var/run/dbus/system_bus_socket ] && [ $i -lt 15 ]; do
     sleep 1
     i=$((i + 1))
 done
+
+# same race iwd/run already guards against, from the NetworkManager side: the wifi interface
+# is wlan0 until udev's eudev-trigger renames it to wlp0s20f3 (or similar). iwd waiting on its
+# own is not enough - if NM starts and does its own initial device enumeration before the
+# rename, it caches the pre-rename name and the wifi device stays "unavailable" until something
+# forces NM to re-enumerate (a service restart), even once iwd itself is fine. Wait for the
+# same eudev-trigger down file iwd/run does, so neither side of the race can start first.
+i=0
+while [ ! -e /etc/sv/eudev-trigger/down ] && [ $i -lt 40 ]; do
+    sleep 1
+    i=$((i + 1))
+done
+
 exec /usr/sbin/NetworkManager --no-daemon

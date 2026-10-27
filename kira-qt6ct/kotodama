@@ -1,0 +1,41 @@
+[meta]
+name = kira-qt6ct
+version = 0.11-r5
+description = "Qt6 platform theme plugin - makes QIcon::fromTheme() work without a desktop environment"
+license = BSD-2-Clause
+size = 1
+
+[source]
+# only in Alpine's testing repo (not main/community, which is all flux's own Alpine
+# resolver pulls from), so this re-packages the raw .apk directly as a kotodama source
+# rather than widening flux's resolver to trust the whole testing repo for one package.
+# pinned by sha256 since this is a real versioned release artifact, not a rolling source
+url = https://dl-cdn.alpinelinux.org/alpine/edge/testing/x86_64/qt6ct-0.11-r5.apk
+sha256 = 6ee94303e0dc03c560063e6de117e4c148a6c62b038170e102a0e17ebc711652
+
+[deps]
+build =
+runtime = qt6-qtbase qt6-qtdeclarative
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# an apk is a concatenation of a signature, a .PKGINFO control tarball, and the real
+# data tarball - tar's gzip reader walks concatenated members transparently, so a plain
+# tar extract already lands exactly the real usr/ tree; naming the paths explicitly
+# skips the control-tarball members (.PKGINFO etc, which live at the archive root)
+mkdir -p "$DESTDIR"
+tar -xzf qt6ct-0.11-r5.apk -C "$DESTDIR" \
+    usr/bin/qt6ct \
+    usr/lib/libqt6ct-common.so.0.11 \
+    usr/lib/qt6/plugins/styles/libqt6ct-style.so \
+    usr/lib/qt6/plugins/platformthemes/libqt6ct.so \
+    usr/share/applications/qt6ct.desktop \
+    usr/share/qt6ct

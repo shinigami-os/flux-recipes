@@ -13,7 +13,11 @@ sha256 =
 
 [deps]
 build = gcc g++ libc-dev pkgconf rust cargo qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtsvg-dev
-runtime = qt6-qtbase qt6-qtdeclarative qt6-qtsvg hicolor-icon-theme kira-sleex-ui-kit
+# kira-qt6ct: without a Qt platform-theme plugin, icon.name lookups (every file/folder
+# icon in the grid/list views) silently resolve to nothing - Sleex's own env.lua already
+# sets QT_QPA_PLATFORMTHEME=qt6ct and ships a qt6ct.conf, but nothing installed the actual
+# plugin that reads them, since Alpine only has qt6ct in its testing repo
+runtime = qt6-qtbase qt6-qtdeclarative qt6-qtsvg hicolor-icon-theme kira-sleex-ui-kit kira-qt6ct
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

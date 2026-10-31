@@ -3,6 +3,7 @@ name = kira-devkit-lua
 version = 1.0
 description = "Lua development kit: interpreter"
 license = MIT
+category = languages
 size = 0
 
 [source]

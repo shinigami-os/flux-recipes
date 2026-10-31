@@ -3,6 +3,7 @@ name = kira-devkit-php
 version = 1.0
 description = "PHP development kit: PHP 8.4, Composer, and the extensions most PHP apps assume are present"
 license = MIT
+category = languages
 size = 0
 
 [source]

@@ -3,6 +3,7 @@ name = kira-devkit-elixir
 version = 1.0
 description = "Elixir development kit: the elixir package pulls in Erlang/OTP and ships mix itself, nothing else needed"
 license = MIT
+category = languages
 size = 0
 
 [source]

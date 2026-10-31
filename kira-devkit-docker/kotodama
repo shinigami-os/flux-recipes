@@ -3,6 +3,7 @@ name = kira-devkit-docker
 version = 1.0
 description = "Docker development kit: docker, docker-cli, dockerd plus the runit service Alpine's own package never ships"
 license = MIT
+category = containers
 size = 0
 
 [source]

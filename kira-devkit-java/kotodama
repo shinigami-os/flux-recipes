@@ -3,6 +3,7 @@ name = kira-devkit-java
 version = 1.1
 description = "Java development kit: OpenJDK plus the Maven and Gradle build tools"
 license = MIT
+category = languages
 size = 0
 
 [source]

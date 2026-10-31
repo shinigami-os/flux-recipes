@@ -3,6 +3,7 @@ name = kira-devkit-haskell
 version = 1.0
 description = "Haskell development kit: GHC and the Stack build tool"
 license = MIT
+category = languages
 size = 0
 
 [source]

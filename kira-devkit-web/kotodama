@@ -3,6 +3,7 @@ name = kira-devkit-web
 version = 1.1
 description = "Web development kit: Node.js, npm, and TypeScript"
 license = MIT
+category = languages
 size = 0
 
 [source]

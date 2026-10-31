@@ -3,6 +3,7 @@ name = kira-devkit-ruby
 version = 1.0
 description = "Ruby development kit: interpreter, headers for native gems, and Bundler"
 license = MIT
+category = languages
 size = 0
 
 [source]

@@ -3,6 +3,7 @@ name = kira-devkit-perl
 version = 1.0
 description = "Perl development kit: interpreter and documentation"
 license = MIT
+category = languages
 size = 0
 
 [source]

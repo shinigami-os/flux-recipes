@@ -3,6 +3,7 @@ name = kira-devkit-rust
 version = 1.2
 description = "Rust development kit: rustc, cargo, clippy, rustfmt, and cargo-c"
 license = MIT
+category = languages
 size = 0
 
 [source]

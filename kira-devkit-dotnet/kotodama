@@ -3,6 +3,7 @@ name = kira-devkit-dotnet
 version = 1.0
 description = ".NET development kit: the .NET 8 (LTS) SDK"
 license = MIT
+category = languages
 size = 0
 
 [source]

@@ -3,6 +3,7 @@ name = kira-devkit-erlang
 version = 1.0
 description = "Erlang development kit: OTP runtime, headers, and the rebar3 build tool"
 license = MIT
+category = languages
 size = 0
 
 [source]

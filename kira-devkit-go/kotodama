@@ -3,6 +3,7 @@ name = kira-devkit-go
 version = 1.1
 description = "Go development kit: compiler, tooling, and the delve debugger"
 license = MIT
+category = languages
 size = 0
 
 [source]

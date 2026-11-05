@@ -84,7 +84,7 @@ grep -q 'update_wallpaper_config "$actual_wallpaper_path" &' src/share/sleex/scr
     || patch -p1 < "$FLUX_RECIPE_DIR/files/switchwall-speed.patch"
 
 sh "$FLUX_RECIPE_DIR/files/patch-palette.sh" src/share/sleex/scripts/colors
-sh "$FLUX_RECIPE_DIR/files/patch-defaults.sh" src
+sh "$FLUX_RECIPE_DIR/files/patch-defaults.sh" .
 
 %build
 cd src/share/sleex
@@ -114,3 +114,5 @@ rsync -a \
     src/share/sleex/ "$DESTDIR/usr/share/sleex/"
 install -Dm644 src/share/wayland-sessions/sleex.desktop \
     "$DESTDIR/usr/share/wayland-sessions/sleex.desktop"
+install -dm755 "$DESTDIR/etc/skel"
+cp -a sleex-user-config/src/.config sleex-user-config/src/.local "$DESTDIR/etc/skel/"

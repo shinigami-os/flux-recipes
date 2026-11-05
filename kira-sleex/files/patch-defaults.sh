@@ -2,7 +2,8 @@
 # Kira-only defaults, run from kira-sleex's %pre-build (kept in files/ for the
 # same 4096-byte hook buffer reason as patch-palette.sh).
 set -e
-src="$1"
+src="$1/src"
+skel="$1/sleex-user-config/src/.config"
 
 # the Kira wallpaper ships from kira-branding - upstream keeps renaming its own
 # default file (SleexOne.png, then twentySix.jpg), which left the background blank
@@ -17,3 +18,15 @@ sed -i 's#/usr/share/backgrounds/sleex/twentySix\.jpg#/usr/share/kira/wallpapers
 grep -q 'blueman-applet' "$src/etc/sleex/hyprland/execs.lua" \
     || sed -i '\#qs -p /usr/share/sleex#a\    hl.exec_cmd("blueman-applet")' "$src/etc/sleex/hyprland/execs.lua"
 grep -q 'blueman-applet' "$src/etc/sleex/hyprland/execs.lua"
+
+# Kira doesn't ship fish - without a shell= line foot runs the user's login shell
+sed -i '/^shell=fish$/d' "$skel/foot/foot.ini"
+
+# matugen writes its templates in random order, and colors.json is the one the
+# shell watches live, so it has to go first
+grep -q '^index = -10$' "$skel/matugen/config.toml" \
+    || sed -i "\#^output_path = '~/.local/state/sleex/user/generated/colors.json'\$#a index = -10" "$skel/matugen/config.toml"
+grep -q '^index = -10$' "$skel/matugen/config.toml"
+
+# papirus-sync.py shells out to papirus-folders, which Alpine doesn't package
+sed -i '/^\[templates\.papirus\]$/,/^post_hook/d' "$skel/matugen/config.toml"

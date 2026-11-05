@@ -48,9 +48,8 @@ meson compile -C builddir
 
 %install
 DESTDIR="$DESTDIR" meson install -C builddir
-# nothing in Kira builds against gdk-pixbuf's C API directly - swayFX's own
-# build chain pulls Alpine's gdk-pixbuf-dev transitively (via wlroots/glycin
-# deps), which conflicts outright with these same paths since both packages
+# nothing in Kira builds against gdk-pixbuf's C API directly - anything built
+# against wlroots/glycin pulls Alpine's gdk-pixbuf-dev transitively, which conflicts outright with these same paths since both packages
 # try to own them. Kira only needs the shared lib/loaders/query tool, so drop
 # the headers and pkgconfig file and let gdk-pixbuf-dev be the one and only
 # header source.

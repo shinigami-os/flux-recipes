@@ -79,4 +79,4 @@ fi
 echo "[howdy] installed. Add a face model with: sudo howdy add"
 echo "[howdy] sudo now tries face auth first, falling back to password."
 echo "[howdy] to also use it for the Sleex lock screen, enable Face Auth in"
-echo "[howdy] Settings > Security (SwayFX has no equivalent integration)."
+echo "[howdy] Settings > Security."

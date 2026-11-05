@@ -76,8 +76,6 @@ Leave `[source]` empty for a recipe that's just a dependency bundle over Alpine 
 
 If a meta-package's `%install`/`%post-install` needs files that live in another git repo (like a desktop config repo), pull them with `git clone` or `curl` inside `%build`, into the scratch build directory, instead of checking a static copy into `files/` - a static copy will silently drift out of sync with its real source of truth.
 
-The `kira-desktop-*` packages follow this pattern: each clones the `kira-desktop` repo and copies out of its own lowercase top-level folder (`swayfx/`, `sleex/`) plus the shared `scripts/` directory. A `kira-desktop-<de>` package should only ever read from `<de>/` and `scripts/` in that clone, never from another DE's folder.
-
 ## Branches
 
 **`kira-only`** is the live branch - the one `flux update` actually syncs (it's this repo's GitHub default branch, so a plain clone or pull already lands here with no extra configuration). It carries only `kira-*` recipes: everything Alpine already provides directly was trimmed out, since flux resolves those on its own without a recipe.

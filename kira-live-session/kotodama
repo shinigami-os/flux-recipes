@@ -30,4 +30,4 @@ echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/90-live-wheel-nopasswd
 chmod 440 /etc/sudoers.d/90-live-wheel-nopasswd
 
 echo "[kira-live-session] live user 'kira', password 'kira' (passwordless sudo)"
-echo "log in through the greeter and pick Sleex or SwayFX from the session menu"
+echo "log in through the greeter and pick Sleex from the session menu"

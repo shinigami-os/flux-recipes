@@ -47,8 +47,7 @@ install -Dm644 "$FLUX_RECIPE_DIR/files/avatar-default.png" "$DESTDIR/usr/share/p
 # comment on Sleex's own XF86PowerOff keybind (hyprland/keybinds.lua) for the
 # full story. kira-acpid (a runtime dep above) provides the daemon; this is
 # just the Sleex-specific event->action wiring, since "hyprctl dispatch
-# global quickshell:powerButtonPressed" is Sleex/Hyprland's own mechanism,
-# not something SwayFX shares.
+# global quickshell:powerButtonPressed" is Sleex/Hyprland's own mechanism.
 install -Dm644 "$FLUX_RECIPE_DIR/files/power-button-custom.event" "$DESTDIR/etc/acpi/events/power-button-custom"
 install -Dm755 "$FLUX_RECIPE_DIR/files/power-button-custom.sh" "$DESTDIR/etc/acpi/power-button-custom.sh"
 

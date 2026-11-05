@@ -131,8 +131,8 @@ ninja -C build
 
 %install
 DESTDIR="$DESTDIR" ninja -C build install
-# nothing in Kira builds against elogind's C API directly - swayFX's own
-# build chain pulls Alpine's elogind-dev transitively (via wlroots), which
+# nothing in Kira builds against elogind's C API directly - anything built
+# against wlroots pulls Alpine's elogind-dev transitively, which
 # conflicts outright with these same paths since both packages try to own
 # them. Kira only needs the daemon/loginctl/pam module/libs, so drop the
 # headers and let elogind-dev be the one and only header source.

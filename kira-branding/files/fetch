@@ -1,8 +1,11 @@
 #!/bin/sh
 
-RED=$(printf '\033[1;31m')
-WHT=$(printf '\033[1;37m')
-GRY=$(printf '\033[0;37m')
+# Kira's own brand palette (kira-website/design_handoff_kira_site/kira-linux-spec-PHASE2.md),
+# not the generic 16-color ANSI red/white/gray this used to hardcode. True color (38/48;2;r;g;b)
+# since every terminal Kira ships (foot included) supports it.
+PRIMARY=$(printf '\033[1;38;2;170;0;255m')   # primary   #aa00ff - main accent
+TEXT=$(printf '\033[1;38;2;232;216;255m')    # text      #e8d8ff - primary text
+SUBTEXT=$(printf '\033[38;2;176;154;204m')   # subtext   #b09acc - secondary text / divider
 RST=$(printf '\033[0m')
 
 HOSTNAME=$(cat /etc/hostname 2>/dev/null || echo "kira")
@@ -16,9 +19,9 @@ MEM_AVAIL=$(awk '/MemAvailable/ {printf "%.0f", $2/1024}' /proc/meminfo 2>/dev/n
 MEM_USED=$((MEM_TOTAL - MEM_AVAIL))
 
 INFO_0=""
-INFO_1="${WHT}root@${HOSTNAME}${RST}"
-INFO_2="${GRY}─────────────────────────${RST}"
-INFO_3="OS:       ${WHT}Kira Linux${RST}"
+INFO_1="${TEXT}root@${HOSTNAME}${RST}"
+INFO_2="${SUBTEXT}─────────────────────────${RST}"
+INFO_3="OS:       ${TEXT}Kira Linux${RST}"
 INFO_4="Kernel:   ${KERNEL}"
 INFO_5="Uptime:   ${UPTIME}"
 INFO_6="Packages: ${PKGS} (flux)"
@@ -29,21 +32,23 @@ INFO_9="Arch:     ${ARCH}"
 n=0
 while IFS= read -r line; do
     eval "info=\$INFO_${n}"
-    printf "${RED}%s${RST}   %b\n" "$line" "$info"
+    printf "${PRIMARY}%s${RST}   %b\n" "$line" "$info"
     n=$((n + 1))
 done << 'EOF'
 
-__/\\\________/\\\__/\\\\\\\\\\\____/\\\\\\\\\_________/\\\\\\\\\____        
- _\/\\\_____/\\\//__\/////\\\///___/\\\///////\\\_____/\\\\\\\\\\\\\__       
-  _\/\\\__/\\\//_________\/\\\_____\/\\\_____\/\\\____/\\\/////////\\\_      
-   _\/\\\\\\//\\\_________\/\\\_____\/\\\\\\\\\\\/____\/\\\_______\/\\\_     
-    _\/\\\//_\//\\\________\/\\\_____\/\\\//////\\\____\/\\\\\\\\\\\\\\\_    
-     _\/\\\____\//\\\_______\/\\\_____\/\\\____\//\\\___\/\\\/////////\\\_   
-      _\/\\\_____\//\\\______\/\\\_____\/\\\_____\//\\\__\/\\\_______\/\\\_  
-       _\/\\\______\//\\\__/\\\\\\\\\\\_\/\\\______\//\\\_\/\\\_______\/\\\_ 
+__/\\\________/\\\__/\\\\\\\\\\\____/\\\\\\\\\_________/\\\\\\\\\____
+ _\/\\\_____/\\\//__\/////\\\///___/\\\///////\\\_____/\\\\\\\\\\\\\__
+  _\/\\\__/\\\//_________\/\\\_____\/\\\_____\/\\\____/\\\/////////\\\_
+   _\/\\\\\\//\\\_________\/\\\_____\/\\\\\\\\\\\/____\/\\\_______\/\\\_
+    _\/\\\//_\//\\\________\/\\\_____\/\\\//////\\\____\/\\\\\\\\\\\\\\\_
+     _\/\\\____\//\\\_______\/\\\_____\/\\\____\//\\\___\/\\\/////////\\\_
+      _\/\\\_____\//\\\______\/\\\_____\/\\\_____\//\\\__\/\\\_______\/\\\_
+       _\/\\\______\//\\\__/\\\\\\\\\\\_\/\\\______\//\\\_\/\\\_______\/\\\_
         _\///________\///__\///////////__\///________\///__\///________\///__
 EOF
 
 printf "\n"
-printf "  $(printf '\033[41m   \033[0m\033[42m   \033[0m\033[43m   \033[0m\033[44m   \033[0m\033[45m   \033[0m\033[46m   \033[0m\033[47m   \033[0m')\n"
+# base / primary / primary_dim / secondary / green / yellow / cyan - the actual palette,
+# not a generic 16-color swatch row
+printf "  $(printf '\033[48;2;10;10;15m   \033[0m\033[48;2;170;0;255m   \033[0m\033[48;2;119;0;204m   \033[0m\033[48;2;255;0;170m   \033[0m\033[48;2;0;255;136m   \033[0m\033[48;2;255;204;0m   \033[0m\033[48;2;0;204;204m   \033[0m')\n"
 printf "\n"

@@ -1,6 +1,6 @@
 [meta]
 name = kira-branding
-version = 1.4
+version = 1.5
 description = "Kira Linux shell branding: zshrc, powerlevel10k theme, fetch script, keymaps, wallpapers"
 license = MIT
 size = 1

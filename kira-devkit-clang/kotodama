@@ -1,7 +1,7 @@
 [meta]
 name = kira-devkit-clang
-version = 1.0
-description = "Clang/LLVM development kit: clang, clang-tidy and friends, alongside (not instead of) kira-devkit-c's gcc"
+version = 1.1
+description = "Clang/LLVM development kit: clang, lld, the llvm tools and clang-tidy on PATH, alongside (not instead of) kira-devkit-c's gcc"
 license = MIT
 category = languages
 size = 0
@@ -11,8 +11,8 @@ url =
 sha256 =
 
 [deps]
-build =
-runtime = clang20 clang20-dev clang20-extra-tools git
+build = clang20 llvm20 lld20
+runtime = clang20 clang20-dev clang20-extra-tools llvm20 lld20 git
 
 [build]
 cflags =
@@ -24,3 +24,11 @@ cflags =
 %post-build
 
 %install
+install -dm755 "$DESTDIR/usr/bin"
+# Alpine only exposes clang-20 in /usr/bin, the unversioned clang and llvm-* names stay in /usr/lib/llvm20/bin
+for f in /usr/lib/llvm20/bin/*; do
+    n=${f##*/}
+    t=../lib/llvm20/bin/$n
+    if [ -e "/usr/bin/$n" ] && [ "$(readlink "/usr/bin/$n")" != "$t" ]; then continue; fi
+    ln -s "$t" "$DESTDIR/usr/bin/$n"
+done

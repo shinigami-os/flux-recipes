@@ -67,9 +67,18 @@ fi
 # autolaunch a dbus-daemon without a $DISPLAY for X11" on every RTKit and
 # portal call), and wireplumber silently skipped loading its MPRIS module
 # as a result, which is why now-playing media never showed up anywhere.
+#
+# Per-user runit tree for session daemons (maestral, syncthing...): drop a service dir in
+# ~/.local/service and manage it with SVDIR=~/.local/service sv. It has to start in here for
+# the same reason as pipewire (needs the session bus), and sleex is no longer exec'd so the
+# tree can be told to stop when the session ends instead of lingering with a dead bus.
 exec dbus-run-session -- sh -c '
     pipewire &
     wireplumber &
     pipewire-pulse &
-    exec /usr/bin/sleex
+    mkdir -p "$HOME/.local/service"
+    pkill -HUP -f "runsvdir $HOME/.local/service" && sleep 1
+    runsvdir "$HOME/.local/service" >/dev/null 2>&1 &
+    trap "kill -HUP $! 2>/dev/null" EXIT TERM HUP
+    /usr/bin/sleex
 '

@@ -1,13 +1,13 @@
 [meta]
 name = kira-quickshell
-version = 0.3.0.9
+version = 0.3.2.1
 description = "Flexible QtQuick-based desktop shell toolkit"
 license = LGPL-3.0-only
 size = 15
 
 [source]
-url = git+https://github.com/quickshell-mirror/quickshell#v0.3.0
-sha256 = 59e9c47b0eb48a9e4bcf9631fa062ee939bd2e83
+url = git+https://github.com/quickshell-mirror/quickshell#v0.3.2
+sha256 = 4f508be500dea6e5732cc3d50382a0048b17e7b1
 
 [deps]
 build = gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev qt6-qtwayland-dev kira-cli11 vulkan-headers wayland-dev wayland-protocols pipewire-dev libdrm-dev mesa-dev polkit-dev linux-pam-dev icu-data-full

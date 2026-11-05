@@ -37,3 +37,19 @@ sed -i '/^\[templates\.papirus\]$/,/^post_hook/d' "$skel/matugen/config.toml"
     mkdir -p "$src/share/xdg-desktop-portal"
     printf '[preferred]\ndefault=hyprland;gtk\n' > "$src/share/xdg-desktop-portal/sleex-portals.conf"
 }
+
+# the watermark and About page show whatever version the package manager reports, which on
+# Kira is this recipe's own version - show upstream's PKGBUILD release instead
+pkgver=$(sed -n 's/^pkgver="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' "$1/PKGBUILD")
+pkgrel=$(sed -n 's/^pkgrel="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' "$1/PKGBUILD")
+[ -n "$pkgver" ] && [ -n "$pkgrel" ]
+echo "$pkgver-$pkgrel" > "$src/share/sleex/version"
+sed -i "s#flux list -a 2>/dev/null | grep -E '^(kira-)?sleex(-git)? '#echo sleex \$(cat /usr/share/sleex/version)#" \
+    "$src/share/sleex/services/SystemInfo.qml"
+grep -q 'cat /usr/share/sleex/version' "$src/share/sleex/services/SystemInfo.qml"
+
+# pair-then-trust from the Bluetooth settings switch, on Sleex's Fix-bluetooth-pairing branch -
+# skipped once upstream has it
+grep -q 'd.trusted = true' "$src/share/sleex/modules/settings/Bluetooth.qml" \
+    || (cd "$1" && patch -p1 < "$FLUX_RECIPE_DIR/files/bluetooth-pairing.patch")
+grep -q 'd.trusted = true' "$src/share/sleex/modules/settings/Bluetooth.qml"

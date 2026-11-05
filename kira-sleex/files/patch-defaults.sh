@@ -31,13 +31,6 @@ grep -q '^index = -10$' "$skel/matugen/config.toml"
 # papirus-sync.py shells out to papirus-folders, which Alpine doesn't package
 sed -i '/^\[templates\.papirus\]$/,/^post_hook/d' "$skel/matugen/config.toml"
 
-# bin/sleex sets XDG_CURRENT_DESKTOP=Sleex, so the portal only reads sleex-portals.conf and
-# never starts the Hyprland backend - no screen sharing at all. Fix is on the Fix-screencast-portal branch
-[ -f "$src/share/xdg-desktop-portal/sleex-portals.conf" ] || {
-    mkdir -p "$src/share/xdg-desktop-portal"
-    printf '[preferred]\ndefault=hyprland;gtk\n' > "$src/share/xdg-desktop-portal/sleex-portals.conf"
-}
-
 # the watermark and About page show whatever version the package manager reports, which on
 # Kira is this recipe's own version - show upstream's PKGBUILD release instead
 pkgver=$(sed -n 's/^pkgver="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' "$1/PKGBUILD")
@@ -47,9 +40,3 @@ echo "$pkgver-$pkgrel" > "$src/share/sleex/version"
 sed -i "s#flux list -a 2>/dev/null | grep -E '^(kira-)?sleex(-git)? '#echo sleex \$(cat /usr/share/sleex/version)#" \
     "$src/share/sleex/services/SystemInfo.qml"
 grep -q 'cat /usr/share/sleex/version' "$src/share/sleex/services/SystemInfo.qml"
-
-# pair-then-trust from the Bluetooth settings switch, on Sleex's Fix-bluetooth-pairing branch -
-# skipped once upstream has it
-grep -q 'd.trusted = true' "$src/share/sleex/modules/settings/Bluetooth.qml" \
-    || (cd "$1" && patch -p1 < "$FLUX_RECIPE_DIR/files/bluetooth-pairing.patch")
-grep -q 'd.trusted = true' "$src/share/sleex/modules/settings/Bluetooth.qml"

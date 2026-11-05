@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira19
+version = 1.37.12-kira20
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -84,6 +84,7 @@ grep -q 'update_wallpaper_config "$actual_wallpaper_path" &' src/share/sleex/scr
     || patch -p1 < "$FLUX_RECIPE_DIR/files/switchwall-speed.patch"
 
 sh "$FLUX_RECIPE_DIR/files/patch-palette.sh" src/share/sleex/scripts/colors
+sh "$FLUX_RECIPE_DIR/files/patch-wallpaper.sh" src/share/sleex
 
 %build
 cd src/share/sleex

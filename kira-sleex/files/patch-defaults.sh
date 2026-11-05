@@ -30,3 +30,10 @@ grep -q '^index = -10$' "$skel/matugen/config.toml"
 
 # papirus-sync.py shells out to papirus-folders, which Alpine doesn't package
 sed -i '/^\[templates\.papirus\]$/,/^post_hook/d' "$skel/matugen/config.toml"
+
+# bin/sleex sets XDG_CURRENT_DESKTOP=Sleex, so the portal only reads sleex-portals.conf and
+# never starts the Hyprland backend - no screen sharing at all. Fix is on the Fix-screencast-portal branch
+[ -f "$src/share/xdg-desktop-portal/sleex-portals.conf" ] || {
+    mkdir -p "$src/share/xdg-desktop-portal"
+    printf '[preferred]\ndefault=hyprland;gtk\n' > "$src/share/xdg-desktop-portal/sleex-portals.conf"
+}

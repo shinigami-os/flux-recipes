@@ -1,6 +1,6 @@
 [meta]
 name = kira-sleex
-version = 1.37.12-kira21
+version = 1.37.12-kira22
 description = "AxOS Sleex desktop environment (Hyprland + quickshell shell)"
 license = GPL-3.0-only
 size = 20
@@ -114,5 +114,7 @@ rsync -a \
     src/share/sleex/ "$DESTDIR/usr/share/sleex/"
 install -Dm644 src/share/wayland-sessions/sleex.desktop \
     "$DESTDIR/usr/share/wayland-sessions/sleex.desktop"
+install -Dm644 src/share/xdg-desktop-portal/sleex-portals.conf \
+    "$DESTDIR/usr/share/xdg-desktop-portal/sleex-portals.conf"
 install -dm755 "$DESTDIR/etc/skel"
 cp -a sleex-user-config/src/.config sleex-user-config/src/.local "$DESTDIR/etc/skel/"

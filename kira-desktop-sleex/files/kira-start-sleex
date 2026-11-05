@@ -68,10 +68,7 @@ fi
 # portal call), and wireplumber silently skipped loading its MPRIS module
 # as a result, which is why now-playing media never showed up anywhere.
 #
-# Per-user runit tree for session daemons (maestral, syncthing...): drop a service dir in
-# ~/.local/service and manage it with SVDIR=~/.local/service sv. It has to start in here for
-# the same reason as pipewire (needs the session bus), and sleex is no longer exec'd so the
-# tree can be told to stop when the session ends instead of lingering with a dead bus.
+# per-user runit tree in ~/.local/service, started here for the session bus; sleex is not exec'd so the trap can stop it
 exec dbus-run-session -- sh -c '
     pipewire &
     wireplumber &

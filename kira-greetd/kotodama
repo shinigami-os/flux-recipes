@@ -1,6 +1,6 @@
 [meta]
 name = kira-greetd
-version = 1.32
+version = 1.33
 description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = greetd cage dbus-x11 kira-eww kira-elogind python3 jq font-raleway font-jetbrains-mono-nerd
+runtime = greetd cage dbus-x11 kira-eww kira-elogind python3 jq font-raleway font-jetbrains-mono-nerd gnome-keyring gnome-keyring-pam
 
 [build]
 cflags =
@@ -26,6 +26,7 @@ install -m644 "$FLUX_RECIPE_DIR/files/config.toml" "$DESTDIR/etc/greetd/config.t
 # Alpine's own greetd package ships a PAM config that includes base-auth/base-account/base-password/
 # base-session, none of which exist anywhere on Kira - replace it with the same pam_unix.so +
 # pam_elogind.so stack /etc/pam.d/login already uses successfully
+# pam_gnome_keyring unlocks the login keyring with the typed password, so it must follow pam_unix and pam_exec in the stack
 install -m644 "$FLUX_RECIPE_DIR/files/pam-greetd" "$DESTDIR/etc/pam.d/greetd"
 # pam_elogind.so doesn't reliably create /run/user/$UID when greetd (rather than
 # a normal getty/login) is the one opening the session, so every desktop session

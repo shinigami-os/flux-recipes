@@ -1,0 +1,285 @@
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  Kira Login · eww styles · tokens from the design handoff, Part 2 ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+$accent:     #c46bff;
+$text:       #f3ecff;
+$text-sec:   rgba(243, 236, 255, 0.72);
+$text-faint: rgba(243, 236, 255, 0.35);
+$error:      #ff6da0;
+$hairline:   rgba(232, 216, 255, 0.22);
+
+$mono: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+$sans: "Raleway", sans-serif;
+
+* {
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+  outline: none;
+}
+
+label {
+  color: $text;
+  font-size: 11px;
+  font-family: $mono;
+}
+
+.background {
+  background-color: transparent;
+  background-image: none;
+}
+
+window {
+  background-color: transparent;
+}
+
+// ── background + legibility scrim ──
+// wallpaper stays still on the login screen (unlike the desktop's ken-burns drift).
+// The wallpaper itself is a real `image` widget now, not CSS background-image -
+// that property never rendered here despite several attempts (relative path,
+// absolute path, file:// URI - all parsed without error, none painted anything),
+// so this box just provides sizing and a fallback color if the image fails.
+.login-bg {
+  /* :geometry's explicit width/height only actually applies to layer-shell
+     surfaces - on the plain xdg-toplevel fallback (cage has no layer-shell)
+     eww falls back to GTK's natural-size computation, and hexpand/vexpand
+     alone don't give a window content any actual size to request, so the
+     window committed as 0x0 and wlroots refused it. Force a real natural
+     size here instead; cage fullscreens its client regardless once mapped. */
+  min-width: 1920px;
+  min-height: 1080px;
+  background-color: #0d0820;
+}
+
+.login-scrim-gradient {
+  min-width: 1920px;
+  min-height: 1080px;
+  background-image: linear-gradient(180deg,
+      rgba(10, 6, 24, 0.32) 0%,
+      rgba(10, 6, 24, 0) 30%,
+      rgba(10, 6, 24, 0.28) 72%,
+      rgba(10, 6, 24, 0.6) 100%);
+}
+
+// ── clock, top right ──
+.login-clock {
+  margin: 52px 60px 0 0;
+  // explicit min-width: labels were getting ellipsized ("19:5…") without it -
+  // GTK sizes this box from its own allocation in the overlay, not purely
+  // from label content, so give it more room than the text ever needs
+  min-width: 340px;
+}
+
+.login-time, .login-date {
+  min-width: 340px;
+}
+
+.login-time {
+  font-family: $sans;
+  font-size: 66px;
+  font-weight: 100;
+  letter-spacing: 4px;
+  color: $text;
+}
+
+.login-date {
+  font-family: $mono;
+  font-size: 11.5px;
+  letter-spacing: 3px;
+  color: $text-sec;
+}
+
+// ── password, bottom center ──
+.login-pw-wrap {
+  margin: 0 0 74px 0;
+  min-width: 390px;
+}
+
+.login-prompt {
+  font-family: $mono;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(196, 107, 255, 0.75);
+  transition: color 200ms ease;
+}
+
+.login-prompt.prompt-error {
+  color: $error;
+}
+
+.login-input {
+  font-family: $mono;
+  font-size: 15px;
+  letter-spacing: 4px;
+  color: $text;
+  background-color: transparent;
+  caret-color: $accent;
+  min-height: 22px;
+}
+
+.login-input placeholder {
+  color: rgba(232, 216, 255, 0.4);
+}
+
+.login-verify-dot {
+  min-width: 7px;
+  min-height: 7px;
+  background-color: transparent;
+}
+
+.login-verify-dot.dot-show {
+  background-color: $accent;
+}
+
+.login-pw-rule {
+  min-height: 1px;
+  background-color: $hairline;
+  transition: background-color 200ms ease;
+}
+
+.login-pw-rule.rule-error {
+  background-color: rgba(255, 109, 160, 0.7);
+}
+
+.login-pw-sweep {
+  min-height: 1px;
+  min-width: 0;
+  background-color: $accent;
+  opacity: 0;
+}
+
+.login-pw-sweep.sweep-run {
+  /* GTK CSS has no % units at all ("Unit is missing" on parse) - 32%/68% of
+     the 390px password field's own width, converted to fixed px by hand */
+  min-width: 125px;
+  opacity: 1;
+  animation: sweep 1s cubic-bezier(0.6, 0.1, 0.4, 0.9) infinite;
+}
+
+@keyframes sweep {
+  0%   { margin-left: 0px; }
+  100% { margin-left: 265px; }
+}
+
+.login-pw-row.pw-error {
+  animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+/* GTK CSS keyframes don't accept comma-grouped selectors either - each stop
+   needs its own block */
+@keyframes shake {
+  10% { margin-left: -1px; }
+  20% { margin-left: 2px; }
+  30% { margin-left: -4px; }
+  40% { margin-left: 4px; }
+  50% { margin-left: -4px; }
+  60% { margin-left: 4px; }
+  70% { margin-left: -4px; }
+  80% { margin-left: 2px; }
+  90% { margin-left: -1px; }
+}
+
+.login-pw-errmsg {
+  font-size: 10.5px;
+  color: $error;
+  opacity: 0;
+}
+
+.login-pw-errmsg.errmsg-show {
+  opacity: 1;
+}
+
+// ── session dropdown, bottom left ──
+.login-session {
+  margin: 0 0 50px 12px;
+  // same overlay-allocation issue as the clock: give real session names like
+  // "Hyprland (uwsm-managed)" room instead of letting GTK ellipsize them
+  min-width: 320px;
+}
+
+.login-session-trigger {
+  opacity: 0.42;
+  transition: opacity 200ms ease;
+}
+
+.login-session-trigger:hover, .login-session-trigger.trigger-open {
+  opacity: 1;
+}
+
+.login-session-current {
+  font-family: $mono;
+  font-size: 11.5px;
+  letter-spacing: 1.5px;
+  color: $text;
+  min-width: 320px;
+}
+
+.login-chevron {
+  color: $accent;
+  font-size: 9px;
+}
+
+.login-session-menu {
+  min-width: 178px;
+  background-color: rgba(12, 8, 26, 0.92);
+  border: 1px solid rgba(232, 216, 255, 0.16);
+  margin-bottom: 12px;
+}
+
+.login-session-row {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(232, 216, 255, 0.06);
+}
+
+.login-session-row.row-selected {
+  background-color: rgba(196, 107, 255, 0.14);
+}
+
+.login-session-dot {
+  min-width: 5px;
+  min-height: 5px;
+  background-color: rgba(232, 216, 255, 0.22);
+}
+
+.login-session-dot.dot-selected {
+  background-color: $accent;
+}
+
+.login-session-name {
+  font-size: 11.5px;
+  color: rgba(243, 236, 255, 0.6);
+}
+
+.login-session-row.row-selected .login-session-name {
+  color: $text;
+}
+
+.login-session-type {
+  font-size: 9.5px;
+  color: $text-faint;
+}
+
+// ── power controls, bottom right ──
+.login-power {
+  margin: 0 56px 48px 0;
+}
+
+.login-power-btn {
+  min-width: 38px;
+  min-height: 38px;
+}
+
+.login-power-icon {
+  font-size: 15px;
+  color: $text;
+  opacity: 0.28;
+  transition: opacity 200ms ease;
+}
+
+.login-power-btn:hover .login-power-icon {
+  opacity: 1;
+}
+

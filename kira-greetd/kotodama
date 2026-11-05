@@ -1,13 +1,11 @@
 [meta]
 name = kira-greetd
-version = 1.31
+version = 1.32
 description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
 
 [source]
-url = git+https://github.com/shinigami-os/kira-desktop#v26.09-28
-sha256 = 160609c309b6cc49a2ec6619b913a9568dc4b446
 
 [deps]
 build =
@@ -47,11 +45,11 @@ install -m755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/lo
 # /usr/share, not /etc: /etc/polkit-1/rules.d ends up root:root 0750 here, which polkitd cannot read
 install -Dm644 "$FLUX_RECIPE_DIR/files/50-kira-greetd-power.rules" "$DESTDIR/usr/share/polkit-1/rules.d/50-kira-greetd-power.rules"
 
-# Kira Login: the custom eww greeter from kira-desktop, replacing regreet so the
+# Kira Login: the custom eww greeter, replacing regreet so the
 # design handoff's exact floating layout is achievable (GTK CSS on regreet's own
 # fixed widget tree can't move things around, only recolor them)
 install -dm755 "$DESTDIR/etc/greetd/kira-login"
-cp -a "login/." "$DESTDIR/etc/greetd/kira-login/"
+cp -a "$FLUX_RECIPE_DIR/files/kira-login/." "$DESTDIR/etc/greetd/kira-login/"
 
 %post-install
 # greetd now owns tty1 - the old auto-login-as-root getty (kira-login) must not race it for

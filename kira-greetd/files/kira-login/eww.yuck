@@ -1,0 +1,108 @@
+;; ╔══════════════════════════════════════════════════════════════════╗
+;; ║  Kira Linux · eww · "Kira Login"                                  ║
+;; ║  four floating elements on the wallpaper, no panel, single user   ║
+;; ╚══════════════════════════════════════════════════════════════════╝
+;;
+;; cage only shows one fullscreen client (no wlr-layer-shell), so unlike the
+;; desktop shell's five separate windows this is ONE window with an `overlay`
+;; container standing in for the "floating islands" look.
+
+(defvar dropdown_open false)
+(defvar selected_session "")
+(defvar pw "")
+;; idle | checking | error | success - success shows one flat black frame,
+;; instantly, so there's no ambiguous moment where the greeter just sits
+;; there while the real session is loading behind it
+(defvar auth_state "idle")
+(defvar auth_msg "")
+
+;; never an empty array: sessions_json[0] is indexed unconditionally below,
+;; and that crashes eww outright for the moment before sessions.sh's first
+;; real line arrives
+(deflisten sessions_json :initial '[{"name":"tty","cmd":["__TTY__"],"type":"console"}]' "scripts/sessions.sh")
+
+(defpoll time_main :interval "30s" :initial "--:--" "date +%H:%M")
+(defpoll date_str   :interval "60s" :initial ""      "scripts/date.sh")
+
+;; ══════════════════════════ elements ══════════════════════════
+
+;; CSS background-image never rendered here (no error either - eww loads its
+;; CSS via gtk_css_provider_load_from_data, a byte string with no base path,
+;; and url() apparently never resolved against it). eww's native `image`
+;; widget is a real gtk::Image, already proven to load files fine elsewhere
+;; in this codebase (workspace thumbnails), so use that instead of fighting
+;; CSS for the one place a raster image needs to appear. 1672x941 source is
+;; already ~16:9, so stretching to 1920x1080 is a negligible distortion.
+(defwidget login-bg []
+  (box :class "login-bg" :hexpand true :vexpand true
+    (image :path "/etc/greetd/kira-login/login-wallpaper.png" :image-width 1920 :image-height 1080)))
+
+;; separate layer from login-bg: GTK CSS's background-image didn't apply a
+;; mixed gradient+url() layer list, only the last one in it - so the wallpaper
+;; and its legibility scrim are two stacked boxes instead of one declaration
+(defwidget login-scrim-gradient []
+  (box :class "login-scrim-gradient" :hexpand true :vexpand true))
+
+(defwidget login-clock []
+  (box :class "login-clock" :orientation "v" :halign "end" :valign "start" :space-evenly false :spacing 4
+    (label :class "login-time" :halign "end" :text time_main)
+    (label :class "login-date" :halign "end" :text date_str)))
+
+(defwidget login-password []
+  (box :class "login-pw-wrap" :orientation "v" :halign "center" :valign "end" :space-evenly false :spacing 6
+    (box :class "login-pw-row ${auth_state == "error" ? "pw-error" : ""}" :space-evenly false :spacing 6 :valign "center"
+      (label :class "login-prompt ${auth_state == "error" ? "prompt-error" : ""}" :text "❯")
+      (input :class "login-input" :password true :value pw :hexpand true
+             :onchange "eww --config /etc/greetd/kira-login update pw={}"
+             :onaccept "scripts/authenticate.sh")
+      (box :class "login-verify-dot ${auth_state == "checking" ? "dot-show" : ""}"))
+    (box :class "login-pw-rule ${auth_state == "error" ? "rule-error" : ""}"
+      (box :class "login-pw-sweep ${auth_state == "checking" ? "sweep-run" : ""}"))
+    (label :class "login-pw-errmsg ${auth_state == "error" ? "errmsg-show" : ""}" :text auth_msg)))
+
+(defwidget login-session []
+  (box :class "login-session" :orientation "v" :halign "start" :valign "end" :space-evenly false
+    (revealer :transition "slidedown" :reveal dropdown_open :duration "240ms"
+      (box :class "login-session-menu" :orientation "v" :space-evenly false
+        (for s in sessions_json
+          (eventbox :onclick "eww --config /etc/greetd/kira-login update selected_session='${s.name}' dropdown_open=false" :cursor "pointer"
+            (box :class "login-session-row ${s.name == (selected_session == "" ? sessions_json[0].name : selected_session) ? "row-selected" : ""}"
+                 :space-evenly false :spacing 8
+              (box :class "login-session-dot ${s.name == (selected_session == "" ? sessions_json[0].name : selected_session) ? "dot-selected" : ""}")
+              (label :class "login-session-name" :text {s.name} :hexpand true :halign "start")
+              (label :class "login-session-type" :text {s.type} :halign "end"))))))
+    (eventbox :onclick "eww --config /etc/greetd/kira-login update dropdown_open=${!dropdown_open}" :cursor "pointer"
+      (box :class "login-session-trigger ${dropdown_open ? "trigger-open" : ""}" :space-evenly false :spacing 6 :valign "center"
+        (label :class "login-session-current" :text {selected_session == "" ? sessions_json[0].name : selected_session})
+        (label :class "login-chevron" :text {dropdown_open ? "▴" : "▾"})))))
+
+(defwidget login-power []
+  (box :class "login-power" :halign "end" :valign "end" :space-evenly false :spacing 4
+    (eventbox :onclick "scripts/power.sh shutdown" :cursor "pointer"
+      (box :class "login-power-btn" (label :class "login-power-icon" :text "")))
+    (eventbox :onclick "scripts/power.sh reboot" :cursor "pointer"
+      (box :class "login-power-btn" (label :class "login-power-icon" :text "")))
+    (eventbox :onclick "scripts/power.sh suspend" :cursor "pointer"
+      (box :class "login-power-btn" (label :class "login-power-icon" :text "")))))
+
+;; ══════════════════════════ window ══════════════════════════
+
+;; a plain toplevel, not a layer-shell surface: cage is a single-app kiosk
+;; compositor (like it already was for regreet), it just fullscreens whatever
+;; one xdg-shell client it's handed, no wlr-layer-shell involved. "%" sizing
+;; only resolves against a monitor for layer-shell windows - on a plain
+;; toplevel it computed to 0x0, so wlroots refused the surface outright. cage
+;; fullscreens its client regardless of requested size, so a concrete
+;; placeholder size is enough; 1920x1080 just avoids a visible resize flash
+;; on the common case.
+(defwindow login
+  :monitor 0
+  :windowtype "normal"
+  :geometry (geometry :x "0px" :y "0px" :width "1920px" :height "1080px" :anchor "center")
+  (overlay
+    (login-bg)
+    (login-scrim-gradient)
+    (login-clock)
+    (login-password)
+    (login-session)
+    (login-power)))

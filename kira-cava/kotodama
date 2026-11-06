@@ -1,0 +1,29 @@
+[meta]
+name = kira-cava
+version = 1.0.0.1
+description = "Console-based audio visualizer, built here because Alpine only carries it in testing"
+license = MIT
+size = 1
+
+[source]
+url = git+https://github.com/karlstav/cava#1.0.0
+sha256 = 15f89867908fa66baaaec8d4b9a2d684a329a0fb
+
+[deps]
+build = gcc libc-dev make pkgconf autoconf automake libtool m4 xxd alsa-lib-dev fftw-dev iniparser-dev ncurses-dev pipewire-dev pulseaudio-dev sdl2-dev
+runtime = mesa-gl sdl2 alsa-lib fftw-double-libs iniparser libncursesw pipewire-libs libpulse
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+./autogen.sh
+./configure --prefix=/usr --sysconfdir=/etc --mandir=/usr/share/man --localstatedir=/var
+make
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

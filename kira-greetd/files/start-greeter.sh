@@ -19,9 +19,17 @@ if [ -n "$keymap_file" ]; then
     [ "$variant" != "$keymap_name" ] && export XKB_DEFAULT_VARIANT="$variant"
 fi
 
+qylock=/etc/greetd/qylock-greeter/launch.sh
+eww_greeter=/etc/greetd/kira-login/launch-kira-login.sh
+terminated=
+rm -f /run/greetd/launched
+
 # one output only: the default (extend) stretches the greeter across every screen
-cage -m last -s -- /etc/greetd/kira-login/launch-kira-login.sh &
-cage_pid=$!
+run_cage() {
+    cage -m last -s -- "$1" &
+    cage_pid=$!
+    wait "$cage_pid"
+}
 
 # cage's own shutdown just stops its Wayland event loop and then blocks
 # indefinitely waiting for its client to notice the dead socket and exit on
@@ -30,11 +38,19 @@ cage_pid=$!
 # our own scripts. Kill the client ourselves the moment greetd asks this
 # session to end, instead of waiting on cage to notice.
 cleanup() {
+    terminated=1
     echo "$(date +%s.%N) start-greeter.sh got TERM, killing client directly" >> /tmp/kira-login-timing.log
     pkill -TERM -f launch-kira-login.sh 2>/dev/null
-    pkill -TERM -x eww 2>/dev/null
+    pkill -TERM -u "$(id -u)" -x eww 2>/dev/null
+    pkill -TERM -u "$(id -u)" -x qs 2>/dev/null
     kill -TERM "$cage_pid" 2>/dev/null
 }
 trap cleanup TERM INT
 
-wait "$cage_pid"
+[ -d /usr/share/kira-qylock/themes ] && run_cage "$qylock"
+
+# the qylock greeter touches /run/greetd/launched right before it starts a session, so no
+# marker without a TERM from greetd means it died on its own: bring up the eww greeter instead
+if [ -z "$terminated" ] && [ ! -e /run/greetd/launched ]; then
+    run_cage "$eww_greeter"
+fi

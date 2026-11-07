@@ -14,12 +14,9 @@ for f in /usr/share/wayland-sessions/*.desktop /usr/share/xsessions/*.desktop; d
     name=$(sed -n 's/^Name=//p' "$f" | head -n1)
     exec_line=$(sed -n 's/^Exec=//p' "$f" | head -n1 | sed 's/ %[a-zA-Z]//g')
     [ -n "$name" ] && [ -n "$exec_line" ] || continue
-    # a real Kira session always launches through its own kira-start-* wrapper
-    # (sets up XDG_CURRENT_DESKTOP, autostart, theming, etc). Anything else is
-    # a raw compositor binary pulled in as some other package's dependency
-    # (e.g. kira-hyprlock depends on hyprland itself, which ships its own
-    # wayland-sessions entry even with no actual desktop session behind it)
-    case "$exec_line" in *kira-start-*) ;; *) continue ;; esac
+    # a real Kira session launches through its own wrapper (kira-start-*, the-line-session); anything
+    # else is a raw compositor pulled in as another package's dependency
+    case "$exec_line" in *kira-start-*|*the-line-session*) ;; *) continue ;; esac
     cmd_json=$(printf '%s\n' "$exec_line" | jq -R 'split(" ") | map(select(length > 0))')
     out=$(printf '%s\n' "$out" | jq --arg name "$name" --argjson cmd "$cmd_json" \
         '. + [{"name":$name,"cmd":$cmd,"type":"wayland"}]')

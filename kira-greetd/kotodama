@@ -1,7 +1,7 @@
 [meta]
 name = kira-greetd
-version = 1.34
-description = "Graphical login greeter: greetd + cage + a custom eww greeter (Kira Login), with the runit service Alpine's own package never ships"
+version = 1.35
+description = "Graphical login greeter: greetd + cage + a Quickshell greeter running qylock's Clockwork theme (eww Kira Login as fallback), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1
 
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = greetd cage dbus-x11 kira-eww kira-elogind python3 jq font-raleway font-jetbrains-mono-nerd gnome-keyring gnome-keyring-pam
+runtime = greetd cage dbus-x11 kira-quickshell kira-qylock kira-eww kira-elogind python3 jq font-raleway font-jetbrains-mono-nerd gnome-keyring gnome-keyring-pam
 
 [build]
 cflags =
@@ -45,6 +45,12 @@ install -m755 "$FLUX_RECIPE_DIR/files/greetd/log/run" "$DESTDIR/etc/sv/greetd/lo
 # "challenge" for every power action and the greeter has no auth agent to answer it. Goes in
 # /usr/share, not /etc: /etc/polkit-1/rules.d ends up root:root 0750 here, which polkitd cannot read
 install -Dm644 "$FLUX_RECIPE_DIR/files/50-kira-greetd-power.rules" "$DESTDIR/usr/share/polkit-1/rules.d/50-kira-greetd-power.rules"
+
+install -dm755 "$DESTDIR/etc/greetd/qylock-greeter"
+install -m644 "$FLUX_RECIPE_DIR/files/qylock-greeter/shell.qml" "$DESTDIR/etc/greetd/qylock-greeter/shell.qml"
+install -m644 "$FLUX_RECIPE_DIR/files/qylock-greeter/GreetdShim.qml" "$DESTDIR/etc/greetd/qylock-greeter/GreetdShim.qml"
+install -m755 "$FLUX_RECIPE_DIR/files/qylock-greeter/launch.sh" "$DESTDIR/etc/greetd/qylock-greeter/launch.sh"
+install -m644 "$FLUX_RECIPE_DIR/files/qylock-theme" "$DESTDIR/etc/greetd/qylock-theme"
 
 # Kira Login: the custom eww greeter, replacing regreet so the
 # design handoff's exact floating layout is achievable (GTK CSS on regreet's own

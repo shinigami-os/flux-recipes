@@ -1,7 +1,7 @@
 [meta]
 name = kira-net
-version = 1.12
-description = "Networking stack: NetworkManager (internal DHCP, manages wifi+ethernet+bluetooth PAN), iwd, bluez, libnl plus their runit services"
+version = 1.13
+description = "Networking stack: NetworkManager (internal DHCP, manages wifi+ethernet+bluetooth PAN), wpa_supplicant, bluez, libnl plus their runit services"
 license = MIT
 size = 1
 
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = networkmanager networkmanager-cli networkmanager-wifi networkmanager-bluetooth iwd libnl3 openssh bluez
+runtime = networkmanager networkmanager-cli networkmanager-wifi networkmanager-bluetooth wpa_supplicant libnl3 openssh bluez
 
 [build]
 cflags =
@@ -31,14 +31,14 @@ install -m644 "$FLUX_RECIPE_DIR/files/NetworkManager.conf" "$DESTDIR/etc/Network
 # runit service at all - bluez's own D-Bus activation entry is a dead end too
 # (Exec=/bin/false, SystemdService=dbus-org.bluez.service) - without a runit service
 # of our own, neither NetworkManager nor bluetoothd ever starts
-install -dm755 "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/iwd" "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/bluetooth"
+install -dm755 "$DESTDIR/etc/sv/sshd" "$DESTDIR/etc/sv/wpa_supplicant" "$DESTDIR/etc/sv/networkmanager" "$DESTDIR/etc/sv/bluetooth"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/run" "$DESTDIR/etc/sv/sshd/run"
-install -m755 "$FLUX_RECIPE_DIR/files/iwd/run" "$DESTDIR/etc/sv/iwd/run"
+install -m755 "$FLUX_RECIPE_DIR/files/wpa_supplicant/run" "$DESTDIR/etc/sv/wpa_supplicant/run"
 install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/run" "$DESTDIR/etc/sv/networkmanager/run"
 install -m755 "$FLUX_RECIPE_DIR/files/bluetooth/run" "$DESTDIR/etc/sv/bluetooth/run"
-install -dm755 "$DESTDIR/etc/sv/sshd/log" "$DESTDIR/etc/sv/iwd/log" "$DESTDIR/etc/sv/networkmanager/log" "$DESTDIR/etc/sv/bluetooth/log"
+install -dm755 "$DESTDIR/etc/sv/sshd/log" "$DESTDIR/etc/sv/wpa_supplicant/log" "$DESTDIR/etc/sv/networkmanager/log" "$DESTDIR/etc/sv/bluetooth/log"
 install -m755 "$FLUX_RECIPE_DIR/files/sshd/log/run" "$DESTDIR/etc/sv/sshd/log/run"
-install -m755 "$FLUX_RECIPE_DIR/files/iwd/log/run" "$DESTDIR/etc/sv/iwd/log/run"
+install -m755 "$FLUX_RECIPE_DIR/files/wpa_supplicant/log/run" "$DESTDIR/etc/sv/wpa_supplicant/log/run"
 install -m755 "$FLUX_RECIPE_DIR/files/networkmanager/log/run" "$DESTDIR/etc/sv/networkmanager/log/run"
 install -m755 "$FLUX_RECIPE_DIR/files/bluetooth/log/run" "$DESTDIR/etc/sv/bluetooth/log/run"
 
@@ -54,6 +54,12 @@ if [ -d /etc/sv/dhcpcd ]; then
     rm -rf /etc/sv/dhcpcd
 fi
 
+if [ -d /etc/sv/iwd ]; then
+    sv exit /etc/sv/iwd 2>/dev/null || true
+    sleep 2
+    rm -rf /etc/sv/iwd
+fi
+
 grep -q "^sshd:" /etc/passwd || \
     echo "sshd:x:84:84:sshd privilege separation:/var/empty:/sbin/nologin" >> /etc/passwd
 grep -q "^sshd:" /etc/group || \
@@ -65,7 +71,7 @@ chmod 711 /var/empty
 # sv up alone doesn't delete a down file, only overrides runsv for the
 # current session - clear it for real so a stray down file (however it
 # got there) can't silently disable any of these again on the next boot
-for svc in iwd sshd networkmanager bluetooth; do
+for svc in wpa_supplicant sshd networkmanager bluetooth; do
     rm -f /etc/sv/$svc/down
     sv up /etc/sv/$svc 2>/dev/null || true
 done

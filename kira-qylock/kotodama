@@ -1,0 +1,29 @@
+[meta]
+name = kira-qylock
+version =
+description = "qylock's Clockwork login theme (orbital, neo-orbital, tape) and its SDDM component shim, for the Kira greeter"
+license = GPL-3.0-only
+size = 1
+
+[source]
+url = git+https://github.com/Darkkal44/qylock#main
+sha256 =
+
+[deps]
+build =
+runtime = qt6-qtdeclarative qt6-qt5compat
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/share/kira-qylock/themes" "$DESTDIR/usr/share/kira-qylock/imports"
+cp -a themes/clockwork "$DESTDIR/usr/share/kira-qylock/themes/clockwork"
+cp -a quickshell-lockscreen/imports/SddmComponents "$DESTDIR/usr/share/kira-qylock/imports/SddmComponents"
+install -Dm644 LICENSE "$DESTDIR/usr/share/licenses/kira-qylock/LICENSE"

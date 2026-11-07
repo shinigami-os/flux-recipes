@@ -19,7 +19,8 @@ if [ -n "$keymap_file" ]; then
     [ "$variant" != "$keymap_name" ] && export XKB_DEFAULT_VARIANT="$variant"
 fi
 
-cage -s -- /etc/greetd/kira-login/launch-kira-login.sh &
+# one output only: the default (extend) stretches the greeter across every screen
+cage -m last -s -- /etc/greetd/kira-login/launch-kira-login.sh &
 cage_pid=$!
 
 # cage's own shutdown just stops its Wayland event loop and then blocks

@@ -1,6 +1,6 @@
 [meta]
 name = kira-greetd
-version = 1.35
+version = 1.36
 description = "Graphical login greeter: greetd + cage + a Quickshell greeter running qylock's Clockwork theme (eww Kira Login as fallback), with the runit service Alpine's own package never ships"
 license = MIT
 size = 1

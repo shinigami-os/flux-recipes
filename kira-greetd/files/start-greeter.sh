@@ -26,7 +26,7 @@ rm -f /run/greetd/launched
 
 # one output only: the default (extend) stretches the greeter across every screen
 run_cage() {
-    cage -m last -s -- "$1" &
+    cage -d -m last -s -- "$1" &
     cage_pid=$!
     wait "$cage_pid"
 }

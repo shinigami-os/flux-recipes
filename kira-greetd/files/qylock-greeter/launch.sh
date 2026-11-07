@@ -6,6 +6,7 @@ export QS_THEME_PATH="$dir/themes/${theme:-clockwork/orbital}"
 export QML_IMPORT_PATH="$dir/imports"
 export QML2_IMPORT_PATH="$dir/imports"
 export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export QSG_RENDER_LOOP=basic
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/greetd}"
 export XDG_CACHE_HOME=/run/greetd/cache

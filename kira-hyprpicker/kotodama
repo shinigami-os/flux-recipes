@@ -1,0 +1,30 @@
+[meta]
+name = kira-hyprpicker
+version = 0.4.8.1
+description = "Wlroots-compatible Wayland color picker, built here because Alpine only carries it in testing"
+license = BSD-3-Clause
+size = 1
+
+[source]
+url = git+https://github.com/hyprwm/hyprpicker#v0.4.8
+sha256 = 838147963f8c2a22b60a455b2ccc02b5aa4a7b98
+
+[deps]
+build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner hyprutils-dev wayland-dev wayland-protocols libxkbcommon-dev cairo-dev pango-dev libjpeg-turbo-dev
+runtime = hyprutils wayland libxkbcommon cairo pango libjpeg-turbo
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

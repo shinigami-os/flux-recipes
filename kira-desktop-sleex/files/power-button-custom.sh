@@ -11,12 +11,14 @@ runtime_dir="/run/user/$uid"
 sig=$(ls "$runtime_dir/hypr" 2>/dev/null | head -n1)
 [ -n "$sig" ] || exit 0
 
-# "global" is Hyprland's own dispatcher for the hyprland-global-shortcuts-v1
-# protocol, which is how the shell registered this shortcut in the first place.
-# Both Kira sessions are asked: Sleex listens on quickshell:powerButtonPressed,
-# The Line on the-line:powerButton; a global nobody registered is a no-op.
+# The Line: its own IPC. A global dispatched through hyprctl reaches the shell as
+# a key release (Hyprland passes on the state of the last real key), which The
+# Line's shortcut ignores. No The Line running: qs finds no instance, no-op.
+chpst -u "$user:$user" env XDG_RUNTIME_DIR="$runtime_dir" \
+    qs -p /usr/share/the-line ipc call line powerButton 2>/dev/null
+
+# Sleex: "global" is Hyprland's own dispatcher for the hyprland-global-shortcuts-v1
+# protocol, which is how quickshell registered this shortcut in the first place.
 # Hyprland 0.55's Lua config only accepts dispatchers written as hl.dsp.* calls
-for global in quickshell:powerButtonPressed the-line:powerButton; do
-    chpst -u "$user:$user" env XDG_RUNTIME_DIR="$runtime_dir" HYPRLAND_INSTANCE_SIGNATURE="$sig" \
-        hyprctl dispatch "hl.dsp.global(\"$global\")"
-done
+chpst -u "$user:$user" env XDG_RUNTIME_DIR="$runtime_dir" HYPRLAND_INSTANCE_SIGNATURE="$sig" \
+    hyprctl dispatch 'hl.dsp.global("quickshell:powerButtonPressed")'

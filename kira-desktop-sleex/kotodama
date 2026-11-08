@@ -49,11 +49,11 @@ install -Dm644 "$FLUX_RECIPE_DIR/files/avatar-default.png" "$DESTDIR/usr/share/p
 # just the Sleex-specific event->action wiring, since "hyprctl dispatch
 # global quickshell:powerButtonPressed" is Sleex/Hyprland's own mechanism.
 install -Dm644 "$FLUX_RECIPE_DIR/files/60-kira-i2c.rules" "$DESTDIR/usr/lib/udev/rules.d/60-kira-i2c.rules"
-install -Dm644 "$FLUX_RECIPE_DIR/files/power-button-custom.event" "$DESTDIR/etc/acpi/events/power-button-custom"
+install -Dm644 "$FLUX_RECIPE_DIR/files/acpid.conf" "$DESTDIR/etc/acpid.conf"
 install -Dm755 "$FLUX_RECIPE_DIR/files/power-button-custom.sh" "$DESTDIR/etc/acpi/power-button-custom.sh"
 
 %post-install
-# acpid only picks up new event files were it running when they're added
+# acpid reads its action table only at startup
 sv restart /etc/sv/acpid 2>/dev/null || true
 udevadm control --reload 2>/dev/null && udevadm trigger --subsystem-match=i2c-dev 2>/dev/null || true
 

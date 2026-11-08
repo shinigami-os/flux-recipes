@@ -13,8 +13,10 @@ sig=$(ls "$runtime_dir/hypr" 2>/dev/null | head -n1)
 
 # The Line: its own IPC. A global dispatched through hyprctl reaches the shell as
 # a key release (Hyprland passes on the state of the last real key), which The
-# Line's shortcut ignores. No The Line running: qs finds no instance, no-op.
-chpst -u "$user:$user" env XDG_RUNTIME_DIR="$runtime_dir" \
+# Line's shortcut ignores. qs only sees the instances on its own Wayland display,
+# so it needs WAYLAND_DISPLAY too. No The Line running: no instance, no-op.
+display=$(cd "$runtime_dir" && ls -d wayland-* 2>/dev/null | grep -v '\.lock$' | head -n1)
+chpst -u "$user:$user" env XDG_RUNTIME_DIR="$runtime_dir" WAYLAND_DISPLAY="$display" \
     qs -p /usr/share/the-line ipc call line powerButton 2>/dev/null
 
 # Sleex: "global" is Hyprland's own dispatcher for the hyprland-global-shortcuts-v1

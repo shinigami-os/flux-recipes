@@ -1,0 +1,28 @@
+[meta]
+name = kira-ttf-ibm-plex-mono
+version = 2.5.0
+description = "IBM Plex Mono typeface, plain family name, Alpine only ships the Nerd Font variant"
+license = OFL-1.1
+size = 1
+
+[source]
+url = https://github.com/IBM/plex/releases/download/%40ibm/plex-mono%402.5.0/ibm-plex-mono.zip
+sha256 = 6d23f01257663d8cc49a0d64c22ced630b79e0e2a0ac08a0da86e9a38bbc481c
+
+[deps]
+build =
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -dm755 "$DESTDIR/usr/share/fonts/ibm-plex-mono"
+install -m644 fonts/complete/ttf/*.ttf "$DESTDIR/usr/share/fonts/ibm-plex-mono/"
+install -Dm644 LICENSE.txt "$DESTDIR/usr/share/licenses/kira-ttf-ibm-plex-mono/LICENSE.txt"

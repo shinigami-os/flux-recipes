@@ -1,0 +1,36 @@
+[meta]
+name = kira-ydotool
+version = 1.0.4.1
+description = "Generic command-line input automation tool for Wayland, built here because Alpine does not carry it, with /dev/uinput opened to the input group"
+license = AGPL-3.0-only
+size = 1
+
+[source]
+url = git+https://github.com/ReimuNotMoe/ydotool#v1.0.4
+sha256 = 57ba7d0af525e82da2de0e275d169477f293b197
+
+[deps]
+build = gcc libc-dev cmake ninja scdoc
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build
+rm -rf "$DESTDIR/usr/lib/systemd"
+install -Dm644 "$FLUX_RECIPE_DIR/files/60-kira-uinput.rules" "$DESTDIR/usr/lib/udev/rules.d/60-kira-uinput.rules"
+
+%post-install
+udevadm control --reload 2>/dev/null && udevadm trigger --name-match=uinput 2>/dev/null || true

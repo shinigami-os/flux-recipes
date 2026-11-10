@@ -11,3 +11,4 @@ find /sys/devices -path "*/input/input*/event*" -type d | while read dev; do
     udevadm test "$parent" > /dev/null 2>&1
 done
 touch /etc/sv/udev-input-trigger/down
+sv d /etc/sv/udev-input-trigger

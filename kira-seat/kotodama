@@ -1,6 +1,6 @@
 [meta]
 name = kira-seat
-version = 1.1
+version = 1.2
 description = "Seat management: seatd daemon plus seatd and udev-input-trigger runit services"
 license = MIT
 size = 1

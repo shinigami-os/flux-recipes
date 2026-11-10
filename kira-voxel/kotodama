@@ -1,12 +1,12 @@
 [meta]
 name = kira-voxel
-version = 0.1.0
+version = 1.0
 description = "Customizable Qt/QML file manager built for Sleex"
 license = GPL-3.0-only
 size = 5
 
 [source]
-# no release tags exist upstream - Cargo.toml's own version (0.1.0) is the only version
+# no release tags exist upstream - the PKGBUILD pkgver (1.0) is the only version
 # marker there is. Floats on main the same way kira-sleex-ui-kit and kira-sleex do
 url = git+https://github.com/AxOS-project/Voxel#main
 sha256 =

@@ -78,7 +78,7 @@ If a meta-package's `%install`/`%post-install` needs files that live in another 
 
 ## Branches
 
-**`kira-only`** is the live branch - the one `flux update` actually syncs (it's this repo's GitHub default branch, so a plain clone or pull already lands here with no extra configuration). It carries only `kira-*` recipes: everything Alpine already provides directly was trimmed out, since flux resolves those on its own without a recipe.
+**`kira-only`** is the live branch - the one `flux check` actually syncs (it's this repo's GitHub default branch, so a plain clone or pull already lands here with no extra configuration). It carries only `kira-*` recipes: everything Alpine already provides directly was trimmed out, since flux resolves those on its own without a recipe.
 
 **`main`** exists only as a history of Kira's recipe set from before the Alpine rewrite - real from-source recipes for software Alpine already packages, kept for reference. Nobody should build against it; it isn't kept in sync and isn't what flux ever fetches.
 

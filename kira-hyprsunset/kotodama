@@ -1,0 +1,31 @@
+[meta]
+name = kira-hyprsunset
+version = 0.4.0.1
+description = "Hyprland's blue light filter, built here because Alpine only carries it in testing"
+license = BSD-3-Clause
+size = 1
+
+[source]
+url = git+https://github.com/hyprwm/hyprsunset#v0.4.0
+sha256 = 25f704346ec22e7623b0873ef8c4573b57ca1512
+
+[deps]
+build = gcc g++ libc-dev cmake ninja pkgconf hyprwayland-scanner hyprutils-dev hyprlang-dev hyprland-protocols wayland-dev wayland-protocols
+runtime = hyprutils hyprlang wayland
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build
+rm -rf "$DESTDIR/usr/lib/systemd"

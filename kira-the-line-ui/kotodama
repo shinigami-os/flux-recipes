@@ -1,0 +1,30 @@
+[meta]
+name = kira-the-line-ui
+version =
+description = "The Line's design language as a QML module (TheLine.Ui): the colours, motion and parts shared by The Line, its settings, its login screen and the Kira installer"
+license = GPL-3.0-or-later
+size = 1
+
+[source]
+# rolling like The Line: floats on main's latest commit, flux records the built one
+url = git+https://github.com/shinigami-os/the-line-ui#main
+sha256 =
+
+[deps]
+build =
+runtime = qt6-qtdeclarative kira-quickshell font-raleway kira-ttf-ibm-plex-mono
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -d "$DESTDIR/usr/lib/qt6/qml"
+cp -r TheLine "$DESTDIR/usr/lib/qt6/qml/"
+
+%post-install

@@ -1,7 +1,7 @@
 [meta]
 name = kira-desktop-apps
-version = 1.1
-description = "Kira's shared default GUI apps: browser, PDF/image/media viewers, calculator, archiver, editors - shared by every desktop meta-package instead of each one drifting its own list"
+version = 1.2
+description = "Kira's shared default GUI apps: boot inspector (kokuin), browser, PDF/image/media viewers, calculator, archiver, editors - shared by every desktop meta-package instead of each one drifting its own list"
 license = MIT
 size = 1
 
@@ -9,7 +9,7 @@ size = 1
 
 [deps]
 build =
-runtime = firefox mupdf-gl nomacs mpv galculator lxqt-archiver kira-featherpad btop neovim kira-flatpak
+runtime = firefox mupdf-gl nomacs mpv galculator lxqt-archiver kira-featherpad btop neovim kira-flatpak kira-kokuin
 
 [build]
 cflags =

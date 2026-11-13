@@ -1,0 +1,32 @@
+[meta]
+name = kira-kokuin-cli
+version =
+description = "kokuin-cli: shows how a machine boots, from the firmware to the desktop, and records boots to explain every step"
+license = GPL-2.0-only
+size = 6
+
+[source]
+# rolling: floats on main's latest commit, flux records the built one
+url = git+https://github.com/shinigami-os/kokuin-cli#main
+sha256 =
+
+[deps]
+build = gcc libc-dev pkgconf rust cargo
+runtime = polkit-elogind
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cargo build --release --locked -p kokuin-cli -p kokuin-init
+
+%post-build
+
+%install
+install -Dm755 target/release/kokuin-cli "$DESTDIR/usr/bin/kokuin-cli"
+install -Dm755 target/release/kokuin-init "$DESTDIR/usr/lib/kokuin/kokuin-init"
+install -Dm644 LICENSE "$DESTDIR/usr/share/licenses/kira-kokuin-cli/LICENSE"
+
+%post-install

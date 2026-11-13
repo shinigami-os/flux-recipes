@@ -1,0 +1,34 @@
+[meta]
+name = kira-kokuin
+version =
+description = "kokuin, the window on how this machine boots (a graphical kokuin-cli), installed with every Kira desktop"
+license = GPL-2.0-only
+size = 1
+
+[source]
+# rolling like The Line: floats on main's latest commit, flux records the built one
+url = git+https://github.com/shinigami-os/kokuin#main
+sha256 =
+
+[deps]
+build =
+runtime = kira-kokuin-cli kira-the-line-ui kira-quickshell polkit-elogind
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -d "$DESTDIR/usr/share/kokuin"
+cp -r shell.qml modules services "$DESTDIR/usr/share/kokuin/"
+install -Dm755 session/kokuin "$DESTDIR/usr/bin/kokuin"
+install -Dm644 session/kokuin.desktop "$DESTDIR/usr/share/applications/kokuin.desktop"
+install -Dm644 LICENSE "$DESTDIR/usr/share/licenses/kira-kokuin/LICENSE"
+
+%post-install
+update-desktop-database -q /usr/share/applications 2>/dev/null || true

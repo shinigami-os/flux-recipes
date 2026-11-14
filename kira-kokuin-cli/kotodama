@@ -1,14 +1,14 @@
 [meta]
 name = kira-kokuin-cli
-version = 0.1.0.1
+version =
 description = "kokuin-cli: shows how a machine boots, from the firmware to the desktop, and records boots to explain every step"
 license = GPL-2.0-only
 size = 6
 
 [source]
-# pinned to a commit so it is cached: the repo is private, installs must not clone it
+# rolling: floats on main's latest commit, flux records the built one
 url = git+https://github.com/shinigami-os/kokuin-cli#main
-sha256 = 2cbb06dd44744f1e2adf0be58c71fd181659a83a
+sha256 =
 
 [deps]
 build = gcc libc-dev pkgconf rust cargo

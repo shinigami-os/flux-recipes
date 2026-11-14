@@ -1,14 +1,14 @@
 [meta]
 name = kira-kokuin
-version =
+version = 0.1.0.1
 description = "kokuin, the window on how this machine boots (a graphical kokuin-cli), installed with every Kira desktop"
 license = GPL-2.0-only
 size = 1
 
 [source]
-# rolling like The Line: floats on main's latest commit, flux records the built one
+# pinned to a commit so it is cached: the repo is private, installs must not clone it
 url = git+https://github.com/shinigami-os/kokuin#main
-sha256 =
+sha256 = 4788179d8929138c46852276a25e6ffedf5e6e61
 
 [deps]
 build =

@@ -46,6 +46,13 @@ sed -i 's#start-hyprland -- --config /etc/sleex/hyprland.lua > /dev/null 2>&1#st
 sed -i 's#QT_QPA_PLATFORM=wayland qs -p /usr/share/sleex#QT_QPA_PLATFORM=wayland QSG_RENDER_LOOP=basic qs -p /usr/share/sleex#' \
     src/etc/sleex/hyprland/execs.lua
 
+# execs.lua asks Hyprland to load the cursor theme with `hyprctl setcursor` right after
+# its start hook; on Kira that request segfaults Hyprland in an event-loop timer (found
+# with a gdb backtrace) and the session bounces back to the greeter. The Line sets the
+# theme through the environment instead, which is what this does for Sleex too.
+sed -i '/hyprctl setcursor Bibata-Modern-Classic 24/d' src/etc/sleex/hyprland/execs.lua
+printf '\nhl.env("XCURSOR_THEME", "Bibata-Modern-Classic")\nhl.env("XCURSOR_SIZE", "24")\n' >> src/etc/sleex/hyprland/env.lua
+
 # every other apps.* default is a .desktop filename resolved through normal
 # desktop-entry lookup, but apps.terminal is the one exception - the three
 # call sites that read it (BackgroundContextMenu.qml, DesktopIconContextMenu.qml,

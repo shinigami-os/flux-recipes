@@ -1,0 +1,4 @@
+# eudev is built without its blkid builtin: the partition and filesystem properties os-prober reads come from blkid itself
+ACTION=="remove", GOTO="kira_blkid_end"
+SUBSYSTEM=="block", ENV{DEVTYPE}=="partition", IMPORT{program}="/sbin/blkid -o udev -p $devnode"
+LABEL="kira_blkid_end"

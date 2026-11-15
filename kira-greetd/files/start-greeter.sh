@@ -19,6 +19,9 @@ if [ -n "$keymap_file" ]; then
     [ "$variant" != "$keymap_name" ] && export XKB_DEFAULT_VARIANT="$variant"
 fi
 
+# The Line: the last user's keyboard layout (Settings > Input), when it is not the console's
+[ -x /usr/share/the-line/greeter/greeter-env ] && eval "$(/usr/share/the-line/greeter/greeter-env 2>/dev/null)"
+
 qylock=/etc/greetd/qylock-greeter/launch.sh
 eww_greeter=/etc/greetd/kira-login/launch-kira-login.sh
 terminated=
@@ -47,7 +50,13 @@ cleanup() {
 }
 trap cleanup TERM INT
 
-[ -d /usr/share/kira-qylock/themes ] && run_cage "$qylock"
+theline=/usr/share/the-line/greeter/launch.sh
+[ -x "$theline" ] && run_cage "$theline"
+
+# The Line's greeter touches /run/greetd/launched before it starts a session too: no marker and no TERM, it died
+if [ -z "$terminated" ] && [ ! -e /run/greetd/launched ] && [ -d /usr/share/kira-qylock/themes ]; then
+    run_cage "$qylock"
+fi
 
 # the qylock greeter touches /run/greetd/launched right before it starts a session, so no
 # marker without a TERM from greetd means it died on its own: bring up the eww greeter instead

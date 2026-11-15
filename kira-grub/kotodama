@@ -1,0 +1,39 @@
+[meta]
+name = kira-grub
+version = 1.0
+description = "Kira's GRUB defaults: other systems found by os-prober, a graphical menu and a theme to restyle"
+license = MIT
+size = 1
+
+[source]
+
+[deps]
+build =
+runtime = grub grub-efi os-prober
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -Dm644 "$FLUX_RECIPE_DIR/files/10-kira.cfg" "$DESTDIR/etc/default/grub.d/10-kira.cfg"
+install -Dm644 "$FLUX_RECIPE_DIR/files/theme.txt" "$DESTDIR/usr/share/kira-grub/themes/kira/theme.txt"
+
+%post-install
+# Alpine's grub-mkconfig does not read /etc/default/grub.d, so /etc/default/grub says to, once
+if [ -f /etc/default/grub ] && ! grep -q '^# BEGIN kira-grub' /etc/default/grub; then
+    cat >> /etc/default/grub << 'BLOCK'
+
+# BEGIN kira-grub
+for f in /etc/default/grub.d/*.cfg; do
+    if [ -r "$f" ]; then . "$f"; fi
+done
+# END kira-grub
+BLOCK
+fi
+[ -f /boot/grub/grub.cfg ] && grub-mkconfig -o /boot/grub/grub.cfg >/dev/null 2>&1 || true

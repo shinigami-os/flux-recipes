@@ -1,6 +1,6 @@
 [meta]
 name = kira-grub
-version = 1.1
+version = 1.2
 description = "Kira's GRUB defaults: other systems found by os-prober, a graphical menu and Kira's theme (drawn like The Line)"
 license = MIT
 size = 1
@@ -24,6 +24,7 @@ cflags =
 install -Dm644 "$FLUX_RECIPE_DIR/files/10-kira.cfg" "$DESTDIR/etc/default/grub.d/10-kira.cfg"
 # the theme: theme.txt, its pictures and its fonts (GRUB's grub-mkconfig loads every .pf2 and .png next to it).
 # Source and build script: github.com/shinigami-os/kira-grub-theme
+install -Dm755 "$FLUX_RECIPE_DIR/files/90_kira-power" "$DESTDIR/etc/grub.d/90_kira-power"
 install -d "$DESTDIR/usr/share/kira-grub/themes/kira"
 for f in "$FLUX_RECIPE_DIR"/files/theme/*; do
     install -m644 "$f" "$DESTDIR/usr/share/kira-grub/themes/kira/"

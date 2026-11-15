@@ -1,0 +1,9 @@
+#!/bin/sh
+cat << 'EOF'
+menuentry 'Reboot' --class restart {
+    reboot
+}
+menuentry 'Shutdown' --class shutdown {
+    halt
+}
+EOF

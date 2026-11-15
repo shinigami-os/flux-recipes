@@ -1,6 +1,6 @@
 [meta]
 name = kira-howdy
-version = 3.0.0-beta1-kira4
+version = 3.0.1-kira1
 description = "Windows Hello-style face authentication for PAM (howdy 3.0 with its native pam_howdy module, no python2 or pam-python)"
 license = MIT
 size = 60
@@ -8,7 +8,8 @@ size = 60
 [source]
 # master is the 3.0 rewrite: a native C++ pam_howdy.so instead of the python2-only
 # pam-python bridge the old dev branch needed, plus the --plain / -U / add <label>
-# CLI Sleex's Settings > Security page relies on. no release tag exists for it yet,
+# CLI Sleex's Settings > Security page relies on. the core lives in the howdy/ folder of
+# the repo (next to the howdy-gtk/ app). no release tag exists for it yet,
 # so a fixed pin just goes stale and aborts the build the moment master moves past
 # it (as happened to kira-cliphist and kira-sleex-ui-kit) - float instead
 url = git+https://github.com/boltgolt/howdy#master
@@ -37,7 +38,7 @@ fetch_model mmod_human_face_detector.dat db9e9e40f092c118d5eb3e643935b2168381707
 fetch_model shape_predictor_5_face_landmarks.dat 6e787bbebf5c9efdb793f6cd1f023230c4413306605f24f299f12869f95aa472
 
 %build
-LDFLAGS=-lintl meson setup builddir --prefix=/usr --libdir=lib --buildtype=release \
+LDFLAGS=-lintl meson setup builddir howdy --prefix=/usr --libdir=lib --buildtype=release \
     -Dconfig_dir=/etc/howdy \
     -Dpython_path=/usr/bin/python3
 meson compile -C builddir

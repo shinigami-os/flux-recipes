@@ -1,7 +1,7 @@
 [meta]
 name = kira-grub
-version = 1.0
-description = "Kira's GRUB defaults: other systems found by os-prober, a graphical menu and a theme to restyle"
+version = 1.1
+description = "Kira's GRUB defaults: other systems found by os-prober, a graphical menu and Kira's theme (drawn like The Line)"
 license = MIT
 size = 1
 
@@ -22,7 +22,12 @@ cflags =
 
 %install
 install -Dm644 "$FLUX_RECIPE_DIR/files/10-kira.cfg" "$DESTDIR/etc/default/grub.d/10-kira.cfg"
-install -Dm644 "$FLUX_RECIPE_DIR/files/theme.txt" "$DESTDIR/usr/share/kira-grub/themes/kira/theme.txt"
+# the theme: theme.txt, its pictures and its fonts (GRUB's grub-mkconfig loads every .pf2 and .png next to it).
+# Source and build script: github.com/shinigami-os/kira-grub-theme
+install -d "$DESTDIR/usr/share/kira-grub/themes/kira"
+for f in "$FLUX_RECIPE_DIR"/files/theme/*; do
+    install -m644 "$f" "$DESTDIR/usr/share/kira-grub/themes/kira/"
+done
 
 %post-install
 # Alpine's grub-mkconfig does not read /etc/default/grub.d, so /etc/default/grub says to, once

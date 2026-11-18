@@ -1,0 +1,34 @@
+[meta]
+name = kira-the-line-core
+version =
+description = "The native half of The Line (TheLine.Core): the /proc and sensor sampler, the backlight and cava readers, on threads of their own"
+license = GPL-3.0-or-later
+size = 1
+
+[source]
+# rolling like The Line: floats on main's latest commit, flux records the built one
+url = git+https://github.com/shinigami-os/the-line-core#main
+sha256 =
+
+[deps]
+build = gcc g++ libc-dev cmake ninja pkgconf qt6-qtbase-dev qt6-qtdeclarative-dev
+runtime = qt6-qtbase qt6-qtdeclarative
+
+[build]
+cflags = -O2 -pipe
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build
+
+%post-install

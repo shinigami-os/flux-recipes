@@ -1,0 +1,40 @@
+#!/bin/sh
+# bluez powers every adapter on at each start (AutoEnable) and remembers nothing, so an adapter switched off stayed
+# a boot trick: it came back on. This keeps the last power state in a file and puts it back once bluetoothd is up.
+state=/var/lib/bluetooth/kira-power
+
+powered() {
+    bluetoothctl show 2>/dev/null | awk '/^\tPowered:/ { print $2 }'
+}
+
+# No controller (or no bluetoothd yet): look again later
+until [ -n "$(powered)" ]; do
+    sleep 5
+done
+
+# Let bluez finish its own power-on before overriding it
+sleep 3
+if [ "$(cat "$state" 2>/dev/null)" = no ] && [ "$(powered)" = yes ]; then
+    bluetoothctl power off >/dev/null 2>&1
+fi
+
+# Every later change is the user's (Settings, bluetoothctl, a shell toggle) and is saved. Sampling after a pause
+# skips the power-off bluetoothd does on its own while it is being stopped: by then it is gone and says nothing.
+# runsv signals the shell only, so the monitor is a child it stops itself (a pipeline would leave it running)
+fifo=/run/bluetooth-power.fifo
+rm -f "$fifo"
+mkfifo "$fifo"
+dbus-monitor --system "type='signal',interface='org.freedesktop.DBus.Properties',member='PropertiesChanged',path_namespace='/org/bluez'" > "$fifo" 2>/dev/null &
+monitor=$!
+trap 'kill $monitor' TERM INT
+while read -r line; do
+    case $line in
+    *'string "Powered"'*)
+        sleep 2
+        now=$(powered)
+        [ -n "$now" ] && echo "$now" > "$state"
+        ;;
+    esac
+done < "$fifo"
+kill $monitor 2>/dev/null
+sleep 2

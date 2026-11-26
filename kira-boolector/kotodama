@@ -1,0 +1,34 @@
+[meta]
+name = kira-boolector
+version = 3.2.4.1
+description = "Boolector SMT solver (bit-vectors and arrays), an alternative solver for SymbiYosys; not in Alpine"
+license = MIT
+size = 1
+
+[source]
+url = git+https://github.com/Boolector/boolector#3.2.4
+sha256 = 393cdfba3735d334bb4e6525500b8a0280dd41e6
+
+[deps]
+build = gcc g++ libc-dev cmake ninja make pkgconf python3 git curl tar gzip
+runtime = libstdc++
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+# upstream pins CaDiCaL and btor2tools by commit and downloads them with its own scripts
+export CMAKE_POLICY_VERSION_MINIMUM=3.5
+./contrib/setup-cadical.sh
+./contrib/setup-btor2tools.sh
+./configure.sh --prefix /usr --path "$PWD/deps/install"
+cd build
+make -j12
+
+%post-build
+
+%install
+cd build
+make DESTDIR="$DESTDIR" install

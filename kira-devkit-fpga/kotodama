@@ -1,6 +1,6 @@
 [meta]
 name = kira-devkit-fpga
-version = 1.0
+version = 1.1
 description = "FPGA and RISC-V kit: Yosys, nextpnr and Apicula (Gowin), openFPGALoader, Verilator, Icarus, GTKWave, cocotb, SymbiYosys, a bare-metal RISC-V GCC"
 license = MIT
 category = languages
@@ -12,7 +12,7 @@ sha256 =
 
 [deps]
 build =
-runtime = kira-yosys kira-nextpnr-gowin kira-apicula kira-openfpgaloader verilator iverilog kira-gtkwave kira-cocotb kira-symbiyosys kira-yices2 z3 kira-riscv-formal kira-riscv-tests gcc-riscv-none-elf binutils-riscv-none-elf newlib-riscv-none-elf
+runtime = kira-yosys kira-nextpnr-gowin kira-apicula kira-openfpgaloader verilator iverilog kira-gtkwave kira-cocotb kira-symbiyosys kira-yices2 z3 kira-boolector verilator-dev kira-riscv-formal kira-riscv-tests gcc-riscv-none-elf binutils-riscv-none-elf newlib-riscv-none-elf
 
 [build]
 cflags =

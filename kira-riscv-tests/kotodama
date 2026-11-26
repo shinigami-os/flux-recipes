@@ -20,7 +20,7 @@ cflags =
 
 %build
 autoconf
-./configure --prefix=/usr/share/riscv-tests --with-xlen=32
+./configure --prefix=/usr --with-xlen=32
 make RISCV_PREFIX=riscv-none-elf- RISCV_GCC_OPTS="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles" isa
 
 %post-build

@@ -1,0 +1,29 @@
+[meta]
+name = kira-riscv-tests
+version =
+description = "Official RISC-V ISA test suite (rv32 and rv64 binaries) in /usr/share/riscv-tests, rolling"
+license = BSD-3-Clause
+size = 1
+
+[source]
+url = git+https://github.com/riscv-software-src/riscv-tests
+sha256 =
+
+[deps]
+build = gcc libc-dev make autoconf automake gcc-riscv-none-elf binutils-riscv-none-elf newlib-riscv-none-elf
+runtime =
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+autoconf
+./configure --prefix=/usr/share/riscv-tests --with-xlen=32
+make RISCV_PREFIX=riscv-none-elf- RISCV_GCC_OPTS="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles" isa
+
+%post-build
+
+%install
+make RISCV_PREFIX=riscv-none-elf- DESTDIR="$DESTDIR" install

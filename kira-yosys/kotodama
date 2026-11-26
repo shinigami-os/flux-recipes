@@ -1,0 +1,32 @@
+[meta]
+name = kira-yosys
+version = 0.71.2
+description = "Yosys RTL synthesis framework, built here because Alpine only carries it in testing"
+license = ISC
+size = 1
+
+[source]
+url = git+https://github.com/YosysHQ/yosys#v0.71
+sha256 = b4c586fd37d0ec61bb38fc1a85fd6a2fde48fcd1
+
+[deps]
+build = gcc g++ libc-dev cmake ninja make pkgconf bison flex python3 git readline-dev tcl-dev libffi-dev zlib-dev
+runtime = python3 readline tcl libffi zlib libstdc++
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DYOSYS_ENABLE_UNIT_TESTS=OFF \
+    -DYOSYS_WITHOUT_SLANG=ON
+cmake --build build -j12
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build

@@ -1,0 +1,29 @@
+[meta]
+name = kira-yices2
+version = 2.8.0.1
+description = "Yices 2 SMT solver (the solver SymbiYosys uses), built here because Alpine only carries it in testing"
+license = GPL-3.0
+size = 1
+
+[source]
+url = git+https://github.com/SRI-CSL/yices2#yices-2.8.0
+sha256 = 1fbee54ad4620893f40836a50d74f91d4bf58bb4
+
+[deps]
+build = gcc g++ libc-dev make autoconf gperf gmp-dev
+runtime = gmp
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+autoconf
+./configure --prefix=/usr
+make -j12
+
+%post-build
+
+%install
+make DESTDIR="$DESTDIR" install

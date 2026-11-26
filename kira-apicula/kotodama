@@ -1,0 +1,29 @@
+[meta]
+name = kira-apicula
+version = 0.36.1
+description = "Apicula: Gowin FPGA bitstream database and tools (gowin_pack, gowin_unpack), with the msgspec and fastcrc wheels it needs"
+license = MIT
+size = 1
+
+[source]
+url = https://files.pythonhosted.org/packages/source/A/Apycula/apycula-0.36.tar.gz
+sha256 = 19b0d9dc62d09cb9af2e6e9f8cd034da5a4c2e3b63296da89b91eec08fd1ab3f
+
+[deps]
+build = python3 py3-pip py3-setuptools py3-setuptools_scm py3-wheel
+runtime = python3 py3-numpy
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+# msgspec and fastcrc are not in Alpine: take their musllinux wheels (no compiler needed)
+pip install --no-deps --only-binary=:all: --break-system-packages --root "$DESTDIR" --prefix /usr \
+    msgspec==0.22.0 fastcrc==0.5.0
+pip install --no-deps --no-build-isolation --break-system-packages --root "$DESTDIR" --prefix /usr .

@@ -1,0 +1,36 @@
+[meta]
+name = kira-openfpgaloader
+version = 1.2.0.2
+description = "openFPGALoader: program FPGAs over JTAG/USB, built here because Alpine only carries it in testing"
+license = Apache-2.0
+size = 1
+
+[source]
+url = git+https://github.com/trabucayre/openFPGALoader#v1.2.0
+sha256 = befbab4f646207dbaf1daf8b144dd980ad283dd5
+
+[deps]
+build = gcc g++ libc-dev cmake ninja pkgconf libusb-dev libftdi1-dev hidapi-dev zlib-dev eudev-dev
+runtime = libusb libftdi1 hidapi zlib eudev-libs libstdc++
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cmake -S . -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+%post-build
+
+%install
+DESTDIR="$DESTDIR" cmake --install build
+# the cmake install skips the udev rules here; uaccess gives the logged-in user the USB cable
+install -Dm644 99-openfpgaloader.rules "$DESTDIR/usr/lib/udev/rules.d/99-openfpgaloader.rules"
+
+%post-install
+grep -q "^plugdev:" /etc/group || addgroup -S plugdev
+udevadm control --reload-rules 2>/dev/null || true

@@ -1,0 +1,26 @@
+[meta]
+name = kira-symbiyosys
+version = 0.71.1
+description = "SymbiYosys (sby): formal verification front-end for Yosys, built here because Alpine only carries it in testing"
+license = ISC
+size = 1
+
+[source]
+url = git+https://github.com/YosysHQ/sby#v0.71
+sha256 = 79fc9eddca5e33a28cc2f2cd19c9825efd9a7255
+
+[deps]
+build = make python3
+runtime = python3 kira-yosys kira-yices2 z3
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+make PREFIX=/usr DESTDIR="$DESTDIR" install

@@ -1,0 +1,31 @@
+[meta]
+name = kira-gtkwave
+version = 3.3.116.2
+description = "GTKWave waveform viewer (GTK3), built here because Alpine only carries it in testing"
+license = GPL-2.0
+size = 1
+
+[source]
+url = git+https://github.com/gtkwave/gtkwave#v3.3.116
+sha256 = c05122be0a56ad75bb5947ae4fcabaf6e1d7c999
+
+[deps]
+build = gcc g++ libc-dev make pkgconf autoconf automake libtool gperf gtk+3.0-dev tk-dev tcl-dev bzip2-dev xz-dev zlib-dev
+runtime = gtk+3.0 tk tcl bzip2 xz-libs zlib
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+cd gtkwave3-gtk3
+autoreconf -fi
+CFLAGS="-O2 -pipe -std=gnu17" ./configure --prefix=/usr --enable-gtk3 --disable-mime-update --disable-xz
+make -j12
+
+%post-build
+
+%install
+cd gtkwave3-gtk3
+make DESTDIR="$DESTDIR" install

@@ -1,0 +1,27 @@
+[meta]
+name = kira-cocotb
+version = 2.1.0.1
+description = "cocotb: Python testbenches for Verilator, Icarus Verilog and friends, with find_libpython"
+license = BSD-3-Clause
+size = 1
+
+[source]
+url = https://files.pythonhosted.org/packages/fa/78/10b7acfaeb41741286d34df039c8ff53850601ee4daa6cf58983887e65e3/cocotb-2.1.0.tar.gz
+sha256 = db9761f947dedf0f264dc1e7ef632e0f0b1d0eab26a4e6bbd4ca97ee46cb6da4
+
+[deps]
+build = gcc g++ libc-dev make python3 python3-dev py3-pip py3-setuptools py3-wheel
+runtime = python3 py3-pytest
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+pip install --no-deps --only-binary=:all: --break-system-packages --root "$DESTDIR" --prefix /usr find_libpython==0.5.1
+pip install --no-deps --no-build-isolation --break-system-packages --root "$DESTDIR" --prefix /usr .

@@ -1,0 +1,28 @@
+[meta]
+name = kira-riscv-formal
+version =
+description = "riscv-formal: formal verification framework for RISC-V cores (scripts and checks in /usr/share/riscv-formal), rolling"
+license = ISC
+size = 1
+
+[source]
+url = git+https://github.com/YosysHQ/riscv-formal
+sha256 =
+
+[deps]
+build =
+runtime = python3 kira-yosys kira-symbiyosys
+
+[build]
+cflags =
+
+%pre-build
+
+%build
+
+%post-build
+
+%install
+install -d "$DESTDIR/usr/share/riscv-formal"
+cp -a . "$DESTDIR/usr/share/riscv-formal/"
+rm -rf "$DESTDIR/usr/share/riscv-formal/.git"

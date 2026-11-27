@@ -1,0 +1,7 @@
+#!/bin/sh
+exec 2>&1
+# a oneshot would run once only: /etc/runit/2 clears the down marker of two named oneshots, not of this one,
+# so this stays up doing nothing after the device exists
+modprobe evdi initial_device_count=1 || { sleep 300; exit 1; }
+ls -d /sys/devices/platform/evdi.* >/dev/null 2>&1 || echo 1 > /sys/devices/evdi/add
+while :; do sleep 3600; done

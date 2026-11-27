@@ -1,6 +1,6 @@
 [meta]
 name = kira-voxel
-version = 1.0
+version = 1.1
 description = "Customizable Qt/QML file manager built for Sleex"
 license = GPL-3.0-only
 size = 5
@@ -17,7 +17,9 @@ build = gcc g++ libc-dev pkgconf rust cargo qt6-qtbase-dev qt6-qtdeclarative-dev
 # icon in the grid/list views) silently resolve to nothing - Sleex's own env.lua already
 # sets QT_QPA_PLATFORMTHEME=qt6ct and ships a qt6ct.conf, but nothing installed the actual
 # plugin that reads them, since Alpine only has qt6ct in its testing repo
-runtime = qt6-qtbase qt6-qtdeclarative qt6-qtsvg hicolor-icon-theme kira-sleex-ui-kit kira-qt6ct
+# Voxel draws its toolbar and popup icons with the Material Symbols font and its file icons from the
+# icon theme: both used to arrive only through kira-desktop-sleex, so a The Line only install had no icons
+runtime = qt6-qtbase qt6-qtdeclarative qt6-qtsvg hicolor-icon-theme papirus-icon-theme kira-ttf-material-symbols-variable kira-sleex-ui-kit kira-qt6ct
 
 [build]
 cflags = -O2 -pipe -march=x86-64-v2

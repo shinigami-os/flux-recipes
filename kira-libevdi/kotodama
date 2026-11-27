@@ -1,0 +1,34 @@
+[meta]
+name = kira-libevdi
+version = 1.15.1
+description = "libevdi, the userspace half of DisplayLink's Extensible Virtual Display Interface, pinned to the commit of the evdi module that Shinigami carries"
+license = LGPL-2.1-only
+size = 1
+
+[source]
+# the library and the kernel module share an ioctl interface and upstream has no tag after v1.9.1, so the commit
+# is pinned (the same one drivers/gpu/drm/evdi in Shinigami was imported from)
+url = https://github.com/DisplayLink/evdi/archive/51748043f3f884a9eff38f11a7cf90daaa3de755.tar.gz
+sha256 = 8554c899bcb4c9cf62ba4751644cd539316153c8266c29e0b025680126236a8b
+
+[deps]
+build = gcc libc-dev make pkgconf libdrm-dev
+runtime =
+
+[build]
+cflags = -O2 -pipe -march=x86-64-v2
+
+%pre-build
+# musl does not pull limits.h in through the headers evdi_lib.c includes, so PATH_MAX is undeclared (glibc does)
+sed -i 's|#include <fcntl.h>|#include <fcntl.h>\n#include <limits.h>|' library/evdi_lib.c
+
+%build
+make -C library
+
+%post-build
+
+%install
+make -C library DESTDIR="$DESTDIR" PREFIX=/usr install
+install -Dm644 library/evdi_lib.h "$DESTDIR/usr/include/evdi_lib.h"
+
+%post-install
